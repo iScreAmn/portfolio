@@ -1,3 +1,5 @@
+"use client";
+
 import "./Footer.css";
 import { followLinks } from "../../data/footerData";
 import FooterLinkGroup from "./FooterLinkGroup";

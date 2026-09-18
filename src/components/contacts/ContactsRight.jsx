@@ -1,3 +1,5 @@
+"use client";
+
 import ContactsForm from "./ContactsForm";
 import { motion } from "motion/react";
 import { slideInVariants } from "../../utils/animation";

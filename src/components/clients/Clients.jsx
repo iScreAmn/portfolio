@@ -1,3 +1,5 @@
+"use client";
+
 import "./Clients.css";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import { Swiper, SwiperSlide } from "swiper/react";

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import "./Header.css";
 import NavMenu from "../nav/NavMenu";
 import { logo } from "../../assets/images";
@@ -21,7 +23,7 @@ const Header = ({ isMenuOpen, toggleMenu, handleMenuClick }) => {
     <header className={isSticky ? "header sticky" : "header"}>
       <div className="container">
         <div className="header__wrapper">
-          <Link to="/" className="logo" onClick={handleMenuClick} aria-label="DJ">
+          <Link href="/" className="logo" onClick={handleMenuClick} aria-label="DJ">
             <img src={logo} alt="DJ" />
           </Link>
           <NavMenu

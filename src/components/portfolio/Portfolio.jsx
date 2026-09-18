@@ -1,12 +1,15 @@
+"use client";
+
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+import { setPendingScroll } from "../../utils/pendingScroll";
 import "./Portfolio.css";
 import portfolioData from "../../data/portfolioData";
 import PortfolioItem from "./PortfolioItem";
 import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
 
 const Portfolio = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { portfolioHeroData } = useLocalePortfolioData();
 
   const chips = useMemo(() => {
@@ -25,7 +28,8 @@ const Portfolio = () => {
   };
 
   const handleContact = () => {
-    navigate("/", { state: { scrollTo: "contact" } });
+    setPendingScroll("contact");
+    router.push("/");
   };
 
   return (

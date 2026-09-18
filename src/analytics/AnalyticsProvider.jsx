@@ -1,5 +1,7 @@
+"use client";
+
 import { createContext, useContext, useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { usePathname } from 'next/navigation'
 import {
   initAnalytics,
   trackEvent,
@@ -15,19 +17,21 @@ const AnalyticsContext = createContext({
 })
 
 export function AnalyticsProvider({ children }) {
-  const location = useLocation()
+  const pathname = usePathname()
   const lastPath = useRef(null)
 
   useEffect(() => {
     initAnalytics()
   }, [])
 
+  // search читаем из window, а не через useSearchParams: тот заставил бы
+  // оборачивать провайдер в Suspense и выключил бы статику на всех страницах.
   useEffect(() => {
-    const path = location.pathname + location.search
+    const path = pathname + window.location.search
     if (lastPath.current === path) return
     lastPath.current = path
     trackPageview(path)
-  }, [location.pathname, location.search])
+  }, [pathname])
 
   return (
     <AnalyticsContext.Provider

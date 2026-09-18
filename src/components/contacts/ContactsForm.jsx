@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { FaPaperPlane, FaCheck, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
 import { MdOutlineArrowDropDown } from "react-icons/md";

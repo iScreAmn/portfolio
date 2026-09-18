@@ -57,7 +57,11 @@ function isDisabled() {
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return true
   // собственные визиты в админку не должны попадать в статистику сайта
   if (window.location.pathname.startsWith('/admin')) return true
-  if (import.meta.env.DEV && !import.meta.env.VITE_ANALYTICS_IN_DEV) return true
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !process.env.NEXT_PUBLIC_ANALYTICS_IN_DEV
+  )
+    return true
   return false
 }
 

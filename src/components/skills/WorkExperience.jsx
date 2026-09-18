@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "motion/react";
 import { slideInVariants } from "../../utils/animation";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";

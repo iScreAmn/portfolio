@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+"use client";
 
-const THEME_STORAGE_KEY = "saved-theme";
+import { useCallback, useEffect, useState } from "react";
+import { THEME_STORAGE_KEY } from "../utils/themeScript";
 
 const listeners = new Set();
 
@@ -28,7 +29,10 @@ if (typeof document !== "undefined") {
  * read and write it without a provider.
  */
 export function useTheme() {
-  const [theme, setThemeState] = useState(currentTheme);
+  // Сервер о localStorage не знает и всегда рендерит светлую тему, поэтому
+  // стартовое состояние здесь тоже "light" — сохранённое значение приезжает
+  // эффектом ниже, уже после гидрации.
+  const [theme, setThemeState] = useState("light");
 
   useEffect(() => {
     applyTheme(currentTheme);

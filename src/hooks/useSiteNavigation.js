@@ -1,6 +1,9 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { usePathname, useRouter } from "next/navigation";
 import { useLocaleHomeData } from "./useLocaleHomeData";
+import { setPendingScroll } from "../utils/pendingScroll";
 
 const ROUTE_SECTIONS = [
   { prefix: "/services", id: "services" },
@@ -15,8 +18,8 @@ const ROUTE_SECTIONS = [
  * both mark the same item as current and follow the same routing rules.
  */
 export function useSiteNavigation() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
   const { navItems, navMenu } = useLocaleHomeData();
   const [activeSection, setActiveSection] = useState("home");
 
@@ -25,13 +28,14 @@ export function useSiteNavigation() {
       setActiveSection(item.id);
 
       if (item.type === "route") {
-        navigate(item.path);
+        router.push(item.path);
         return;
       }
 
       // A section lives on the home page: route there first when we are away.
-      if (location.pathname !== "/") {
-        navigate("/", { state: { scrollTo: item.id } });
+      if (pathname !== "/") {
+        setPendingScroll(item.id);
+        router.push("/");
         return;
       }
 
@@ -39,12 +43,12 @@ export function useSiteNavigation() {
         .getElementById(item.id)
         ?.scrollIntoView({ behavior: "smooth", block: "start" });
     },
-    [location.pathname, navigate]
+    [pathname, router]
   );
 
   useEffect(() => {
     const matchedRoute = ROUTE_SECTIONS.find((route) =>
-      location.pathname.startsWith(route.prefix)
+      pathname.startsWith(route.prefix)
     );
 
     if (matchedRoute) {
@@ -52,7 +56,7 @@ export function useSiteNavigation() {
       return;
     }
 
-    if (location.pathname !== "/") return;
+    if (pathname !== "/") return;
 
     const handleScroll = () => {
       const sectionItems = navItems.filter((item) => item.type === "section");
@@ -74,7 +78,7 @@ export function useSiteNavigation() {
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname, navItems]);
+  }, [pathname, navItems]);
 
   return { navItems, navMenu, activeSection, goToNavItem };
 }

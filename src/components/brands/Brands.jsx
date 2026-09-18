@@ -1,3 +1,5 @@
+"use client";
+
 import { 
   brand1, 
   brand2, 

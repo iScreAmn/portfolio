@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "motion/react";
 import { titleVariants, subtitleVariants } from "../../utils/animation";
 import "./SectionTitle.css";
