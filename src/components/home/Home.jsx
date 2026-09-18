@@ -1,19 +1,16 @@
+"use client";
+
 import "./Home.css";
 import DecryptedText from "../widgets/decryptedText/DecryptedText";
 import { aboutImg2 } from "../../assets/images";
 import { motion } from "motion/react";
 import { iconVariants, slideInVariants } from "../../utils/animation";
-import { useState, useEffect, useMemo } from "react";
-import { fetchHomeSection } from "../../services/strapi";
+import { useMemo } from "react";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
-import { useLocale } from "../../context/LocaleContext";
 
 const Home = () => {
-  const { locale } = useLocale();
-  const localeHome = useLocaleHomeData();
-  const fallbackData = localeHome.homeData;
-  const [homeData, setHomeData] = useState(fallbackData);
+  const { homeData } = useLocaleHomeData();
   const { socialLinks } = useLocaleAboutData();
 
   const icons = useMemo(
@@ -28,33 +25,6 @@ const Home = () => {
       }),
     [socialLinks]
   );
-
-  useEffect(() => {
-    setHomeData(fallbackData);
-
-    const loadData = async () => {
-      const data = await fetchHomeSection();
-      if (data?.greeting) {
-        setHomeData({
-          greeting: data.greeting,
-          role: data.role,
-          description: data.description,
-          contactButton: {
-            text: data.contactButtonText,
-            href: data.contactButtonHref,
-            icon: fallbackData.contactButton.icon,
-          },
-          scrollDown: {
-            text: data.scrollDownText,
-            href: data.scrollDownHref,
-            icon: fallbackData.scrollDown.icon,
-          },
-        });
-      }
-    };
-
-    loadData();
-  }, [locale, fallbackData]);
 
   const ContactIcon = homeData.contactButton.icon;
   const ScrollIcon = homeData.scrollDown.icon;

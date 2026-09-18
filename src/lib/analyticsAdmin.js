@@ -7,7 +7,7 @@ import { supabase } from './supabase'
 function getSupabaseOrThrow() {
   if (!supabase) {
     throw new Error(
-      'Supabase не настроен. Добавьте VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY в .env.'
+      'Supabase не настроен. Добавьте NEXT_PUBLIC_SUPABASE_URL и NEXT_PUBLIC_SUPABASE_ANON_KEY в .env.'
     )
   }
   return supabase

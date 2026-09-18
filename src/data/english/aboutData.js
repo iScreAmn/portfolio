@@ -1,5 +1,4 @@
 import { FaLinkedinIn, FaInstagram, FaGithub } from "react-icons/fa";
-import cvFile from "../../assets/docs/Dimitri_Jmukhadze_CV.pdf";
 
 export const heroData = {
   eyebrow: "About",
@@ -15,7 +14,9 @@ export const posterAlt = "Dimitri Jmukhadze portrait";
 
 export const cvData = {
   downloadText: "Download CV",
-  filePath: cvFile,
+  // PDF лежит в public/: сборщик Next статические импорты .pdf не понимает,
+  // а файл всё равно нужен как обычная ссылка на скачивание.
+  filePath: "/docs/Dimitri_Jmukhadze_CV.pdf",
 };
 
 export const socialLinks = [

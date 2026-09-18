@@ -1,3 +1,5 @@
+"use client";
+
 import { animate, useMotionValue, useMotionValueEvent } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import "./AnimatedNumber.css";

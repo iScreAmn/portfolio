@@ -1,3 +1,5 @@
+"use client";
+
 import "./Contacts.css";
 import ContactsRight from "./ContactsRight";
 import ContactsLeft from "./ContactsLeft";

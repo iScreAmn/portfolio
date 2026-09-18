@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "motion/react";
 import { slideInVariants, sectionVariants } from "../../utils/animation";
 import SectionTitle from "../section-title/SectionTitle";

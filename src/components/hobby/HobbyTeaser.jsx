@@ -1,9 +1,11 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { hobby1 } from "../../assets/images";
 import "./HobbyTeaser.css";
 
 const HobbyTeaser = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <section className="hobby-teaser section" id="hobby">
@@ -18,7 +20,7 @@ const HobbyTeaser = () => {
           <button
             type="button"
             className="hobby-teaser__btn"
-            onClick={() => navigate("/hobby")}
+            onClick={() => router.push("/hobby")}
           >
             View hobby
           </button>

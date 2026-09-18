@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const LocaleContext = createContext(null);
@@ -23,12 +25,29 @@ const resolveInitialLocale = () => {
 };
 
 export const LocaleProvider = ({ children }) => {
-  const [locale, setLocale] = useState(resolveInitialLocale);
+  // На сервере localStorage и navigator.language недоступны, поэтому первый
+  // рендер всегда идёт на языке по умолчанию — иначе разметка сервера и клиента
+  // разойдутся и React выбросит ошибку гидрации. Сохранённый язык поднимается
+  // эффектом сразу после монтирования.
+  const [locale, setLocale] = useState(DEFAULT_LOCALE);
+  const [isResolved, setIsResolved] = useState(false);
+
+  useEffect(() => {
+    setLocale(resolveInitialLocale());
+    setIsResolved(true);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
   }, [locale]);
+
+  // Пока сохранённый язык не прочитан, писать в localStorage нельзя: запись
+  // стартового "en" затёрла бы выбранный ранее "ru" ещё до того, как эффект
+  // выше успеет его поднять.
+  useEffect(() => {
+    if (!isResolved) return;
+    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+  }, [locale, isResolved]);
 
   const value = useMemo(
     () => ({
@@ -42,7 +61,6 @@ export const LocaleProvider = ({ children }) => {
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useLocale = () => {
   const context = useContext(LocaleContext);
 

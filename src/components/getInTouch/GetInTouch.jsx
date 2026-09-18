@@ -1,12 +1,14 @@
+"use client";
+
 import { motion } from "motion/react";
 import "./GetInTouch.css";
 import { slideInVariants } from "../../utils/animation";
 import { project } from "../../assets/images";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const GetInTouch = () => {
   return (
-    <Link to="/about" className="get-in-touch-link">
+    <Link href="/about" className="get-in-touch-link">
       <div className="get-in-touch sub-section">
         <div className="container flex-center">
           <motion.div

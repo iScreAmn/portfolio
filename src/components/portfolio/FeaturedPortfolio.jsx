@@ -1,11 +1,13 @@
+"use client";
+
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import portfolioData from "../../data/portfolioData";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import "./FeaturedPortfolio.css";
 
 const FeaturedPortfolio = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { featuredPortfolioSectionData } = useLocaleHomeData();
   const featured = useMemo(
     () =>
@@ -27,7 +29,7 @@ const FeaturedPortfolio = () => {
             className="featured-portfolio__btn"
             type="button"
             onClick={() =>
-              navigate(featuredPortfolioSectionData.allProjectsButton.path)
+              router.push(featuredPortfolioSectionData.allProjectsButton.path)
             }
           >
             {featuredPortfolioSectionData.allProjectsButton.text}
@@ -39,7 +41,7 @@ const FeaturedPortfolio = () => {
             <article
               key={item.id}
               className="featured-portfolio__card"
-              onClick={() => navigate(`/portfolio/${item.slug}`)}
+              onClick={() => router.push(`/portfolio/${item.slug}`)}
             >
               <div className="featured-portfolio__media">
                 <img src={item.imgSrc} alt={item.title} loading="lazy" />

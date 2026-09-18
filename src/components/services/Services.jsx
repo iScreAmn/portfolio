@@ -1,6 +1,8 @@
+"use client";
+
 import "./Services.css";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -10,7 +12,7 @@ import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 
 const Services = () => {
   const { servicesSectionData } = useLocaleHomeData();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { slides } = servicesSectionData;
 
   return (
@@ -55,7 +57,7 @@ const Services = () => {
                         <button
                           type="button"
                           className="inner-info-link game-app"
-                          onClick={() => navigate(slide.button.path)}
+                          onClick={() => router.push(slide.button.path)}
                         >
                           {slide.button.text} <ButtonIcon />
                         </button>
