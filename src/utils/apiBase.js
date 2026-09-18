@@ -1,8 +1,8 @@
 export function getApiBase() {
-  const raw = import.meta.env.VITE_API_URL;
+  const raw = process.env.NEXT_PUBLIC_API_URL;
   const trimmed = typeof raw === 'string' ? raw.trim() : '';
   if (!trimmed) return '';
-  if (import.meta.env.DEV) {
+  if (process.env.NODE_ENV !== 'production') {
     try {
       const u = new URL(trimmed);
       const h = u.hostname.toLowerCase();

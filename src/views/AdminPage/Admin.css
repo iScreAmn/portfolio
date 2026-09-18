@@ -1,0 +1,133 @@
+.admin-page {
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+.admin-page__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-page__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.admin-page__logout {
+  padding: 10px 20px;
+  font-size: 13px;
+  border-radius: 6px;
+  color: #fff;
+  background: #ffa500;
+  cursor: pointer;
+}
+
+.admin-page__logout:hover {
+  background: #c68101;
+}
+
+.admin-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f3f4f6;
+}
+
+.admin-gate__card {
+  width: 100%;
+  max-width: 400px;
+  padding: 28px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.admin-gate__title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.admin-gate__hint {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.45;
+}
+
+.admin-gate__hint code {
+  font-size: 12px;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.admin-gate__input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.admin-gate__err {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.admin-gate__btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  background: #ffa500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-gate__btn:hover {
+  background: #c88406;
+}
+
+@media (max-width: 768px) {
+  .admin-page__bar {
+    padding: 10px 16px;
+  }
+
+  .admin-page__label {
+    font-size: 13px;
+    display: none;
+  }
+
+  .admin-page__logout {
+    padding: 8px 16px;
+    font-size: 12px;
+    margin-left: auto;
+  }
+
+  .admin-gate {
+    padding: 16px;
+  }
+
+  .admin-gate__card {
+    padding: 22px;
+  }
+
+  .admin-gate__title {
+    font-size: 20px;
+  }
+}

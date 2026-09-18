@@ -1,0 +1,13 @@
+.home-page {
+  background: radial-gradient(circle at 12% 8%, rgba(255, 122, 78, 0.16), transparent 30%),
+    radial-gradient(circle at 84% 4%, rgba(22, 83, 225, 0.2), transparent 32%),
+    var(--body-bg-color);
+  min-height: 100vh;
+}
+
+.dark-theme .home-page {
+  background: radial-gradient(circle at 12% 8%, rgba(255, 122, 78, 0.16), transparent 30%),
+    radial-gradient(circle at 80% 4%, rgba(22, 83, 225, 0.18), transparent 32%),
+    var(--body-bg-color);
+}
+
