@@ -9,6 +9,7 @@ import {
   client5,
   brand3,
   brand8,
+  brand9,
   flameJumper,
   imgboxCover,
 } from "../../assets/images";
@@ -205,7 +206,7 @@ export const clientsData = [
     id: 3,
     imgSrc: client2,
     description:
-      "Несколько проектов вместе с Дмитрием. Front-end решения усилили юридические процессы, доступность и стабильность платформы для клиентов",
+      "Несколько проектов вместе с Дмитрием. Новый сайт усилил наши юридические процессы, доступность и стабильность платформы для клиентов",
     name: "Гиорги",
     company: "Law Firm",
     companyLogo: brand8,
@@ -225,5 +226,6 @@ export const clientsData = [
       "Приятно было работать с Дмитрием. Сайт стабильный, быстрый, полный функционал и отличная адаптивность",
     name: "Елена",
     company: "Old Tbilisi Narikala",
+    companyLogo: brand9,
   },
 ];

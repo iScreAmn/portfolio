@@ -1,11 +1,3 @@
-/**
- * Единая точка входа для всех картинок проекта.
- *
- * Next отдаёт статический импорт изображения объектом
- * { src, width, height, blurDataURL } — ровно тем, что ждёт на вход next/image,
- * поэтому реэкспортируем как есть, без разворачивания в строку.
- */
-
 export { default as logo } from "./dj-logo.webp";
 export { default as aboutImg } from "./about-img-2.webp";
 export { default as aboutImg2 } from "./dj-cover.webp";

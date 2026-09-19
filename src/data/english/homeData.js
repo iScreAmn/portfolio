@@ -206,7 +206,7 @@ export const clientsData = [
     id: 3,
     imgSrc: client2,
     description:
-      "We worked with Dimitri on several projects. His frontend solutions improved legal workflows, accessibility, and client-facing platform reliability",
+      "We worked with Dimitri on several projects. His modern solutions improved legal workflows, accessibility, and client-facing platform reliability",
     name: "Giorgi",
     company: "Law Firm",
     companyLogo: brand8,
