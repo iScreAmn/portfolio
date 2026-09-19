@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import portfolioData from "../../data/portfolioData";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
@@ -44,7 +45,12 @@ const FeaturedPortfolio = () => {
               onClick={() => router.push(`/portfolio/${item.slug}`)}
             >
               <div className="featured-portfolio__media">
-                <img src={item.imgSrc} alt={item.title} loading="lazy" />
+                <Image
+                  src={item.imgSrc}
+                  alt={item.title}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  placeholder="blur"
+                />
                 <span className="featured-portfolio__category">
                   {item.category || "Project"}
                 </span>

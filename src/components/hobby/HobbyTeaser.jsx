@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { hobby1 } from "../../assets/images";
 import "./HobbyTeaser.css";
 
@@ -26,7 +27,12 @@ const HobbyTeaser = () => {
           </button>
         </div>
         <div className="hobby-teaser__thumb">
-          <img src={hobby1} alt="Drone hobby preview" />
+          <Image
+            src={hobby1}
+            alt="Drone hobby preview"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            placeholder="blur"
+          />
         </div>
       </div>
     </section>

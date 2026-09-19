@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import Image from "next/image";
 import { hobby1, hobby2, hobby3 } from "../../assets/images";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import "./HobbyPage.css";
+
+// Анимированная обёртка над next/image: motion.img не умеет работать со
+// статическим импортом, а motion.create сохраняет ту же разметку, что и <Image>.
+const MotionImage = motion.create(Image);
 
 const chips = ["Drone filming", "Video making", "Storytelling", "Aerial visuals"];
 
@@ -61,7 +66,7 @@ const HobbyPage = () => {
     <div className="hobby-page">
       <section className="hobby-hero">
         <div className="hobby-hero__bg" aria-hidden="true">
-          <img src={hobby1} alt="" />
+          <Image src={hobby1} alt="" sizes="100vw" priority />
         </div>
         <div className="hobby-hero__container">
           <div className="hobby-hero__content">
@@ -95,9 +100,11 @@ const HobbyPage = () => {
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <motion.img
+            <MotionImage
               src={hobby2}
               alt="Drone hobby preview"
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              placeholder="blur"
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.5 }}
@@ -125,9 +132,12 @@ const HobbyPage = () => {
                   onClick={() => openVideo(video)}
                   aria-label={`Play ${video.title}`}
                 >
-                  <img
+                  <Image
                     src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
                     alt={video.title}
+                    width={480}
+                    height={360}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                   <span className="hobby-video-card__play">▶</span>
                 </button>
@@ -171,7 +181,12 @@ const HobbyPage = () => {
             </div>
           </div>
           <div className="hobby-fly__visual">
-            <img src={hobby3} alt="Drone controller" />
+            <Image
+              src={hobby3}
+              alt="Drone controller"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              placeholder="blur"
+            />
           </div>
         </div>
       </section>

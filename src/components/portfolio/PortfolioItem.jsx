@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 
 const PortfolioItem = ({ item, index }) => {
@@ -22,7 +23,12 @@ const PortfolioItem = ({ item, index }) => {
               {item.category || "Project"}
             </span>
           </div>
-          <img src={item.imgSrc} alt={item.title} />
+          <Image
+            src={item.imgSrc}
+            alt={item.title}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            placeholder="blur"
+          />
         </div>
       </Link>
     </article>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -398,7 +399,13 @@ const Calculator = () => {
                 {t.ctaButton}
               </button>
             </div>
-            <img src={logo} alt="" aria-hidden className="cta-decoration" />
+            <Image
+              src={logo}
+              alt=""
+              aria-hidden
+              className="cta-decoration"
+              sizes="300px"
+            />
           </motion.div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Image from "next/image";
 import { aboutImg } from "../../assets/images";
 import SectionTitle from "../section-title/SectionTitle";
 import { slideInVariants } from "../../utils/animation";
@@ -54,7 +55,12 @@ const About = () => {
             viewport={{ once: true, amount: 0.5 }}
             variants={slideInVariants("left", 0.9, 100, false)}
           >
-            <img src={aboutImg} alt="about" />
+            <Image
+              src={aboutImg}
+              alt="about"
+              sizes="(max-width: 768px) 400px, 500px"
+              placeholder="blur"
+            />
           </motion.div>
           <motion.div
             initial="hidden"
@@ -76,7 +82,7 @@ const About = () => {
               status="Online"
               contactText="Contact Me"
               innerGradient={true}
-              avatarUrl={aboutImg}
+              avatarUrl={aboutImg.src}
               showUserInfo={true}
               enableTilt={true}
               enableMobileTilt={false}

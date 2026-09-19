@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import SectionTitle from "../section-title/SectionTitle";
 import { motion } from "motion/react";
+import Image from "next/image";
 import ReviewModal from "../review-modal/ReviewModal";
 import { useState } from "react";
 import { useLocale } from "../../context/LocaleContext";
@@ -75,7 +76,11 @@ const Clients = () => {
                     </blockquote>
                     <figcaption className="review-author">
                       <div className="review-avatar">
-                        <img src={client.imgSrc} alt={client.name} />
+                        <Image
+                          src={client.imgSrc}
+                          alt={client.name}
+                          sizes="64px"
+                        />
                       </div>
                       <div className="review-author-meta">
                         <h3 className="review-author-name">{client.name}</h3>
@@ -85,10 +90,10 @@ const Clients = () => {
                       </div>
                       <div className="review-company-logo">
                         {client.companyLogo ? (
-                          <img
+                          <Image
                             src={client.companyLogo}
                             alt={client.company}
-                            loading="lazy"
+                            sizes="110px"
                           />
                         ) : (
                           <span
@@ -126,11 +131,12 @@ const Clients = () => {
                 {clientsSectionData.addReviewButton}
               </button>
             </div>
-            <img
+            <Image
               src={logo}
               alt=""
               aria-hidden
               className="reviews-cta-decoration"
+              sizes="300px"
             />
           </motion.div>
         </div>

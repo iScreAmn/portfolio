@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { createPortal } from "react-dom";
 import { FaXmark } from "react-icons/fa6";
 
@@ -48,7 +49,12 @@ const PortfolioModal = ({ item, isModalOpen, closeModal }) => {
       <div className="portfolio-modal-body" ref={modalRef}>
         <FaXmark className="portfolio-close-btn" onClick={closeModal} />
         <div className="portfolio-modal-img-container">
-          <img src={item.imgSrc} alt={item.title} />
+          <Image
+            src={item.imgSrc}
+            alt={item.title}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            placeholder="blur"
+          />
         </div>
         <div className="portfolio-content">
           <h3 className="portfolio-title">{item.title}</h3>

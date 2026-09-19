@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import "./Header.css";
 import NavMenu from "../nav/NavMenu";
 import { logo } from "../../assets/images";
@@ -24,7 +25,7 @@ const Header = ({ isMenuOpen, toggleMenu, handleMenuClick }) => {
       <div className="container">
         <div className="header__wrapper">
           <Link href="/" className="logo" onClick={handleMenuClick} aria-label="DJ">
-            <img src={logo} alt="DJ" />
+            <Image src={logo} alt="DJ" sizes="52px" priority />
           </Link>
           <NavMenu
             isMenuOpen={isMenuOpen}

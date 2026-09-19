@@ -1,6 +1,7 @@
 "use client";
 
 import { FaGithub } from "react-icons/fa";
+import Image from "next/image";
 import { flameJumper2 } from "../../assets/images";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import "./GamePage.css";
@@ -59,7 +60,8 @@ const GamePage = () => {
           </div>
 
           <div className="game-hero__poster">
-            <img src={flameJumper2} alt="Flame Jumper cover" />
+            {/* Анимированный GIF: оптимизатор свёл бы его к одному кадру. */}
+            <Image src={flameJumper2} alt="Flame Jumper cover" unoptimized />
           </div>
         </div>
       </section>

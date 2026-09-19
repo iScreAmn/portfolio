@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { IoIosClose } from "react-icons/io";
@@ -178,10 +179,11 @@ const ProjectPage = ({ slug }) => {
         <div className="project-gallery__container">
           <div className="project-gallery__layout">
             <div className="project-gallery__main-img">
-              <img
+              <Image
                 src={project.imgSrc}
                 alt={`${project.title} main screenshot`}
-                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                placeholder="blur"
               />
             </div>
 
@@ -202,10 +204,10 @@ const ProjectPage = ({ slug }) => {
                         onClick={() => openModalAt(thumb.targetIndex)}
                         aria-label={`Open image ${thumb.targetIndex + 1}`}
                       >
-                        <img
+                        <Image
                           src={thumb.src}
                           alt={`${project.title} thumbnail ${thumb.targetIndex + 1}`}
-                          loading="lazy"
+                          sizes="(max-width: 1024px) 50vw, 17vw"
                         />
                       </button>
                     ))}
@@ -230,9 +232,11 @@ const ProjectPage = ({ slug }) => {
             </button>
 
             <div className="gallery-modal__slide">
-              <img
+              <Image
                 src={gallery[currentIndex]}
                 alt={`${project.title} full ${currentIndex + 1}`}
+                sizes="100vw"
+                priority
               />
 
               <button
@@ -265,10 +269,10 @@ const ProjectPage = ({ slug }) => {
                   onClick={() => setCurrentIndex(idx)}
                   aria-label={`Open image ${idx + 1}`}
                 >
-                  <img
+                  <Image
                     src={image}
                     alt={`${project.title} thumbnail ${idx + 1}`}
-                    loading="lazy"
+                    sizes="120px"
                   />
                 </button>
               ))}

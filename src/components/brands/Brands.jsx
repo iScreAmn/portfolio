@@ -1,7 +1,8 @@
 "use client";
 
-import { 
-  brand1, 
+import Image from 'next/image';
+import {
+  brand1,
   brand2, 
   brand3, 
   brand4, 
@@ -37,11 +38,11 @@ const Brands = () => {
       className={`brands__item ${brand.darkOnLightHover ? 'brands__item--dark-hover' : ''}`}
       aria-label={brand.name}
     >
-      <img
+      <Image
         src={brand.logo}
         alt={brand.name}
         className="brands__logo"
-        loading="lazy"
+        sizes="150px"
       />
     </div>
   );

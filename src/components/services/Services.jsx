@@ -2,6 +2,7 @@
 
 import "./Services.css";
 import { motion } from "motion/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -63,7 +64,12 @@ const Services = () => {
                         </button>
                       </div>
                       <div className="services-app-img">
-                        <img src={slide.imageSrc} alt={slide.imageAlt} />
+                        <Image
+                          src={slide.imageSrc}
+                          alt={slide.imageAlt}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          placeholder="blur"
+                        />
                       </div>
                     </div>
                   </SwiperSlide>

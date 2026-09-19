@@ -5,6 +5,7 @@ import "./GetInTouch.css";
 import { slideInVariants } from "../../utils/animation";
 import { project } from "../../assets/images";
 import Link from "next/link";
+import Image from "next/image";
 
 const GetInTouch = () => {
   return (
@@ -24,7 +25,12 @@ const GetInTouch = () => {
               <h3>About your</h3>
               <h2>Next project</h2>
             </div>
-            <img src={project} alt="project" className="project-image" />
+            <Image
+              src={project}
+              alt="project"
+              className="project-image"
+              sizes="(max-width: 768px) 30vw, 40vw"
+            />
           </motion.div>
         </div>
       </div>

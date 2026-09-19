@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 import "./ServicesPage.css";
 import { useLocale } from "../../context/LocaleContext";
@@ -80,10 +81,12 @@ const ServicesPage = () => {
                   className={`services-card services-card--${pkg.accent}`}
                   key={pkg.name}
                 >
-                  <img
+                  <Image
                     src={pkg.image}
                     alt={pkg.name}
                     className="services-card__image"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    placeholder="blur"
                   />
                   <div className="services-card__header">
                     <span className="services-card__pill">{pkg.price}</span>
@@ -160,10 +163,12 @@ const ServicesPage = () => {
               </div>
 
               <div className="services-support-cta__media">
-                <img
+                <Image
                   src={supportCtaData.image}
                   alt={supportCtaData.imageAlt}
                   className="services-support-cta__image"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  placeholder="blur"
                 />
               </div>
             </div>

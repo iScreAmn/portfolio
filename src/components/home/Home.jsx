@@ -1,6 +1,7 @@
 "use client";
 
 import "./Home.css";
+import Image from "next/image";
 import DecryptedText from "../widgets/decryptedText/DecryptedText";
 import { aboutImg2 } from "../../assets/images";
 import { motion } from "motion/react";
@@ -97,7 +98,14 @@ const Home = () => {
           </motion.a>
         </div>
         <div className="circle">
-          <img src={aboutImg2} alt="Profile" className="circle__img" />
+          <Image
+            src={aboutImg2}
+            alt="Profile"
+            className="circle__img"
+            sizes="350px"
+            placeholder="blur"
+            priority
+          />
         </div>
         <motion.div
           className="home-img"

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { aboutImg } from "../../assets/images";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
 import "./AboutPage.css";
@@ -67,7 +68,13 @@ const AboutPage = () => {
           </div>
 
           <div className="about-page__poster">
-            <img src={aboutImg} alt={posterAlt} loading="eager" />
+            <Image
+              src={aboutImg}
+              alt={posterAlt}
+              sizes="(max-width: 768px) 100vw, 500px"
+              placeholder="blur"
+              priority
+            />
           </div>
         </div>
       </section>
