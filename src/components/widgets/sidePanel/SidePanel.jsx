@@ -5,34 +5,42 @@ import { FaArrowUp } from "react-icons/fa";
 import "./SidePanel.css";
 
 const SidePanel = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isFooterVisible, setIsFooterVisible] = useState(false);
-
-  // Обработка скролла
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 300);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const [isVisible, setIsVisible] = useState(false);
+  const [footerLift, setFooterLift] = useState(0);
 
   // Кнопка прижата к низу экрана, поэтому на футере она бы легла прямо поверх
-  // его содержимого — прячем её, как только футер появляется в кадре.
+  // его содержимого — вместо того чтобы прятать её, приподнимаем ровно на ту
+  // высоту, на которую футер зашёл в кадр, и кнопка «останавливается» у него.
   useEffect(() => {
-    const footer = document.querySelector(".footer");
-    if (!footer) return;
+    let frame = null;
 
-    const observer = new IntersectionObserver(([entry]) =>
-      setIsFooterVisible(entry.isIntersecting)
-    );
+    const measure = () => {
+      frame = null;
+      setIsVisible(window.scrollY > 300);
 
-    observer.observe(footer);
-    return () => observer.disconnect();
+      const footer = document.querySelector(".footer");
+      if (!footer) {
+        setFooterLift(0);
+        return;
+      }
+
+      const overlap = window.innerHeight - footer.getBoundingClientRect().top;
+      setFooterLift(Math.max(0, overlap));
+    };
+
+    const onScroll = () => {
+      if (frame === null) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
-
-  const isVisible = isScrolled && !isFooterVisible;
 
   // Прокрутка к началу страницы
   const scrollToTop = () => {
@@ -45,6 +53,7 @@ const SidePanel = () => {
   return (
     <button
       className={`side-panel-btn scroll-btn ${isVisible ? "visible" : ""}`}
+      style={{ "--footer-lift": `${footerLift}px` }}
       onClick={scrollToTop}
       aria-label="Прокрутить к началу страницы"
     >

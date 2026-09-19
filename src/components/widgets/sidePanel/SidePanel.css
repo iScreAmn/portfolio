@@ -53,13 +53,18 @@
   transform: scale(1.1);
 }
 
+/* --footer-lift задаётся из JS: насколько футер зашёл в кадр. Свойство bottom
+   намеренно вынесено из transition, иначе кнопка тащилась бы за футером. */
 .scroll-btn {
-  bottom: 20px;
+  bottom: calc(20px + var(--footer-lift, 0px));
   color: #fff;
   opacity: 0;
   transform: translateX(100%);
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .scroll-btn.visible {

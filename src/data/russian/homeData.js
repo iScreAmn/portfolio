@@ -74,7 +74,7 @@ export const navMenu = {
 };
 
 export const homeData = {
-  greeting: "Привет, я Дмитрий",
+  greeting: "Дмитрий на связи!",
   role: "Full-stack разработчик",
   description:
     "Помогаю бизнесу расти с помощью продуманных и визуально сильных сайтов.",

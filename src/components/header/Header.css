@@ -5,7 +5,6 @@
   left: 0;
   width: 100%;
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   transition: .6s linear;
 }
 
@@ -32,8 +31,6 @@
   mix-blend-mode: screen;
 }
 
-/* Логотип слева, бургер справа — навигация и настройки живут в его меню
-   (NavMenu) на всех разрешениях. */
 .header__wrapper {
   display: flex;
   justify-content: space-between;
