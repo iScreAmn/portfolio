@@ -7,6 +7,8 @@ import {
   client3,
   client4,
   client5,
+  brand3,
+  brand8,
   flameJumper,
   imgboxCover,
 } from "../../assets/images";
@@ -176,6 +178,9 @@ export const clientsSectionData = {
   sectionTitle: "Мне доверяют",
   sectionSubtitle: "Мне доверяют",
   addReviewButton: "Оставить отзыв",
+  ctaTitle: "Работали вместе?",
+  ctaText:
+    "Расскажите, как прошёл проект. Пара минут вашего времени — и отзыв появится в этом блоке.",
 };
 
 export const clientsData = [
@@ -185,15 +190,16 @@ export const clientsData = [
     description:
       "Приятно было работать с Дмитрием. Сделал наш сайт стабильным, быстрым и полностью рабочим, отличная работа",
     name: "Леван",
-    position: "Владелец Burger Bar",
+    company: "Burger House",
+    companyLogo: brand3,
   },
   {
     id: 2,
     imgSrc: client5,
     description:
-      "Работали с Дмитрием над проектом. Его креативныерешения улучшили наши внутренние процессы, доступность и надёжность клиентской платформы",
+      "Работали с Дмитрием над проектом. Его креативные решения улучшили наши внутренние процессы, доступность и надёжность клиентской платформы",
     name: "Натия",
-    position: "Менеджер GeoTrip",
+    company: "GeoTrip",
   },
   {
     id: 3,
@@ -201,7 +207,8 @@ export const clientsData = [
     description:
       "Несколько проектов вместе с Дмитрием. Front-end решения усилили юридические процессы, доступность и стабильность платформы для клиентов",
     name: "Гиорги",
-    position: "Главный юрист",
+    company: "Law Firm",
+    companyLogo: brand8,
   },
   {
     id: 4,
@@ -209,7 +216,7 @@ export const clientsData = [
     description:
       "Сотрудничали полгода назад. AI-чатбот получился эффективным и профессиональным — точно под задачи компании",
     name: "Александра",
-    position: "2 Sisters Designer",
+    company: "2 Sisters",
   },
   {
     id: 5,
@@ -217,6 +224,6 @@ export const clientsData = [
     description:
       "Приятно было работать с Дмитрием. Сайт стабильный, быстрый, полный функционал и отличная адаптивность",
     name: "Елена",
-    position: "Менеджер Old Tbilisi Narikala",
+    company: "Old Tbilisi Narikala",
   },
 ];

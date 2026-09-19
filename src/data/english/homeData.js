@@ -7,6 +7,8 @@ import {
   client3,
   client4,
   client5,
+  brand3,
+  brand8,
   flameJumper,
   imgboxCover,
 } from "../../assets/images";
@@ -177,6 +179,9 @@ export const clientsSectionData = {
   sectionTitle: "Trusted By",
   sectionSubtitle: "Trusted By",
   addReviewButton: "Add Review",
+  ctaTitle: "Worked together?",
+  ctaText:
+    "Tell me how the project went. A couple of minutes of your time — and your review shows up in this block.",
 };
 
 export const clientsData = [
@@ -186,7 +191,8 @@ export const clientsData = [
     description:
       "Enjoyed working with Dimitri. He developed our web-page ensuring stability, speed, and full functionality with excellent responsive performance",
     name: "Levan",
-    position: "Burger Bar Owner",
+    company: "Burger House",
+    companyLogo: brand3,
   },
   {
     id: 2,
@@ -194,7 +200,7 @@ export const clientsData = [
     description:
       "Collaborated with Dimitri on a project. His IT solutions improved legal workflows, accessibility, and client-facing platform reliability",
     name: "Natia",
-    position: "GeoTrip Manager",
+    company: "GeoTrip",
   },
   {
     id: 3,
@@ -202,7 +208,8 @@ export const clientsData = [
     description:
       "We worked with Dimitri on several projects. His frontend solutions improved legal workflows, accessibility, and client-facing platform reliability",
     name: "Giorgi",
-    position: "Head Lawyer",
+    company: "Law Firm",
+    companyLogo: brand8,
   },
   {
     id: 4,
@@ -210,7 +217,7 @@ export const clientsData = [
     description:
       "Сollaborated with Dimitri six months ago. His AI chatbot was efficient and professional. Perfectly matched our company’s exact needs",
     name: "Alexandra",
-    position: "2 Sisters Designer",
+    company: "2 Sisters",
   },
   {
     id: 5,
@@ -218,6 +225,6 @@ export const clientsData = [
     description:
       "Enjoyed working with Dimitri. He developed our web-page ensuring stability, speed, and full functionality with excellent responsive performance",
     name: "Elena",
-    position: "Old Tbilisi Narikala Manager",
+    company: "Old Tbilisi Narikala",
   },
 ];

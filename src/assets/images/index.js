@@ -1,11 +1,3 @@
-/**
- * Единая точка входа для всех картинок проекта.
- *
- * Next отдаёт статический импорт изображения объектом { src, width, height },
- * а компоненты рендерят обычный <img src={...}> и складывают пути в data-файлы,
- * поэтому здесь импорт разворачивается обратно в строку с URL.
- */
-
 import _logo from "./dj-logo.webp"
 import _aboutImg from "./about-img-2.webp"
 import _aboutImg2 from "./dj-cover.webp"

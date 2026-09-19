@@ -3,16 +3,31 @@
 import "./Clients.css";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 import SectionTitle from "../section-title/SectionTitle";
 import { motion } from "motion/react";
-import { slideInVariants } from "../../utils/animation";
 import ReviewModal from "../review-modal/ReviewModal";
 import { useState } from "react";
 import { useLocale } from "../../context/LocaleContext";
+import { logo } from "../../assets/images";
+
+/**
+ * Монограмма компании — фолбэк, когда логотипа клиента нет в ассетах.
+ * Из двух слов берём по первой букве, из одного — первые две, чтобы чип
+ * не выглядел пустым с единственным символом.
+ */
+const companyInitials = (company = "") => {
+  const words = company.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return "";
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return words
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+};
 
 const Clients = () => {
   const { clientsData, clientsSectionData } = useLocaleHomeData();
@@ -26,48 +41,99 @@ const Clients = () => {
           title={clientsSectionData.sectionTitle}
           subtitle={clientsSectionData.sectionSubtitle}
         />
-        <motion.div
-          className="our-client-wrapper"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          variants={slideInVariants("bottom", 0.7, 70, false)}
-        >
-          <Swiper
-            modules={[Navigation, Pagination]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            loop={true}
-            className="client-swiper"
+        <div className="our-client-wrapper">
+          <motion.div
+            className="reviews-card"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
           >
-            {clientsData.map((client) => (
-              <SwiperSlide key={client.id}>
-                <div className="swiper-slide swiper-client-block">
-                  <div className="client-img">
-                    <img src={client.imgSrc} alt={client.name} />
-                  </div>
-                  <div className="client-details">
-                    <p>{client.description}</p>
-                    <h3>{client.name}</h3>
-                    <span>{client.position}</span>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <motion.button
-            className="add-review-btn"
-            onClick={() => setIsModalOpen(true)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={slideInVariants("bottom", 0.9, 70, false)}
+            <span className="reviews-quote" aria-hidden>
+              &ldquo;
+            </span>
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              slidesPerView={1}
+              spaceBetween={30}
+              loop={true}
+              grabCursor={true}
+              autoHeight={false}
+              autoplay={{
+                delay: 6000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              pagination={{ clickable: true }}
+              className="reviews-swiper"
+            >
+              {clientsData.map((client) => (
+                <SwiperSlide key={client.id}>
+                  <figure className="review-slide">
+                    <blockquote className="review-text">
+                      {client.description}
+                    </blockquote>
+                    <figcaption className="review-author">
+                      <div className="review-avatar">
+                        <img src={client.imgSrc} alt={client.name} />
+                      </div>
+                      <div className="review-author-meta">
+                        <h3 className="review-author-name">{client.name}</h3>
+                        <span className="review-author-role">
+                          {client.company}
+                        </span>
+                      </div>
+                      <div className="review-company-logo">
+                        {client.companyLogo ? (
+                          <img
+                            src={client.companyLogo}
+                            alt={client.company}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span
+                            className="review-company-initials"
+                            aria-label={client.company}
+                          >
+                            {companyInitials(client.company)}
+                          </span>
+                        )}
+                      </div>
+                    </figcaption>
+                  </figure>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </motion.div>
+
+          <motion.div
+            className="reviews-cta-card"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
           >
-            {clientsSectionData.addReviewButton}
-          </motion.button>
-        </motion.div>
+            <div className="reviews-cta-content">
+              <h3 className="reviews-cta-title">
+                {clientsSectionData.ctaTitle}
+              </h3>
+              <p className="reviews-cta-text">{clientsSectionData.ctaText}</p>
+              <button
+                type="button"
+                className="reviews-cta-btn"
+                onClick={() => setIsModalOpen(true)}
+              >
+                {clientsSectionData.addReviewButton}
+              </button>
+            </div>
+            <img
+              src={logo}
+              alt=""
+              aria-hidden
+              className="reviews-cta-decoration"
+            />
+          </motion.div>
+        </div>
       </div>
       <ReviewModal
         isOpen={isModalOpen}
