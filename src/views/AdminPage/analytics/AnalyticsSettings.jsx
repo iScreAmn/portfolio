@@ -1,38 +1,26 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import './AnalyticsSettings.css';
-import { IoRefresh } from "react-icons/io5";
 import { CiWarning } from "react-icons/ci";
-import { getMyProfile, changePassword } from '../../../lib/analyticsAdmin';
+import { changePassword } from '../../../lib/analyticsAdmin';
 
-const AnalyticsSettings = ({ session, onLogout }) => {
+const MIN_PASSWORD_LENGTH = 8;
+
+const AnalyticsSettings = ({ user, onLogout }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [profileMissing, setProfileMissing] = useState(false);
 
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      const row = await getMyProfile();
-      setProfile(row);
-      setProfileMissing(!row);
-    } catch (err) {
-      console.error('Failed to fetch profile:', err);
-      setProfileMissing(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
-
   const handleChangePassword = async () => {
-    if (newPassword.length < 6) {
-      setMessage({ type: 'error', text: 'Пароль должен быть не короче 6 символов' });
+    if (newPassword.length < MIN_PASSWORD_LENGTH) {
+      setMessage({
+        type: 'error',
+        text: `Пароль должен быть не короче ${MIN_PASSWORD_LENGTH} символов`,
+      });
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -43,8 +31,9 @@ const AnalyticsSettings = ({ session, onLogout }) => {
     setLoading(true);
     setMessage(null);
     try {
-      await changePassword(newPassword);
+      await changePassword(currentPassword, newPassword);
       setMessage({ type: 'success', text: 'Пароль изменён' });
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
@@ -54,19 +43,13 @@ const AnalyticsSettings = ({ session, onLogout }) => {
     }
   };
 
+  const canSubmit = currentPassword && newPassword && confirmPassword && !loading;
+
   return (
     <div className="analytics-settings">
       <div className="analytics-settings-header">
         <h2 className="analytics-settings-title">Аккаунт</h2>
         <div className="analytics-settings-header__actions">
-          <button
-            type="button"
-            onClick={fetchProfile}
-            className="analytics-settings-refresh"
-            disabled={loading}
-          >
-            <IoRefresh /> Refresh
-          </button>
           {typeof onLogout === 'function' && (
             <button type="button" className="admin-page__logout" onClick={onLogout}>
               Logout
@@ -84,27 +67,30 @@ const AnalyticsSettings = ({ session, onLogout }) => {
       <div className="analytics-settings-info">
         <div className="analytics-settings-info-card">
           <div className="analytics-settings-info-label">Email:</div>
-          <div className="analytics-settings-info-value">{session?.user?.email || '—'}</div>
+          <div className="analytics-settings-info-value">{user?.email || '—'}</div>
         </div>
         <div className="analytics-settings-info-card">
           <div className="analytics-settings-info-label">Роль:</div>
-          <div className="analytics-settings-info-value">{profile?.role || '—'}</div>
+          <div className="analytics-settings-info-value">{user?.role || '—'}</div>
         </div>
       </div>
-
-      {profileMissing && (
-        <div className="analytics-settings-message analytics-settings-message--error">
-          <CiWarning /> Вход выполнен, но строки в <code>profiles</code> нет — RLS будет
-          отдавать пустую статистику. Добавьте профиль этому пользователю в Supabase.
-        </div>
-      )}
 
       <div className="analytics-settings-section">
         <h3 className="analytics-settings-section-title">Смена пароля</h3>
         <p className="analytics-settings-section-desc">
-          Меняется через Supabase Auth для текущего пользователя.
+          После смены пароля все остальные сессии завершаются.
         </p>
 
+        <div className="analytics-settings-modal-input-group">
+          <input
+            type="password"
+            className="analytics-settings-modal-input"
+            placeholder="Текущий пароль"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+        </div>
         <div className="analytics-settings-modal-input-group">
           <input
             type="password"
@@ -119,10 +105,10 @@ const AnalyticsSettings = ({ session, onLogout }) => {
           <input
             type="password"
             className="analytics-settings-modal-input"
-            placeholder="Повторите пароль"
+            placeholder="Повторите новый пароль"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleChangePassword()}
+            onKeyDown={(e) => e.key === 'Enter' && canSubmit && handleChangePassword()}
             autoComplete="new-password"
           />
         </div>
@@ -130,7 +116,7 @@ const AnalyticsSettings = ({ session, onLogout }) => {
           type="button"
           onClick={handleChangePassword}
           className="analytics-settings-btn analytics-settings-btn--warning"
-          disabled={loading || !newPassword || !confirmPassword}
+          disabled={!canSubmit}
         >
           {loading ? 'Сохранение...' : 'Сменить пароль'}
         </button>
@@ -139,12 +125,15 @@ const AnalyticsSettings = ({ session, onLogout }) => {
       <div className="analytics-settings-section">
         <h3 className="analytics-settings-section-title">Удаление данных</h3>
         <p className="analytics-settings-section-desc">
-          <CiWarning /> Публичный ключ не имеет прав на удаление — это защита от чистки
-          статистики через фронтенд. Удаляйте через Supabase → SQL Editor:
+          <CiWarning /> Через админку статистика не удаляется — это защита от
+          случайной чистки. Старые события убираются на сервере:
         </p>
         <div className="analytics-settings-action-card">
           <p className="analytics-settings-action-desc">
-            <code>delete from public.analytics_events where occurred_at &lt; now() - interval &#39;90 days&#39;;</code>
+            <code>
+              docker compose exec db psql -U portfolio -d portfolio -c &quot;delete from
+              analytics_events where occurred_at &lt; now() - interval &#39;90 days&#39;;&quot;
+            </code>
           </p>
         </div>
       </div>

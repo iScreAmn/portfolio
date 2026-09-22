@@ -1,90 +1,53 @@
 "use client";
 
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
-import { signIn, signOut } from '../../lib/analyticsAdmin';
+import { useRouter } from 'next/navigation';
+import { getSession, signOut } from '../../lib/analyticsAdmin';
 import AnalyticsContainer from './analytics/AnalyticsContainer';
 import './Admin.css';
 
 export default function Admin() {
-  // Сессию держит сам supabase-js (persistSession), localStorage вручную не трогаем.
-  const [session, setSession] = useState(null);
+  const router = useRouter();
+  // Сессию держит httpOnly-кука: JS её не видит, поэтому единственный способ
+  // узнать, вошли мы или нет — спросить у API.
+  const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!supabase) {
-      setChecking(false);
-      return undefined;
-    }
-
     let active = true;
 
-    supabase.auth
-      .getSession()
-      .then(({ data }) => {
+    getSession()
+      .then((currentUser) => {
         if (!active) return;
-        setSession(data?.session ?? null);
+        if (!currentUser) {
+          router.replace('/admin/login');
+          return;
+        }
+        setUser(currentUser);
+      })
+      .catch(() => {
+        if (active) router.replace('/admin/login');
       })
       .finally(() => {
         if (active) setChecking(false);
       });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession ?? null);
-    });
-
     return () => {
       active = false;
-      listener?.subscription?.unsubscribe();
     };
-  }, []);
+  }, [router]);
 
-  if (!supabase) {
-    return (
-      <div className="admin-gate">
-        <div className="admin-gate__card">
-          <h1 className="admin-gate__title">Admin Panel</h1>
-          <p className="admin-gate__err">
-            Supabase не настроен. Добавьте `NEXT_PUBLIC_SUPABASE_URL` и `NEXT_PUBLIC_SUPABASE_ANON_KEY` в `.env`.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const tryAuth = useCallback(async () => {
-    const mail = email.trim();
-    if (!mail || !password) {
-      setError('Введите email и пароль');
-      return;
-    }
-    setError(null);
-    setSubmitting(true);
-    try {
-      await signIn(mail, password);
-      setPassword('');
-      // сессию проставит onAuthStateChange
-    } catch (e) {
-      setError(e?.message || 'Не удалось войти');
-    } finally {
-      setSubmitting(false);
-    }
-  }, [email, password]);
-
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await signOut();
     } catch {
-      /* даже если разлогин не дошёл до сервера, локальную сессию supabase-js сбросит */
+      /* кука всё равно протухнет — уводим на логин в любом случае */
     }
-    setSession(null);
-  };
+    setUser(null);
+    router.replace('/admin/login');
+  }, [router]);
 
-  if (checking) {
+  if (checking || !user) {
     return (
       <div className="admin-gate">
         <div className="admin-gate__card">
@@ -94,46 +57,9 @@ export default function Admin() {
     );
   }
 
-  if (!session) {
-    return (
-      <div className="admin-gate">
-        <div className="admin-gate__card">
-          <h1 className="admin-gate__title">Admin Panel</h1>
-          <p className="admin-gate__hint">Login to access the analytics.</p>
-          <input
-            type="email"
-            className="admin-gate__input"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="username"
-          />
-          <input
-            type="password"
-            className="admin-gate__input"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && tryAuth()}
-            autoComplete="current-password"
-          />
-          {error && <p className="admin-gate__err">{error}</p>}
-          <button
-            type="button"
-            className="admin-gate__btn"
-            onClick={tryAuth}
-            disabled={submitting}
-          >
-            {submitting ? 'Entering...' : 'Enter'}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="admin-page">
-      <AnalyticsContainer session={session} onLogout={logout} />
+      <AnalyticsContainer user={user} onLogout={logout} />
     </div>
   );
 }

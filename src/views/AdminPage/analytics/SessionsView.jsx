@@ -7,11 +7,7 @@ import { IoIosLaptop, IoIosTabletLandscape } from "react-icons/io";
 import { CiMobile1 } from "react-icons/ci";
 import { getSessionsList, getSessionEvents } from '../../../lib/analyticsAdmin';
 
-/**
- * duration в витрине — тип interval, в JS он приезжает строкой ("00:02:00",
- * а на длинных визитах "1 day 00:02:00"). Парсить это хрупко, поэтому считаем
- * длительность из границ сессии — они всегда timestamptz.
- */
+/** Длительность считаем из границ визита: сервер отдаёт их как ISO-строки. */
 const formatDuration = (startedAt, endedAt) => {
   const start = new Date(startedAt).getTime();
   const end = new Date(endedAt).getTime();
@@ -91,7 +87,7 @@ const SessionsView = ({ period, filters }) => {
     fetchSessions();
   }, [fetchSessions]);
 
-  // Сегментация делается на клиенте: витрина сессий отдаёт максимум 100 строк
+  // Сегментация делается на клиенте: список сессий отдаёт максимум 100 строк
   // за период, фильтровать их в браузере дешевле, чем гонять запрос на каждый ввод.
   const visibleSessions = useMemo(() => {
     const country = filters.country.trim().toLowerCase();

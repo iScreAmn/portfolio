@@ -1,10 +1,11 @@
 /**
- * Хостинг — свой сервер (timeweb.cloud): Node-процесс за nginx, поэтому сборка
- * standalone. Vercel-специфика (vercel.json, rewrite на index.html) не нужна:
- * маршрутизацию теперь держит сам Next.
+ * Хостинг — свой сервер (timeweb.cloud): Node-процесс в контейнере за nginx,
+ * поэтому сборка standalone.
  */
 
-// Куда уходит /api в dev — раньше это делал proxy из vite.config.js.
+// Куда уходит /api в dev, когда NEXT_PUBLIC_API_URL не задан или указывает
+// на localhost. В проде запросы идут прямо на https://api.djcode.ge и этот
+// rewrite не используется.
 const apiProxyTarget = process.env.API_PROXY_TARGET || 'http://127.0.0.1:5050';
 
 /** @type {import('next').NextConfig} */
@@ -23,6 +24,8 @@ const nextConfig = {
   },
 
   async rewrites() {
+    if (process.env.NODE_ENV === 'production') return [];
+
     return [
       {
         source: '/api/:path*',

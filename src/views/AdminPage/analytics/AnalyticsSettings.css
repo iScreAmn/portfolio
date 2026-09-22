@@ -241,7 +241,9 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 16px;
-  width: 100px;
+  /* width был зафиксирован на 100px — в поле не помещался даже плейсхолдер. */
+  width: 100%;
+  max-width: 360px;
 }
 
 .analytics-settings-modal-input:focus {

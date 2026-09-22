@@ -9,7 +9,7 @@ import { MdOutlineAnalytics, MdMenu, MdClose } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 
-// Значения закрыты check-констрейнтами в БД — списки соответствуют схеме один в один.
+// Списки соответствуют тому, что проставляет трекер в lib/analytics.js.
 const DEVICE_OPTIONS = ['desktop', 'mobile', 'tablet', 'tv', 'bot', 'unknown'];
 const SOURCE_OPTIONS = [
   'direct',
@@ -23,7 +23,7 @@ const SOURCE_OPTIONS = [
 
 const RANGE_DAYS = { '7d': 7, '30d': 30, '90d': 90 };
 
-const AnalyticsContainer = ({ session, onLogout }) => {
+const AnalyticsContainer = ({ user, onLogout }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [range, setRange] = useState('7d');
@@ -109,8 +109,8 @@ const AnalyticsContainer = ({ session, onLogout }) => {
             ))}
           </div>
 
-          {/* Сегменты применимы только к списку сессий: сводка приходит из RPC,
-              который принимает лишь период и на стороне БД не сегментируется. */}
+          {/* Сегменты применимы только к списку сессий: сводка считается
+              на сервере за период целиком и по сегментам не разбивается. */}
           {activeTab === 'sessions' && (
             <div className="analytics-filter-bar__segments">
               <input
@@ -174,7 +174,7 @@ const AnalyticsContainer = ({ session, onLogout }) => {
           <SessionsView period={period} filters={filters} />
         )}
         {activeTab === 'settings' && (
-          <AnalyticsSettings session={session} onLogout={onLogout} />
+          <AnalyticsSettings user={user} onLogout={onLogout} />
         )}
       </div>
     </div>

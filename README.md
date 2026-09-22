@@ -17,7 +17,7 @@ user experience.
 - **Next.js 16 (App Router)**: Routing, server rendering and the production build.
 - **React 19**: Building reusable and scalable components.
 - **CSS**: Plain stylesheets per component — Flexbox, Grid, custom properties for theming.
-- **Supabase**: Analytics (RPC `track_events`) and the admin panel auth.
+- **Own Express API**: Analytics ingest, contact forms and admin auth — see `NEXT_PUBLIC_API_URL`.
 
 ## Project structure
 
@@ -29,7 +29,9 @@ src/
   views/          # компоненты страниц (бывший src/pages)
   components/     # переиспользуемые блоки и виджеты
   data/           # локальный контент, русская и английская версии
-  hooks/ context/ lib/ utils/
+  analytics/      # провайдер трекера, подключён в корневом layout
+  lib/            # apiClient + трекер + запросы админки
+  hooks/ context/ utils/
   assets/         # картинки и шрифты, попадают в бандл
 public/           # то, что отдаётся как есть: резюме в PDF
 ```
@@ -51,20 +53,15 @@ npm run lint    # eslint
 В dev-режиме запросы на `/api/*` проксируются через `rewrites()` из
 `next.config.mjs` на `API_PROXY_TARGET` (по умолчанию `http://127.0.0.1:5050`).
 
-## Deploy (свой сервер, Node за nginx)
+## Deploy
 
-Сборка идёт в режиме `output: 'standalone'`, поэтому на сервер достаточно
-положить три вещи:
+Push в `main` собирает Docker-образ в GitHub Actions, пушит его в GHCR и
+обновляет контейнер на сервере. Сам сервер ничего не собирает.
 
-```bash
-npm ci
-npm run build
+Важно: `NEXT_PUBLIC_API_URL` вшивается в клиентский бандл **на этапе сборки**
+(build-аргумент в `.github/workflows/deploy.yml`), поэтому менять адрес API
+в `.env` на сервере бесполезно — нужна пересборка образа.
 
-# standalone-сервер не копирует статику сам
-cp -r public .next/standalone/public
-cp -r .next/static .next/standalone/.next/static
-
-PORT=3000 node .next/standalone/server.js
-```
+Пошаговая настройка сервера — в репозитории бэкенда, `deploy/README-deploy.md`.
 
 Требуется Node 20.9+ (см. `.nvmrc`).

@@ -1,167 +1,53 @@
 /**
- * Запросы для админки. Работают только у вошедшего пользователя,
- * у которого есть строка в public.profiles — иначе RLS вернёт пустоту.
+ * Запросы админки. Всё идёт через Express по NEXT_PUBLIC_API_URL,
+ * авторизация — по httpOnly-куке, которую ставит /api/auth/login.
  */
-import { supabase } from './supabase'
+import { apiRequest, ApiError } from './apiClient';
 
-function getSupabaseOrThrow() {
-  if (!supabase) {
-    throw new Error(
-      'Supabase не настроен. Добавьте NEXT_PUBLIC_SUPABASE_URL и NEXT_PUBLIC_SUPABASE_ANON_KEY в .env.'
-    )
-  }
-  return supabase
-}
+/* ------------------------------------------------------------------- сессия */
 
 export async function signIn(email, password) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client.auth.signInWithPassword({ email, password })
-  if (error) throw error
-  return data
+  const data = await apiRequest('/api/auth/login', {
+    method: 'POST',
+    body: { email, password },
+  });
+  return data.user;
 }
 
-export const signOut = () => getSupabaseOrThrow().auth.signOut()
+export const signOut = () => apiRequest('/api/auth/logout', { method: 'POST' });
+
+/** @returns вошедший пользователь или null, если сессии нет. */
+export async function getSession() {
+  try {
+    const data = await apiRequest('/api/auth/me');
+    return data.user;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) return null;
+    throw error;
+  }
+}
+
+export const changePassword = (currentPassword, newPassword) =>
+  apiRequest('/api/auth/change-password', {
+    method: 'POST',
+    body: { currentPassword, newPassword },
+  });
+
+/* ---------------------------------------------------------------- аналитика */
 
 /** Сводка за период: тоталы, график по дням, топ страниц, источники, гео. */
-export async function getSummary(from, to = new Date()) {
-  const client = getSupabaseOrThrow()
-  const fromTs = from ?? new Date(Date.now() - 30 * 24 * 3600 * 1000)
-  const { data, error } = await client.rpc('analytics_summary', {
-    from_ts: new Date(fromTs).toISOString(),
-    to_ts: new Date(to).toISOString(),
-  })
-  if (error) throw error
-  return data
-}
+export const getSummary = (from, to = new Date()) =>
+  apiRequest('/api/analytics/summary', { query: { from, to } });
 
-export async function getDaily(limit = 60) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_daily')
-    .select('*')
-    .order('day', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
-
-// Витрины отдают строки без гарантии порядка (внутренний order by в view
-// PostgREST не сохраняет), поэтому сортировку задаём явно в каждом запросе.
-
-export async function getTopPages(limit = 20) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_pages')
-    .select('*')
-    .order('pageviews', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
-
-export async function getSources(limit = 20) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_sources')
-    .select('*')
-    .order('sessions', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
-
-export async function getDevices(limit = 20) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_devices')
-    .select('*')
-    .order('sessions', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
-
-export async function getGeo(limit = 50) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_geo')
-    .select('*')
-    .order('sessions', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
+export const getDevices = (from, to = new Date(), limit = 10) =>
+  apiRequest('/api/analytics/devices', { query: { from, to, limit } });
 
 /** Список визитов за период. Одна строка = одна сессия. */
-export async function getSessionsList(from, to = new Date(), limit = 100) {
-  const client = getSupabaseOrThrow()
-  const fromTs = from ?? new Date(Date.now() - 7 * 24 * 3600 * 1000)
-  const { data, error } = await client
-    .from('analytics_sessions')
-    .select('*')
-    .gte('started_at', new Date(fromTs).toISOString())
-    .lte('started_at', new Date(to).toISOString())
-    .order('started_at', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
+export const getSessionsList = (from, to = new Date(), limit = 100) =>
+  apiRequest('/api/analytics/sessions', { query: { from, to, limit } });
 
 /** Лента событий одной сессии — для раскрытия карточки визита. */
-export async function getSessionEvents(sessionId, limit = 500) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_events')
-    .select('occurred_at, category, action, label, path, params')
-    .eq('session_id', sessionId)
-    .order('occurred_at', { ascending: true })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
-
-/** Профиль вошедшего админа. Пустой ответ = строки в profiles нет. */
-export async function getMyProfile() {
-  const client = getSupabaseOrThrow()
-  const { data: auth } = await client.auth.getUser()
-  const userId = auth?.user?.id
-  if (!userId) return null
-
-  const { data, error } = await client.from('profiles').select('*').eq('id', userId).maybeSingle()
-  if (error) throw error
-  return data
-}
-
-/** Смена собственного пароля — работает через Supabase Auth, без обращения к profiles. */
-export async function changePassword(newPassword) {
-  const client = getSupabaseOrThrow()
-  const { error } = await client.auth.updateUser({ password: newPassword })
-  if (error) throw error
-}
-
-/** Последние сырые события — для отладки трекера. */
-export async function getRecentEvents(limit = 100) {
-  const client = getSupabaseOrThrow()
-  const { data, error } = await client
-    .from('analytics_events')
-    .select('occurred_at, session_id, category, action, label, path, country, device_type, browser')
-    .order('occurred_at', { ascending: false })
-    .limit(limit)
-  if (error) throw error
-  return data
-}
-
-/** Живая лента событий через Realtime (включи репликацию таблицы в дашборде). */
-export function subscribeToEvents(onEvent) {
-  if (!supabase) return () => {}
-
-  const channel = supabase
-    .channel('analytics-live')
-    .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'analytics_events' },
-      (payload) => onEvent(payload.new)
-    )
-    .subscribe()
-  return () => supabase.removeChannel(channel)
-}
+export const getSessionEvents = (sessionId, limit = 500) =>
+  apiRequest(`/api/analytics/sessions/${encodeURIComponent(sessionId)}/events`, {
+    query: { limit },
+  });

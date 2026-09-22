@@ -17,8 +17,8 @@ const formatSeconds = (total) => {
 };
 
 /**
- * RPC отдаёт только те дни, в которые были события. Пропуски заполняем нулями,
- * иначе график по времени сжимает паузы и врёт о динамике.
+ * Сервер отдаёт только те дни, в которые были события. Пропуски заполняем
+ * нулями, иначе график по времени сжимает паузы и врёт о динамике.
  */
 const fillDailyGaps = (daily, from, to) => {
   const byDay = new Map((daily || []).map((d) => [d.day, d]));
@@ -54,7 +54,7 @@ const AnalyticsDashboard = ({ period }) => {
     try {
       const [summaryData, deviceRows] = await Promise.all([
         getSummary(period.from, period.to),
-        getDevices(10),
+        getDevices(period.from, period.to, 10),
       ]);
       setSummary(summaryData);
       setDevices(deviceRows || []);

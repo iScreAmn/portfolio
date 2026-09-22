@@ -1,8 +1,8 @@
 /**
  * Клиентский трекер аналитики.
  *
- * Пишет напрямую в Supabase через RPC public.track_events — Express-бэкенд не нужен.
- * События копятся в очереди и уходят батчами, чтобы не долбить сеть на каждый клик.
+ * Шлёт события на собственный Express по NEXT_PUBLIC_API_URL. События копятся
+ * в очереди и уходят батчами, чтобы не долбить сеть на каждый клик.
  *
  * Публичный API:
  *   initAnalytics()                                  — один раз при старте приложения
@@ -12,11 +12,11 @@
  *   setAnalyticsEnabled(bool)                        — переключатель для баннера согласия
  */
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase'
+import { getApiBase } from '../utils/apiBase'
 
-const ENDPOINT = SUPABASE_URL ? `${SUPABASE_URL}/rest/v1/rpc/track_events` : null
+const ENDPOINT = `${getApiBase()}/api/analytics`
 
-const MAX_BATCH = 50 // жёсткий предел на стороне БД
+const MAX_BATCH = 50 // столько же событий за раз принимает сервер
 const FLUSH_SIZE = 10 // отправляем, как только накопилось столько
 const FLUSH_MS = 8000 // ...или прошло столько времени
 const SESSION_TTL_MS = 30 * 60 * 1000 // 30 минут без активности = новая сессия
@@ -52,7 +52,7 @@ const safeStorage = (store) => {
 
 /** Аналитика выключена: opt-out, Do Not Track, админка или локальная разработка. */
 function isDisabled() {
-  if (!isBrowser() || !ENDPOINT) return true
+  if (!isBrowser()) return true
   if (safeStorage('localStorage')?.getItem(OPTOUT_KEY) === '1') return true
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return true
   // собственные визиты в админку не должны попадать в статистику сайта
@@ -222,11 +222,11 @@ function enqueue(event) {
 
 /**
  * Отправка очереди.
- * keepalive: true вместо sendBeacon — beacon не умеет ставить заголовок apikey,
- * а keepalive-запрос переживает закрытие вкладки так же надёжно.
+ * keepalive: true — запрос переживает закрытие вкладки, поэтому последние
+ * события визита не теряются.
  */
 export function flushAnalytics() {
-  if (!queue.length || !ENDPOINT) return Promise.resolve()
+  if (!queue.length) return Promise.resolve()
 
   const batch = queue.slice(0, MAX_BATCH)
   queue = queue.slice(MAX_BATCH)
@@ -239,11 +239,7 @@ export function flushAnalytics() {
   return fetch(ENDPOINT, {
     method: 'POST',
     keepalive: true,
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ events: batch }),
   }).catch(() => {
     // Сеть отвалилась — аналитика не должна ломать сайт. Молча забываем батч.
