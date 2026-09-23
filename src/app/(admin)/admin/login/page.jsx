@@ -1,4 +1,4 @@
-import LoginPage from "../../../../views/AdminPage/LoginPage";
+import LoginPage from "../../../../views/AdminPage/login/LoginPage";
 
 export const metadata = {
   title: "Admin login",

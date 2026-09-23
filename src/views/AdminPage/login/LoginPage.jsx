@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, getSession } from '../../lib/analyticsAdmin';
-import adminData from '../../data/adminData';
-import './Admin.css';
+import { signIn, getSession } from '../../../lib/analyticsAdmin';
+import adminData from '../../../data/adminData';
+import './LoginPage.css';
 
 const { common, login } = adminData;
 

@@ -17,6 +17,8 @@ import {
 import { useLocale } from "../../context/LocaleContext";
 import { useSiteNavigation } from "../../hooks/useSiteNavigation";
 import { useTheme } from "../../hooks/useTheme";
+// Механика бургера и панели — общая с админским меню.
+import "./NavPanel.css";
 import "./NavMenu.css";
 
 const PANEL_ID = "mobile-nav-panel";

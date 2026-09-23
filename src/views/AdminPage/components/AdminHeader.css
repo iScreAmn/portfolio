@@ -1,0 +1,84 @@
+/**
+ * Только каркас хедера. Бургер и панель приезжают из
+ * components/nav/NavPanel.css — корневой элемент меню несёт `.nav-menu-root`,
+ * поэтому все общие правила применяются как есть.
+ */
+
+/**
+ * position: fixed, а не sticky: у html в index.css стоит overflow-x: hidden,
+ * а это делает html скролл-контейнером и ломает прилипание к вьюпорту —
+ * sticky-хедер уезжал вверх вместе со страницей.
+ *
+ * Высота задана явно (а не набирается из содержимого), потому что на неё
+ * опирается отступ .admin-page__main — иначе контент уходил бы под хедер.
+ */
+.admin-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  box-sizing: border-box;
+  height: var(--admin-header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--liner-color);
+  background: color-mix(in srgb, var(--body-bg-color) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Кнопки не наследуют шрифт: глобальный сброс button в index.css задаёт
+   только фон и рамку, поэтому «Выйти» рисовался системным Arial и рядом со
+   ссылками выглядел другой жирности. */
+.admin-nav-root .nav-item {
+  font-family: inherit;
+}
+
+.admin-header__logo {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+/* filter + multiply — как в сайтовом Header.css: у файла логотипа непрозрачный
+   светлый фон, без смешивания он лёг бы на хедер белым прямоугольником. */
+.admin-header__logo img {
+  display: block;
+  width: 44px;
+  height: auto;
+  filter: var(--color-filter);
+  mix-blend-mode: multiply;
+}
+
+.admin-header__logo:focus-visible {
+  outline: 2px solid var(--second-color);
+  outline-offset: 4px;
+}
+
+/* Выход — единственная строка панели, которая никуда не ведёт, поэтому без
+   стрелки и с красноватым акцентом при наведении. */
+.admin-nav-logout:hover {
+  color: #dc2626;
+}
+
+.admin-nav-logout:hover .nav-item__icon {
+  color: #dc2626;
+}
+
+.admin-nav-logout::before {
+  background: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 0 16px;
+  }
+
+  .admin-header__logo img {
+    width: 38px;
+  }
+}

@@ -1,0 +1,278 @@
+/** Главная админки. Две карточки-сводки, без графиков и таблиц. */
+
+.dash {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dash__header {
+  margin-bottom: 20px;
+}
+
+.dash__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dash__subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.dash__placeholder {
+  padding: 48px 16px;
+  font-size: 14px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.dash__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.dash-card {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.dash-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dash-card__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dash-card__period {
+  font-size: 12px;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+.dash-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #ffa500;
+  white-space: nowrap;
+}
+
+.dash-card__link:hover {
+  color: #c88406;
+}
+
+.dash-card__subtitle {
+  margin: 20px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.dash-card__error {
+  margin: 0;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.dash-card__empty {
+  margin: 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* --------------------------------- Числа --------------------------------- */
+
+.dash-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.dash-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #eef0f3;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fcfcfd 0%, #fff 60%);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.dash-tile:hover {
+  border-color: #e0e2e7;
+  box-shadow: 0 6px 18px -10px rgba(17, 24, 39, 0.35);
+  transform: translateY(-1px);
+}
+
+.dash-tile__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dash-tile__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  color: #ffa500;
+  background: rgba(255, 165, 0, 0.12);
+}
+
+.dash-tile__icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.dash-tile__label {
+  overflow: hidden;
+  font-size: 12px;
+  color: #6b7280;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* tabular-nums обязателен: без него цифры разной ширины, и во время
+   count-up число дёргается по горизонтали на каждом кадре. */
+.dash-tile__value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #111827;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.dash-tile__bar {
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1f2f4;
+}
+
+.dash-tile__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffa500, #ffc457);
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-tile,
+  .dash-tile__bar-fill {
+    transition: none;
+  }
+}
+
+/* -------------------------------- Заявки --------------------------------- */
+
+.dash-leads {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.dash-lead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dash-lead:last-child {
+  border-bottom: none;
+}
+
+.dash-lead__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dash-lead__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.dash-lead__contact {
+  overflow: hidden;
+  font-size: 12px;
+  color: #6b7280;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.dash-lead__contact {
+  color: #2563eb;
+}
+
+a.dash-lead__contact:hover {
+  text-decoration: underline;
+}
+
+.dash-lead__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-lead__source,
+.dash-lead__date {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .dash {
+    padding: 16px;
+  }
+
+  .dash-card {
+    padding: 16px;
+  }
+
+  /* Две плитки в ряд вместо трёх — при трёх число уже не помещается. */
+  .dash-tiles {
+    grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  }
+
+  .dash-tile__value {
+    font-size: 26px;
+  }
+}

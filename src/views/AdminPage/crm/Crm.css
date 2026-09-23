@@ -1,0 +1,590 @@
+/**
+ * Мини-CRM. Палитра и отступы повторяют Analytics.css, чтобы разделы админки
+ * не выглядели собранными из разных проектов.
+ */
+
+.crm {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.crm__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.crm__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/**
+ * Список переживает смену фильтра на экране и лишь притухает — высота не
+ * скачет между «Загрузка…» и таблицей. min-height держит область, пока список
+ * пуст, чтобы фильтры не уезжали вверх на пустом статусе.
+ */
+.crm__body {
+  min-height: 180px;
+  transition: opacity 0.18s ease;
+}
+
+.crm__body.is-refreshing {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.crm__placeholder {
+  padding: 48px 16px;
+  font-size: 14px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.crm__total {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.crm__error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+/* ------------------------------- Фильтры --------------------------------- */
+
+.crm__filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.crm-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.crm-filter:hover {
+  border-color: #ffa500;
+}
+
+.crm-filter.is-active {
+  color: #fff;
+  background: #ffa500;
+  border-color: #ffa500;
+}
+
+.crm-filter__count {
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.crm-filter.is-active .crm-filter__count {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* -------------------------------- Кнопки --------------------------------- */
+
+.crm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.crm-btn:hover:not(:disabled) {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.crm-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.crm-btn--primary {
+  color: #fff;
+  background: #ffa500;
+  border-color: #ffa500;
+}
+
+.crm-btn--primary:hover:not(:disabled) {
+  background: #c88406;
+  border-color: #c88406;
+}
+
+.crm-btn--danger {
+  color: #fff;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.crm-btn--danger:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.crm-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #9ca3af;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.crm-icon-btn--danger:hover {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+/* -------------------------------- Источник ------------------------------- */
+/* Бейдж статуса — в crm/StatusBadge.css, рядом со своим компонентом. */
+
+.crm-source {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.crm-source--manual {
+  color: #7c3aed;
+}
+
+/* -------------------------------- Таблица -------------------------------- */
+
+.crm-table {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.crm-table__head,
+.crm-table__row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr 0.9fr 0.8fr 1fr 60px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.crm-table__head {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.crm-table__row {
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+  color: #374151;
+}
+
+.crm-table__row:last-child {
+  border-bottom: none;
+}
+
+.crm-table__row:hover,
+.crm-table__row.is-expanded {
+  background: #fafafa;
+}
+
+.crm-table__cell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crm-table__cell--actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.crm-table__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.crm-table__name:hover {
+  color: #ffa500;
+}
+
+.crm-table__chevron {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.crm-table__row.is-expanded .crm-table__chevron {
+  transform: rotate(180deg);
+}
+
+.crm-table__detail {
+  padding: 0 16px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fafafa;
+}
+
+.crm-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: #374151;
+}
+
+.crm-contact--link {
+  color: #2563eb;
+}
+
+.crm-contact--link:hover {
+  text-decoration: underline;
+}
+
+.crm-contact__icon {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  color: #9ca3af;
+}
+
+.crm-contact__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ------------------------------- Карточка -------------------------------- */
+
+.crm-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.crm-card__col {
+  min-width: 0;
+}
+
+.crm-card__label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.crm-card__label:not(:first-child) {
+  margin-top: 16px;
+}
+
+.crm-card__hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.crm-card__message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #374151;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.crm-card__payload {
+  list-style: none;
+  font-size: 13px;
+  color: #374151;
+}
+
+.crm-card__payload li {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f3f4f6;
+  overflow-wrap: anywhere;
+}
+
+.crm-card__payload-key {
+  flex-shrink: 0;
+  width: 40%;
+  color: #9ca3af;
+}
+
+.crm-card__note {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #374151;
+  resize: vertical;
+}
+
+.crm-card__note-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.crm-card__msg {
+  font-size: 12px;
+}
+
+.crm-card__msg--ok {
+  color: #15803d;
+}
+
+.crm-card__msg--err {
+  color: #dc2626;
+}
+
+/* -------------------------------- Модалки -------------------------------- */
+
+.crm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.crm-modal__card {
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.crm-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 0;
+}
+
+.crm-modal__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.crm-modal__close {
+  display: inline-flex;
+  padding: 4px;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  color: #9ca3af;
+  background: transparent;
+  cursor: pointer;
+}
+
+.crm-modal__close:hover:not(:disabled) {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.crm-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px 20px;
+}
+
+.crm-modal__hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.crm-modal__err {
+  margin: 0;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.crm-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.crm-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #374151;
+  background: #fff;
+}
+
+.crm-input:focus {
+  outline: 2px solid #ffa500;
+  outline-offset: -1px;
+  border-color: transparent;
+}
+
+.crm-input--area {
+  resize: vertical;
+}
+
+.crm-field {
+  display: block;
+}
+
+.crm-field__label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ------------------------------ Узкий экран ------------------------------ */
+
+@media (max-width: 900px) {
+  .crm-card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .crm {
+    padding: 16px;
+  }
+
+  /* Таблица разбирается в карточки: заголовок колонки берётся из data-label,
+     поэтому шапка целиком уходит. */
+  .crm-table__head {
+    display: none;
+  }
+
+  .crm-table__row {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+
+  .crm-table__cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    white-space: normal;
+  }
+
+  .crm-table__cell[data-label]::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #9ca3af;
+  }
+
+  /* Имя занимает всю ширину строки, кнопка удаления встаёт рядом с ним. */
+  .crm-table__cell[data-label]:first-child {
+    grid-column: 1;
+  }
+
+  .crm-table__cell[data-label]:first-child::before {
+    content: none;
+  }
+
+  .crm-table__cell--actions {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .crm-table__cell:not(:first-child):not(.crm-table__cell--actions) {
+    grid-column: 1 / -1;
+  }
+
+  .crm-table__detail {
+    padding: 0 12px 12px;
+  }
+}

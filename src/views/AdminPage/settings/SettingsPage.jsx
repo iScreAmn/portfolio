@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import './AnalyticsSettings.css';
+import './Settings.css';
 import { changePassword, deleteAllAnalytics } from '../../../lib/analyticsAdmin';
+import { useAdminSession } from '../components/AdminSessionContext';
 import adminData from '../../../data/adminData';
 
 const { settings: text } = adminData;
@@ -10,7 +11,12 @@ const DangerIcon = text.dangerIcon;
 
 const MIN_PASSWORD_LENGTH = 8;
 
-const AnalyticsSettings = ({ user, onLogout }) => {
+/**
+ * Отдельная страница, а не вкладка аналитики: сюда попадают из раздела
+ * «Аккаунт» бургер-меню. Выход живёт там же, рядом с пунктом настроек.
+ */
+const SettingsPage = () => {
+  const { user } = useAdminSession() ?? {};
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -67,66 +73,59 @@ const AnalyticsSettings = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="analytics-settings">
-      <div className="analytics-settings-header">
-        <h2 className="analytics-settings-title">{text.accountTitle}</h2>
-        <div className="analytics-settings-header__actions">
-          {typeof onLogout === 'function' && (
-            <button type="button" className="admin-page__logout" onClick={onLogout}>
-              {text.logoutButton}
-            </button>
-          )}
-        </div>
+    <div className="admin-settings">
+      <div className="admin-settings-header">
+        <h2 className="admin-settings-title">{text.accountTitle}</h2>
       </div>
 
       {message && (
-        <div className={`analytics-settings-message analytics-settings-message--${message.type}`}>
+        <div className={`admin-settings-message admin-settings-message--${message.type}`}>
           {message.text}
         </div>
       )}
 
-      <div className="analytics-settings-info">
-        <div className="analytics-settings-info-card">
-          <div className="analytics-settings-info-label">{text.emailLabel}</div>
-          <div className="analytics-settings-info-value">{user?.email || '—'}</div>
+      <div className="admin-settings-info">
+        <div className="admin-settings-info-card">
+          <div className="admin-settings-info-label">{text.emailLabel}</div>
+          <div className="admin-settings-info-value">{user?.email || '—'}</div>
         </div>
-        <div className="analytics-settings-info-card">
-          <div className="analytics-settings-info-label">{text.roleLabel}</div>
-          <div className="analytics-settings-info-value">
+        <div className="admin-settings-info-card">
+          <div className="admin-settings-info-label">{text.roleLabel}</div>
+          <div className="admin-settings-info-value">
             {(user?.role && text.roleLabels[user.role]) || user?.role || '—'}
           </div>
         </div>
       </div>
 
-      <div className="analytics-settings-row">
-        <div className="analytics-settings-section">
-          <h3 className="analytics-settings-section-title">{text.passwordSectionTitle}</h3>
-          <p className="analytics-settings-section-desc">{text.passwordSectionDesc}</p>
+      <div className="admin-settings-row">
+        <div className="admin-settings-section">
+          <h3 className="admin-settings-section-title">{text.passwordSectionTitle}</h3>
+          <p className="admin-settings-section-desc">{text.passwordSectionDesc}</p>
 
-          <div className="analytics-settings-modal-input-group">
+          <div className="admin-settings-modal-input-group">
             <input
               type="password"
-              className="analytics-settings-modal-input"
+              className="admin-settings-modal-input"
               placeholder={text.currentPasswordPlaceholder}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               autoComplete="current-password"
             />
           </div>
-          <div className="analytics-settings-modal-input-group">
+          <div className="admin-settings-modal-input-group">
             <input
               type="password"
-              className="analytics-settings-modal-input"
+              className="admin-settings-modal-input"
               placeholder={text.newPasswordPlaceholder}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               autoComplete="new-password"
             />
           </div>
-          <div className="analytics-settings-modal-input-group">
+          <div className="admin-settings-modal-input-group">
             <input
               type="password"
-              className="analytics-settings-modal-input"
+              className="admin-settings-modal-input"
               placeholder={text.confirmPasswordPlaceholder}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -137,34 +136,34 @@ const AnalyticsSettings = ({ user, onLogout }) => {
           <button
             type="button"
             onClick={handleChangePassword}
-            className="analytics-settings-btn analytics-settings-btn--warning"
+            className="admin-settings-btn admin-settings-btn--warning"
             disabled={!canSubmit}
           >
             {loading ? text.savingButton : text.saveButton}
           </button>
         </div>
 
-        <div className="analytics-settings-section">
-          <h3 className="analytics-settings-section-title">{text.dangerSectionTitle}</h3>
-          <p className="analytics-settings-section-desc">
+        <div className="admin-settings-section">
+          <h3 className="admin-settings-section-title">{text.dangerSectionTitle}</h3>
+          <p className="admin-settings-section-desc">
             <DangerIcon /> {text.dangerIntro}
           </p>
-          <details className="analytics-settings-action-card analytics-settings-details">
-            <summary className="analytics-settings-details-summary">
+          <details className="admin-settings-action-card admin-settings-details">
+            <summary className="admin-settings-details-summary">
               {text.serverCommandSummary}
             </summary>
-            <p className="analytics-settings-action-desc">
+            <p className="admin-settings-action-desc">
               <code>{text.serverCommand}</code>
             </p>
           </details>
 
           {user?.isDev && (
-            <div className="analytics-settings-action-card">
-              <p className="analytics-settings-action-desc">{text.devClearTitle}</p>
+            <div className="admin-settings-action-card">
+              <p className="admin-settings-action-desc">{text.devClearTitle}</p>
               <button
                 type="button"
                 onClick={handleClearLocalAnalytics}
-                className="analytics-settings-btn analytics-settings-btn--warning"
+                className="admin-settings-btn admin-settings-btn--warning"
                 disabled={clearing}
               >
                 {clearing ? text.devClearingButton : text.devClearButton}
@@ -177,4 +176,4 @@ const AnalyticsSettings = ({ user, onLogout }) => {
   );
 };
 
-export default AnalyticsSettings;
+export default SettingsPage;
