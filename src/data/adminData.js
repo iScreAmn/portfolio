@@ -3,10 +3,9 @@ import {
   MdSpaceDashboard,
   MdLogout,
   MdOutlineEmail,
-  MdOutlinePhone,
-  MdOutlineChat,
 } from 'react-icons/md';
-import { FaUsers, FaArrowLeft, FaPlus, FaRegTrashAlt } from 'react-icons/fa';
+import { FaUsers, FaArrowLeft, FaPlus, FaRegTrashAlt, FaTelegram } from 'react-icons/fa';
+import { FaWhatsapp, FaPhoneFlip } from 'react-icons/fa6';
 import { CgWebsite } from 'react-icons/cg';
 import {
   HiOutlineEye,
@@ -232,9 +231,9 @@ const adminData = {
 
     contactIcons: {
       Email: MdOutlineEmail,
-      Telegram: MdOutlineChat,
-      WhatsApp: MdOutlineChat,
-      Phone: MdOutlinePhone,
+      Telegram: FaTelegram,
+      WhatsApp: FaWhatsapp,
+      Phone: FaPhoneFlip,
     },
     mailtoTitle: (value) => `Написать на ${value}`,
     telTitle: (value) => `Позвонить на ${value}`,
