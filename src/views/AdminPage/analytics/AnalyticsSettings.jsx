@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import './AnalyticsSettings.css';
-import { CiWarning } from "react-icons/ci";
-import { changePassword } from '../../../lib/analyticsAdmin';
+import { changePassword, deleteAllAnalytics } from '../../../lib/analyticsAdmin';
+import adminData from '../../../data/adminData';
+
+const { settings: text } = adminData;
+const DangerIcon = text.dangerIcon;
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -19,12 +22,12 @@ const AnalyticsSettings = ({ user, onLogout }) => {
     if (newPassword.length < MIN_PASSWORD_LENGTH) {
       setMessage({
         type: 'error',
-        text: `Пароль должен быть не короче ${MIN_PASSWORD_LENGTH} символов`,
+        text: text.passwordTooShort(MIN_PASSWORD_LENGTH),
       });
       return;
     }
     if (newPassword !== confirmPassword) {
-      setMessage({ type: 'error', text: 'Пароли не совпадают' });
+      setMessage({ type: 'error', text: text.passwordMismatch });
       return;
     }
 
@@ -32,12 +35,12 @@ const AnalyticsSettings = ({ user, onLogout }) => {
     setMessage(null);
     try {
       await changePassword(currentPassword, newPassword);
-      setMessage({ type: 'success', text: 'Пароль изменён' });
+      setMessage({ type: 'success', text: text.passwordChanged });
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
-      setMessage({ type: 'error', text: err?.message || 'Не удалось сменить пароль' });
+      setMessage({ type: 'error', text: err?.message || text.passwordChangeFailed });
     } finally {
       setLoading(false);
     }
@@ -45,14 +48,32 @@ const AnalyticsSettings = ({ user, onLogout }) => {
 
   const canSubmit = currentPassword && newPassword && confirmPassword && !loading;
 
+  const [clearing, setClearing] = useState(false);
+
+  const handleClearLocalAnalytics = async () => {
+    if (!window.confirm(text.devClearConfirm)) {
+      return;
+    }
+    setClearing(true);
+    setMessage(null);
+    try {
+      const { deleted } = await deleteAllAnalytics();
+      setMessage({ type: 'success', text: text.devClearSuccess(deleted) });
+    } catch (err) {
+      setMessage({ type: 'error', text: err?.message || text.devClearFailed });
+    } finally {
+      setClearing(false);
+    }
+  };
+
   return (
     <div className="analytics-settings">
       <div className="analytics-settings-header">
-        <h2 className="analytics-settings-title">Аккаунт</h2>
+        <h2 className="analytics-settings-title">{text.accountTitle}</h2>
         <div className="analytics-settings-header__actions">
           {typeof onLogout === 'function' && (
             <button type="button" className="admin-page__logout" onClick={onLogout}>
-              Logout
+              {text.logoutButton}
             </button>
           )}
         </div>
@@ -66,75 +87,90 @@ const AnalyticsSettings = ({ user, onLogout }) => {
 
       <div className="analytics-settings-info">
         <div className="analytics-settings-info-card">
-          <div className="analytics-settings-info-label">Email:</div>
+          <div className="analytics-settings-info-label">{text.emailLabel}</div>
           <div className="analytics-settings-info-value">{user?.email || '—'}</div>
         </div>
         <div className="analytics-settings-info-card">
-          <div className="analytics-settings-info-label">Роль:</div>
-          <div className="analytics-settings-info-value">{user?.role || '—'}</div>
+          <div className="analytics-settings-info-label">{text.roleLabel}</div>
+          <div className="analytics-settings-info-value">
+            {(user?.role && text.roleLabels[user.role]) || user?.role || '—'}
+          </div>
         </div>
       </div>
 
-      <div className="analytics-settings-section">
-        <h3 className="analytics-settings-section-title">Смена пароля</h3>
-        <p className="analytics-settings-section-desc">
-          После смены пароля все остальные сессии завершаются.
-        </p>
+      <div className="analytics-settings-row">
+        <div className="analytics-settings-section">
+          <h3 className="analytics-settings-section-title">{text.passwordSectionTitle}</h3>
+          <p className="analytics-settings-section-desc">{text.passwordSectionDesc}</p>
 
-        <div className="analytics-settings-modal-input-group">
-          <input
-            type="password"
-            className="analytics-settings-modal-input"
-            placeholder="Текущий пароль"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            autoComplete="current-password"
-          />
+          <div className="analytics-settings-modal-input-group">
+            <input
+              type="password"
+              className="analytics-settings-modal-input"
+              placeholder={text.currentPasswordPlaceholder}
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+          </div>
+          <div className="analytics-settings-modal-input-group">
+            <input
+              type="password"
+              className="analytics-settings-modal-input"
+              placeholder={text.newPasswordPlaceholder}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="analytics-settings-modal-input-group">
+            <input
+              type="password"
+              className="analytics-settings-modal-input"
+              placeholder={text.confirmPasswordPlaceholder}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && canSubmit && handleChangePassword()}
+              autoComplete="new-password"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleChangePassword}
+            className="analytics-settings-btn analytics-settings-btn--warning"
+            disabled={!canSubmit}
+          >
+            {loading ? text.savingButton : text.saveButton}
+          </button>
         </div>
-        <div className="analytics-settings-modal-input-group">
-          <input
-            type="password"
-            className="analytics-settings-modal-input"
-            placeholder="Новый пароль"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-        </div>
-        <div className="analytics-settings-modal-input-group">
-          <input
-            type="password"
-            className="analytics-settings-modal-input"
-            placeholder="Повторите новый пароль"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && canSubmit && handleChangePassword()}
-            autoComplete="new-password"
-          />
-        </div>
-        <button
-          type="button"
-          onClick={handleChangePassword}
-          className="analytics-settings-btn analytics-settings-btn--warning"
-          disabled={!canSubmit}
-        >
-          {loading ? 'Сохранение...' : 'Сменить пароль'}
-        </button>
-      </div>
 
-      <div className="analytics-settings-section">
-        <h3 className="analytics-settings-section-title">Удаление данных</h3>
-        <p className="analytics-settings-section-desc">
-          <CiWarning /> Через админку статистика не удаляется — это защита от
-          случайной чистки. Старые события убираются на сервере:
-        </p>
-        <div className="analytics-settings-action-card">
-          <p className="analytics-settings-action-desc">
-            <code>
-              docker compose exec db psql -U portfolio -d portfolio -c &quot;delete from
-              analytics_events where occurred_at &lt; now() - interval &#39;90 days&#39;;&quot;
-            </code>
+        <div className="analytics-settings-section">
+          <h3 className="analytics-settings-section-title">{text.dangerSectionTitle}</h3>
+          <p className="analytics-settings-section-desc">
+            <DangerIcon /> {text.dangerIntro}
           </p>
+          <details className="analytics-settings-action-card analytics-settings-details">
+            <summary className="analytics-settings-details-summary">
+              {text.serverCommandSummary}
+            </summary>
+            <p className="analytics-settings-action-desc">
+              <code>{text.serverCommand}</code>
+            </p>
+          </details>
+
+          {user?.isDev && (
+            <div className="analytics-settings-action-card">
+              <p className="analytics-settings-action-desc">{text.devClearTitle}</p>
+              <button
+                type="button"
+                onClick={handleClearLocalAnalytics}
+                className="analytics-settings-btn analytics-settings-btn--warning"
+                disabled={clearing}
+              >
+                {clearing ? text.devClearingButton : text.devClearButton}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -90,11 +90,24 @@
   color: #111827;
 }
 
+.analytics-settings-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
 .analytics-settings-section {
+  display: flex;
+  flex-direction: column;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 24px;
+}
+
+.analytics-settings-action-card + .analytics-settings-action-card,
+.analytics-settings-details + .analytics-settings-action-card {
+  margin-top: 16px;
 }
 
 .analytics-settings-section-title {
@@ -135,6 +148,34 @@
   color: #6b7280;
   margin: 0 0 16px 0;
   line-height: 1.5;
+}
+
+.analytics-settings-details-summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  list-style: none;
+}
+
+.analytics-settings-details-summary::-webkit-details-marker {
+  display: none;
+}
+
+.analytics-settings-details-summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 6px;
+  transition: transform 0.15s;
+}
+
+.analytics-settings-details[open] .analytics-settings-details-summary::before {
+  transform: rotate(90deg);
+}
+
+.analytics-settings-details .analytics-settings-action-desc {
+  margin-top: 12px;
+  margin-bottom: 0;
 }
 
 .analytics-settings-btn {
@@ -346,6 +387,11 @@
 
   .analytics-settings-info-value {
     font-size: 20px;
+  }
+
+  .analytics-settings-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .analytics-settings-section {

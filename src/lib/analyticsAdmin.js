@@ -16,11 +16,14 @@ export async function signIn(email, password) {
 
 export const signOut = () => apiRequest('/api/auth/logout', { method: 'POST' });
 
-/** @returns вошедший пользователь или null, если сессии нет. */
+/**
+ * @returns вошедший пользователь (с примешанным isDev — режимом бэкенда,
+ * не фронта) или null, если сессии нет.
+ */
 export async function getSession() {
   try {
     const data = await apiRequest('/api/auth/me');
-    return data.user;
+    return data.user ? { ...data.user, isDev: data.isDev } : null;
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) return null;
     throw error;
@@ -51,3 +54,6 @@ export const getSessionEvents = (sessionId, limit = 500) =>
   apiRequest(`/api/analytics/sessions/${encodeURIComponent(sessionId)}/events`, {
     query: { limit },
   });
+
+/** Только для dev-бэкенда — сервер отвечает 403 в production. */
+export const deleteAllAnalytics = () => apiRequest('/api/analytics', { method: 'DELETE' });
