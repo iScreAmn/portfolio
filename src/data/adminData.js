@@ -67,7 +67,6 @@ const adminData = {
 
   login: {
     title: 'Панель администратора',
-    hint: 'Войдите, чтобы увидеть аналитику.',
     emailPlaceholder: 'Email',
     passwordPlaceholder: 'Пароль',
     missingFieldsError: 'Введите email и пароль',
