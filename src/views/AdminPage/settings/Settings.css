@@ -125,7 +125,7 @@
 .admin-settings-action-card {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 20px;
+  padding: 14px;
   background: #f9fafb;
 }
 
@@ -171,15 +171,21 @@
   margin-bottom: 0;
 }
 
+.admin-settings-section > .admin-settings-btn {
+  margin-top: auto;
+}
+
 .admin-settings-btn {
   width: 100%;
-  padding: 10px 16px;
+  margin-top: 16px;
+  padding: 13px 20px;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
 .admin-settings-btn:disabled {
@@ -267,23 +273,24 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .admin-settings-modal-input {
-  padding: 10px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 16px;
-  /* width был зафиксирован на 100px — в поле не помещался даже плейсхолдер. */
+  box-sizing: border-box;
   width: 100%;
-  max-width: 360px;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  color: #111827;
 }
 
 .admin-settings-modal-input:focus {
   outline: none;
-  border-color: #047857;
-  box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
+  border-color: #ffa500;
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.15);
 }
 
 .admin-settings-modal-input-label {

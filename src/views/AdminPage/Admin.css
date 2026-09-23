@@ -1,28 +1,11 @@
-/**
- * Каркас закрытой части админки. Форма входа стилизуется отдельно —
- * login/LoginPage.css.
- */
-
 .admin-page {
-  /**
-   * Админка живёт в собственной палитре и тему сайта не наследует: вёрстка
-   * аналитики сделана фиксированными светлыми цветами, и при dark-theme
-   * тёмный хедер встречался бы с белыми карточками. Переопределяем
-   * переменные на поддереве — общий css бургера и панели читает именно их.
-   */
   --first-color: #374151;
   --second-color: #ffa500;
   --third-color: #6b7280;
   --body-bg-color: #f9fafb;
   --card-bg-color: #fff;
   --liner-color: #e5e7eb;
-  /* Логотип нарисован светлым — на светлом фоне его инвертируют, как в
-     сайтовом хедере. */
   --color-filter: invert(1);
-
-  /* Хедер зафиксирован и выпал из потока, поэтому его высота живёт здесь:
-     на неё опирается и сам хедер, и верхний отступ контента. 40px бургера +
-     по 10px сверху и снизу. */
   --admin-header-h: 60px;
 
   min-height: 100vh;
@@ -30,15 +13,15 @@
   background: var(--body-bg-color);
 }
 
-/* Селектор длиннее, чем `body.dark-theme .nav-menu-root` в NavPanel.css, —
-   иначе тёмная тема сайта подменила бы тень и подложку hover в панели. */
+html:has(.admin-page) {
+  scrollbar-gutter: stable;
+}
+
 body.dark-theme .admin-page .nav-menu-root {
   --nav-surface-2: rgba(0, 0, 0, 0.05);
   --nav-shadow: 0 20px 50px -18px rgba(22, 22, 40, 0.28);
 }
 
-/* Компенсируем зафиксированный хедер — без этого первая карточка уезжает
-   под него. */
 .admin-page__main {
   display: block;
   padding-top: var(--admin-header-h);
@@ -50,8 +33,6 @@ body.dark-theme .admin-page .nav-menu-root {
   }
 }
 
-/* Пока идёт запрос к /api/auth/me показывать нечего — просто держим высоту,
-   чтобы страница не прыгала после ответа. */
 .admin-page__checking {
   display: flex;
   align-items: center;

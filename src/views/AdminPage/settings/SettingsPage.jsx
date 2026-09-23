@@ -157,18 +157,25 @@ const SettingsPage = () => {
             </p>
           </details>
 
+          {/* Кнопка вынесена из карточки и лежит прямо в секции — так обе
+              секции прижимают свою кнопку к низу (margin-top: auto), и на
+              десктопе «Сменить пароль» и «Удалить» встают на одну линию. */}
           {user?.isDev && (
-            <div className="admin-settings-action-card">
-              <p className="admin-settings-action-desc">{text.devClearTitle}</p>
+            <>
+              <div className="admin-settings-action-card">
+                <p className="admin-settings-action-desc">{text.devClearTitle}</p>
+              </div>
+              {/* Красная, а не оранжевая: кнопка необратимо чистит базу и не
+                  должна выглядеть так же, как «Сменить пароль». */}
               <button
                 type="button"
                 onClick={handleClearLocalAnalytics}
-                className="admin-settings-btn admin-settings-btn--warning"
+                className="admin-settings-btn admin-settings-btn--danger"
                 disabled={clearing}
               >
                 {clearing ? text.devClearingButton : text.devClearButton}
               </button>
-            </div>
+            </>
           )}
         </div>
       </div>
