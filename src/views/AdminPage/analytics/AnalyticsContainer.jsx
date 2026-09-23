@@ -6,8 +6,7 @@ import SessionsView from './SessionsView';
 import adminData from '../../../data/adminData';
 import './AnalyticsContainer.css';
 
-const { tabs: TABS, menuIcons: MenuIcons, menuToggleLabel, ranges: RANGES, filters: filterText } =
-  adminData;
+const { tabs: TABS, ranges: RANGES, filters: filterText } = adminData;
 
 // Списки соответствуют тому, что проставляет трекер в lib/analytics.js.
 const DEVICE_OPTIONS = ['desktop', 'mobile', 'tablet', 'tv', 'bot', 'unknown'];
@@ -25,7 +24,6 @@ const RANGE_DAYS = { '7d': 7, '30d': 30, '90d': 90 };
 
 const AnalyticsContainer = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [range, setRange] = useState('7d');
   const [filters, setFilters] = useState({
     country: '',
@@ -45,34 +43,20 @@ const AnalyticsContainer = () => {
   const updateFilter = (key, value) =>
     setFilters((prev) => ({ ...prev, [key]: value }));
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setMobileMenuOpen(false);
-  };
-
   const hasSegmentFilters =
     filters.country || filters.device || filters.browser || filters.source;
 
   return (
     <div className="analytics-container-wrapper">
+      {/* Вкладок всего две, поэтому они помещаются в строку и на телефоне —
+          бургер с выпадающим списком здесь больше не нужен. */}
       <div className="analytics-tabs-wrapper">
-        <button
-          className="analytics-mobile-burger"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={menuToggleLabel}
-        >
-          {mobileMenuOpen ? <MenuIcons.close /> : <MenuIcons.open />}
-          <span className="analytics-mobile-burger__text">
-            {TABS.find((tab) => tab.key === activeTab)?.label}
-          </span>
-        </button>
-
-        <div className={`analytics-tabs ${mobileMenuOpen ? 'analytics-tabs--open' : ''}`}>
+        <div className="analytics-tabs">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
               key={key}
               className={`analytics-tab ${activeTab === key ? 'active' : ''}`}
-              onClick={() => handleTabChange(key)}
+              onClick={() => setActiveTab(key)}
             >
               <Icon /> {label}
             </button>

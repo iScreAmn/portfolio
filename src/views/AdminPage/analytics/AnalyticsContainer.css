@@ -9,10 +9,6 @@
   border-bottom: 2px solid #e5e7eb;
 }
 
-.analytics-mobile-burger {
-  display: none;
-}
-
 .analytics-tabs {
   display: flex;
   gap: 4px;
@@ -124,71 +120,25 @@
 }
 
 @media (max-width: 768px) {
-  .analytics-mobile-burger {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 12px 16px;
-    background: white;
-    border: none;
-    font-size: 16px;
-    font-weight: 500;
-    color: #374151;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .analytics-mobile-burger:active {
-    background: #f9fafb;
-  }
-
-  .analytics-mobile-burger svg {
-    font-size: 22px;
-    color: #ffa500;
-  }
-
-  .analytics-mobile-burger__text {
-    flex: 1;
-    text-align: left;
-  }
-
+  /* Обе вкладки стоят в строку прямо в шапке раздела: делим ширину поровну и
+     ужимаем подпись, чтобы «Пользователи и сессии» влезало без обрезки. */
   .analytics-tabs {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    padding: 0;
-    background: white;
-    border: none;
-    border-bottom: 2px solid #e5e7eb;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-  }
-
-  .analytics-tabs--open {
-    display: flex;
+    gap: 0;
+    padding: 0 8px;
   }
 
   .analytics-tab {
-    justify-content: flex-start;
-    padding: 14px 16px;
-    border-bottom: 1px solid #f3f4f6;
-    border-left: 3px solid transparent;
-    top: 0;
-    font-size: 14px;
+    flex: 1;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 6px;
+    font-size: 13px;
+    line-height: 1.2;
+    text-align: center;
   }
 
-  .analytics-tab.active {
-    border-bottom-color: #f3f4f6;
-    border-left-color: #ffa500;
-    background: #fffbf5;
-  }
-
-  .analytics-tab:last-child {
-    border-bottom: none;
+  .analytics-tab svg {
+    flex-shrink: 0;
   }
 
   .analytics-filter-bar {
