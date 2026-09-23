@@ -34,11 +34,6 @@
   background: #dcfce7;
 }
 
-.crm-status--spam {
-  color: #6b7280;
-  background: #f3f4f6;
-}
-
 /* Бейдж-селект: цвет и форма от бейджа, сам select прозрачный и без рамки —
    иначе в списке появился бы второй визуальный язык. */
 .crm-status--select {
@@ -52,6 +47,7 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
+  text-align: center;
   color: inherit;
   background: transparent;
   cursor: pointer;

@@ -28,32 +28,60 @@ export const contactHref = (method, value) => {
 const renderPayloadValue = (value) =>
   Array.isArray(value) ? value.join(', ') : String(value ?? '—');
 
-const ClientCard = ({ client, onSaveNote }) => {
-  const [note, setNote] = useState(client.note || '');
+/** Поля, которые карточка умеет править, — в том же виде, в каком их ждёт PATCH. */
+const toForm = (client) => ({
+  name: client.name || '',
+  company: client.company || '',
+  contactValue: client.contactValue || '',
+  message: client.message || '',
+  note: client.note || '',
+});
+
+/**
+ * Раскрытая строка списка: правит контакт, компанию, задачу и заметку одной
+ * формой. Статус сюда намеренно не вынесен — он меняется бейджем прямо в
+ * строке, не раскрывая карточку.
+ */
+const ClientCard = ({ client, onSave }) => {
+  const [form, setForm] = useState(() => toForm(client));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
   /**
-   * Сбрасываем поле только при переключении на другого клиента.
+   * Сбрасываем форму только при переключении на другого клиента.
    *
-   * Следить ещё и за client.note нельзя: сохранение обновляет запись в
-   * родителе, эффект отрабатывал бы сразу после успешного save и стирал
-   * «Заметка сохранена» раньше, чем её успевали прочитать.
+   * Следить за самими полями нельзя: сохранение обновляет запись в родителе,
+   * эффект отработал бы сразу после успешного save и стёр «Изменения
+   * сохранены» раньше, чем их успевали прочитать.
    */
   useEffect(() => {
-    setNote(client.note || '');
+    setForm(toForm(client));
     setMessage(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client.id]);
 
-  const save = async () => {
+  const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
+
+  const saved = toForm(client);
+  const dirty = Object.keys(saved).some((key) => form[key] !== saved[key]);
+
+  const submit = async () => {
+    if (!form.name.trim()) {
+      setMessage({ type: 'err', text: crm.nameRequired });
+      return;
+    }
+    if (!form.contactValue.trim()) {
+      setMessage({ type: 'err', text: crm.contactRequired });
+      return;
+    }
+
     setSaving(true);
     setMessage(null);
     try {
-      await onSaveNote(note);
-      setMessage({ type: 'ok', text: crm.noteSaved });
+      await onSave(form);
+      setMessage({ type: 'ok', text: crm.cardSaved });
     } catch (err) {
-      setMessage({ type: 'err', text: err?.message || crm.noteFailed });
+      setMessage({ type: 'err', text: err?.message || crm.cardFailed });
     } finally {
       setSaving(false);
     }
@@ -64,9 +92,51 @@ const ClientCard = ({ client, onSaveNote }) => {
   return (
     <div className="crm-card">
       <div className="crm-card__col">
-        <h4 className="crm-card__label">{crm.messageLabel}</h4>
-        <p className="crm-card__message">{client.message || crm.noMessage}</p>
+        <h4 className="crm-card__label">{crm.editTitle}</h4>
 
+        <label className="crm-card__field">
+          <span className="crm-card__field-label">{crm.nameLabel}</span>
+          <input
+            className="crm-card__input"
+            value={form.name}
+            onChange={(event) => update('name', event.target.value)}
+            placeholder={crm.namePlaceholder}
+          />
+        </label>
+
+        <label className="crm-card__field">
+          <span className="crm-card__field-label">{crm.contactLabel}</span>
+          <input
+            className="crm-card__input"
+            value={form.contactValue}
+            onChange={(event) => update('contactValue', event.target.value)}
+            placeholder={crm.contactPlaceholder}
+          />
+        </label>
+
+        <label className="crm-card__field">
+          <span className="crm-card__field-label">{crm.companyLabel}</span>
+          <input
+            className="crm-card__input"
+            value={form.company}
+            onChange={(event) => update('company', event.target.value)}
+            placeholder={crm.companyPlaceholder}
+          />
+        </label>
+
+        <label className="crm-card__field">
+          <span className="crm-card__field-label">{crm.messageLabel}</span>
+          <textarea
+            className="crm-card__input crm-card__input--area"
+            value={form.message}
+            onChange={(event) => update('message', event.target.value)}
+            placeholder={crm.messagePlaceholder}
+            rows={4}
+          />
+        </label>
+
+        {/* Ответы калькулятора пришли с сайта и не правятся: это снимок того,
+            что человек выбрал в форме. */}
         {payloadEntries.length > 0 && (
           <>
             <h4 className="crm-card__label">{crm.payloadLabel}</h4>
@@ -86,21 +156,36 @@ const ClientCard = ({ client, onSaveNote }) => {
         <h4 className="crm-card__label">{crm.noteLabel}</h4>
         <p className="crm-card__hint">{crm.noteHint}</p>
         <textarea
-          className="crm-card__note"
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
+          className="crm-card__input crm-card__note"
+          value={form.note}
+          onChange={(event) => update('note', event.target.value)}
           placeholder={crm.notePlaceholder}
-          rows={5}
+          rows={6}
         />
-        <div className="crm-card__note-row">
+
+        <div className="crm-card__actions">
           <button
             type="button"
             className="crm-btn crm-btn--primary"
-            onClick={save}
-            disabled={saving || note === (client.note || '')}
+            onClick={submit}
+            disabled={saving || !dirty}
           >
-            {saving ? crm.noteSaving : crm.noteSave}
+            {saving ? crm.cardSaving : crm.cardSave}
           </button>
+
+          {dirty && !saving && (
+            <button
+              type="button"
+              className="crm-btn"
+              onClick={() => {
+                setForm(toForm(client));
+                setMessage(null);
+              }}
+            >
+              {crm.cardReset}
+            </button>
+          )}
+
           {message && (
             <span className={`crm-card__msg crm-card__msg--${message.type}`}>
               {message.text}

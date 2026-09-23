@@ -1,8 +1,3 @@
-/**
- * Мини-CRM. Палитра и отступы повторяют Analytics.css, чтобы разделы админки
- * не выглядели собранными из разных проектов.
- */
-
 .crm {
   padding: 24px;
   max-width: 1400px;
@@ -25,11 +20,6 @@
   color: #111827;
 }
 
-/**
- * Список переживает смену фильтра на экране и лишь притухает — высота не
- * скачет между «Загрузка…» и таблицей. min-height держит область, пока список
- * пуст, чтобы фильтры не уезжали вверх на пустом статусе.
- */
 .crm__body {
   min-height: 180px;
   transition: opacity 0.18s ease;
@@ -68,8 +58,6 @@
   background: #fef2f2;
 }
 
-/* ------------------------------- Фильтры --------------------------------- */
-
 .crm__filters {
   display: flex;
   gap: 8px;
@@ -84,6 +72,7 @@
   padding: 7px 12px;
   border: 1px solid #e5e7eb;
   border-radius: 999px;
+  font-family: inherit;
   font-size: 13px;
   color: #374151;
   background: #fff;
@@ -112,8 +101,6 @@
 .crm-filter.is-active .crm-filter__count {
   background: rgba(255, 255, 255, 0.28);
 }
-
-/* -------------------------------- Кнопки --------------------------------- */
 
 .crm-btn {
   display: inline-flex;
@@ -181,9 +168,6 @@
   background: #fef2f2;
 }
 
-/* -------------------------------- Источник ------------------------------- */
-/* Бейдж статуса — в crm/StatusBadge.css, рядом со своим компонентом. */
-
 .crm-source {
   font-size: 12px;
   color: #6b7280;
@@ -192,8 +176,6 @@
 .crm-source--manual {
   color: #7c3aed;
 }
-
-/* -------------------------------- Таблица -------------------------------- */
 
 .crm-table {
   border: 1px solid #e5e7eb;
@@ -251,6 +233,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  max-width: 100%;
   padding: 0;
   border: none;
   font-family: inherit;
@@ -264,6 +247,28 @@
 
 .crm-table__name:hover {
   color: #ffa500;
+}
+
+.crm-table__name-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.crm-table__name-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.crm-table__company {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 400;
+  color: #9ca3af;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .crm-table__chevron {
@@ -310,8 +315,6 @@
   white-space: nowrap;
 }
 
-/* ------------------------------- Карточка -------------------------------- */
-
 .crm-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -345,13 +348,40 @@
   color: #9ca3af;
 }
 
-.crm-card__message {
-  margin: 0;
+.crm-card__field {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.crm-card__field-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.crm-card__input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
   font-size: 13px;
-  line-height: 1.5;
   color: #374151;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  background: #fff;
+}
+
+.crm-card__input:focus {
+  outline: none;
+  border-color: #ffa500;
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.15);
+}
+
+.crm-card__input--area {
+  resize: vertical;
+  line-height: 1.5;
 }
 
 .crm-card__payload {
@@ -375,23 +405,16 @@
 }
 
 .crm-card__note {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 13px;
-  color: #374151;
   resize: vertical;
+  line-height: 1.5;
 }
 
-.crm-card__note-row {
+.crm-card__actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 .crm-card__msg {
@@ -405,8 +428,6 @@
 .crm-card__msg--err {
   color: #dc2626;
 }
-
-/* -------------------------------- Модалки -------------------------------- */
 
 .crm-modal {
   position: fixed;
@@ -523,8 +544,6 @@
   color: #6b7280;
 }
 
-/* ------------------------------ Узкий экран ------------------------------ */
-
 @media (max-width: 900px) {
   .crm-card {
     grid-template-columns: 1fr;
@@ -537,8 +556,6 @@
     padding: 16px;
   }
 
-  /* Таблица разбирается в карточки: заголовок колонки берётся из data-label,
-     поэтому шапка целиком уходит. */
   .crm-table__head {
     display: none;
   }
@@ -566,7 +583,6 @@
     color: #9ca3af;
   }
 
-  /* Имя занимает всю ширину строки, кнопка удаления встаёт рядом с ним. */
   .crm-table__cell[data-label]:first-child {
     grid-column: 1;
   }

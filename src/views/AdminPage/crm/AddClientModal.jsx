@@ -11,6 +11,7 @@ const text = crm.addModal;
 const AddClientModal = ({ onClose, onCreate }) => {
   const [form, setForm] = useState({
     name: '',
+    company: '',
     contactMethod: text.methods[0],
     contactValue: '',
     message: '',
@@ -35,6 +36,7 @@ const AddClientModal = ({ onClose, onCreate }) => {
       await onCreate({
         ...form,
         name: form.name.trim(),
+        company: form.company.trim(),
         contactValue: form.contactValue.trim(),
       });
       onClose();
@@ -54,6 +56,13 @@ const AddClientModal = ({ onClose, onCreate }) => {
           placeholder={text.namePlaceholder}
           value={form.name}
           onChange={(event) => update('name', event.target.value)}
+        />
+
+        <input
+          className="crm-input"
+          placeholder={text.companyPlaceholder}
+          value={form.company}
+          onChange={(event) => update('company', event.target.value)}
         />
 
         <label className="crm-field">

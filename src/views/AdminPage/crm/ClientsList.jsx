@@ -48,7 +48,7 @@ const ContactLink = ({ client }) => {
  * Таблица на широком экране и карточки на узком — одна и та же разметка,
  * переключается в Crm.css через data-label у ячеек.
  */
-const ClientsList = ({ clients, expandedId, onToggle, onStatusChange, onSaveNote, onDelete, busyId }) => (
+const ClientsList = ({ clients, expandedId, onToggle, onStatusChange, onSave, onDelete, busyId }) => (
   <div className="crm-table" role="table">
     <div className="crm-table__head" role="row">
       <span role="columnheader">{crm.columns.name}</span>
@@ -74,7 +74,15 @@ const ClientsList = ({ clients, expandedId, onToggle, onStatusChange, onSaveNote
                 title={expanded ? crm.detailsClose : crm.detailsOpen}
               >
                 <MdExpandMore className="crm-table__chevron" aria-hidden />
-                {client.name}
+                {/* Компания второй строкой под именем, а не отдельной
+                    колонкой: заполнена она только у ручных клиентов, и седьмая
+                    колонка ради них сжала бы таблицу для всех остальных. */}
+                <span className="crm-table__name-text">
+                  <span className="crm-table__name-label">{client.name}</span>
+                  {client.company && (
+                    <span className="crm-table__company">{client.company}</span>
+                  )}
+                </span>
               </button>
             </span>
 
@@ -115,7 +123,7 @@ const ClientsList = ({ clients, expandedId, onToggle, onStatusChange, onSaveNote
 
           {expanded && (
             <div className="crm-table__detail" role="row">
-              <ClientCard client={client} onSaveNote={(note) => onSaveNote(client, note)} />
+              <ClientCard client={client} onSave={(patch) => onSave(client, patch)} />
             </div>
           )}
         </Fragment>

@@ -5,8 +5,6 @@
  */
 import {
   MdOutlineAnalytics,
-  MdMenu,
-  MdClose,
   MdSpaceDashboard,
   MdLogout,
   MdOutlineEmail,
@@ -98,9 +96,6 @@ const adminData = {
     { key: 'overview', label: 'Обзор', icon: MdOutlineAnalytics },
     { key: 'sessions', label: 'Пользователи и сессии', icon: FaUsers },
   ],
-  menuIcons: { open: MdMenu, close: MdClose },
-  menuToggleLabel: 'Открыть/закрыть меню',
-
   ranges: [
     { value: '7d', label: '7 дней' },
     { value: '30d', label: '30 дней' },
@@ -240,13 +235,12 @@ const adminData = {
       actions: 'Действия',
     },
 
-    statusOrder: ['new', 'in_progress', 'promotion', 'done', 'spam'],
+    statusOrder: ['new', 'in_progress', 'promotion', 'done'],
     statusLabels: {
       new: 'Новая',
       in_progress: 'В работе',
       promotion: 'Продвижение',
       done: 'Завершена',
-      spam: 'Спам',
     },
     statusAria: 'Статус клиента',
     statusUpdateFailed: 'Не удалось сменить статус',
@@ -270,22 +264,37 @@ const adminData = {
     detailsTitle: 'Карточка клиента',
     detailsOpen: 'Открыть карточку',
     detailsClose: 'Закрыть карточку',
-    messageLabel: 'Сообщение',
     payloadLabel: 'Ответы калькулятора',
-    noMessage: 'Сообщения нет.',
+
+    // Поля карточки правятся прямо в раскрытой строке. Статус сюда не входит:
+    // он меняется бейджем в самой строке списка.
+    editTitle: 'Данные клиента',
+    nameLabel: 'Имя',
+    namePlaceholder: 'Имя клиента',
+    nameRequired: 'Имя не может быть пустым',
+    companyLabel: 'Компания',
+    companyPlaceholder: 'Например: ООО «Ромашка»',
+    contactLabel: 'Контакт',
+    contactPlaceholder: 'Телефон, email или @ник',
+    contactRequired: 'Контакт не может быть пустым',
+    messageLabel: 'Что нужно клиенту',
+    messagePlaceholder: 'Коротко о задаче',
 
     noteLabel: 'Приватная заметка',
     noteHint: 'Видна только в админке, клиенту не уходит.',
     notePlaceholder: 'Например: перезвонить после 18:00',
-    noteSave: 'Сохранить заметку',
-    noteSaving: 'Сохраняем…',
-    noteSaved: 'Заметка сохранена',
-    noteFailed: 'Не удалось сохранить заметку',
+
+    cardSave: 'Сохранить',
+    cardSaving: 'Сохраняем…',
+    cardSaved: 'Изменения сохранены',
+    cardFailed: 'Не удалось сохранить изменения',
+    cardReset: 'Отменить',
 
     addModal: {
       title: 'Новый клиент',
       hint: 'Запись создастся с источником «вручную» и статусом «новая».',
       namePlaceholder: 'Имя',
+      companyPlaceholder: 'Компания (необязательно)',
       methodLabel: 'Способ связи',
       contactPlaceholder: 'Телефон, email или @ник',
       messagePlaceholder: 'Что нужно клиенту (необязательно)',

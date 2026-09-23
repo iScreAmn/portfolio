@@ -84,9 +84,9 @@ const CrmContainer = () => {
     }
   };
 
-  // Ошибку отдаём наверх: её показывает сама карточка, рядом с полем.
-  const saveNote = async (client, note) => {
-    const updated = await updateClient(client.id, { note });
+  // Ошибку отдаём наверх: её показывает сама карточка, рядом с полями.
+  const saveCard = async (client, patch) => {
+    const updated = await updateClient(client.id, patch);
     setClients((prev) => prev.map((row) => (row.id === client.id ? updated : row)));
   };
 
@@ -176,7 +176,7 @@ const CrmContainer = () => {
               busyId={busyId}
               onToggle={(id) => setExpandedId((prev) => (prev === id ? null : id))}
               onStatusChange={changeStatus}
-              onSaveNote={saveNote}
+              onSave={saveCard}
               onDelete={setPendingDelete}
             />
           </>

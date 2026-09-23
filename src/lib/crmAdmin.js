@@ -9,7 +9,7 @@
 import { apiRequest } from './apiClient';
 
 /** Порядок статусов совпадает с бэкендом (enum LeadStatus). */
-export const CLIENT_STATUSES = ['new', 'in_progress', 'promotion', 'done', 'spam'];
+export const CLIENT_STATUSES = ['new', 'in_progress', 'promotion', 'done'];
 
 /**
  * @returns {{ items: Array, total: number, counts: Record<string, number> }}
@@ -19,10 +19,10 @@ export const CLIENT_STATUSES = ['new', 'in_progress', 'promotion', 'done', 'spam
 export const getClients = ({ status, source, limit } = {}) =>
   apiRequest('/api/leads', { query: { status, source, limit } });
 
-export const createClient = ({ name, contactMethod, contactValue, message, note }) =>
+export const createClient = ({ name, company, contactMethod, contactValue, message, note }) =>
   apiRequest('/api/leads', {
     method: 'POST',
-    body: { name, contactMethod, contactValue, message, note },
+    body: { name, company, contactMethod, contactValue, message, note },
   });
 
 /** Частичное обновление: передаём только то, что меняем. */
