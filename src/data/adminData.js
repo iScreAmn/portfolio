@@ -1,8 +1,3 @@
-/**
- * Весь статичный текст и иконки админки/аналитики — в одном месте, чтобы
- * менять формулировки не залезая в JSX. Компоненты сами держат только
- * динамику (числа, подстановки, состояния).
- */
 import {
   MdOutlineAnalytics,
   MdSpaceDashboard,
@@ -31,7 +26,6 @@ const adminData = {
     cancel: 'Отмена',
   },
 
-  /** Хедер админки: логотип слева, бургер с разделами справа. */
   nav: {
     logoAria: 'На дашборд',
     logoAlt: 'DJ',
@@ -40,7 +34,6 @@ const adminData = {
     panelLabel: 'Разделы админки',
     sectionsTitle: 'Разделы',
     accountTitle: 'Аккаунт',
-    // href сравнивается с usePathname — активный пункт определяется роутом.
     items: [
       { href: '/admin', label: 'Дашборд', hint: 'Сводка за неделю', icon: MdSpaceDashboard },
       {
@@ -55,11 +48,6 @@ const adminData = {
         hint: 'Заявки с сайта и свои',
         icon: FaUsers,
       },
-      /**
-       * Сайт и админка — одно Next-приложение, поэтому ведём на '/', а не на
-       * https://djcode.ge: в проде это тот же djcode.ge, а локально ссылка
-       * не выкидывает с localhost на боевой домен.
-       */
       {
         href: '/',
         label: 'Вернуться на сайт',
@@ -67,7 +55,6 @@ const adminData = {
         icon: CgWebsite,
       },
     ],
-    // Раздел «Аккаунт» панели: сначала настройки, следом выход.
     account: [
       {
         href: '/admin/settings',
@@ -90,8 +77,6 @@ const adminData = {
     submittingLabel: 'Входим...',
   },
 
-  // Настройки уехали в отдельный роут /admin/settings — у аналитики остались
-  // только её собственные вкладки.
   tabs: [
     { key: 'overview', label: 'Обзор', icon: MdOutlineAnalytics },
     { key: 'sessions', label: 'Пользователи и сессии', icon: FaUsers },
@@ -182,10 +167,6 @@ const adminData = {
     backIcon: FaArrowLeft,
   },
 
-  /**
-   * Главная страница админки. Своих данных не считает — показывает сводку
-   * аналитики и заявки CRM, которые уже отдают существующие эндпоинты.
-   */
   overview: {
     title: 'Обзор',
     subtitle: 'Коротко о том, что происходило за последние 7 дней.',
@@ -195,8 +176,6 @@ const adminData = {
       periodLabel: 'за 7 дней',
       linkLabel: 'Вся аналитика',
       loadFailed: 'Не удалось загрузить сводку',
-      // Порядок задаёт воронку: просмотры ≥ сессии ≥ посетители. `key` —
-      // поле из totals, которые отдаёт /api/analytics/summary.
       metrics: [
         { key: 'pageviews', label: 'Просмотры', icon: HiOutlineEye },
         { key: 'sessions', label: 'Сессии', icon: HiOutlineCursorClick },
@@ -251,7 +230,6 @@ const adminData = {
       manual: 'Вручную',
     },
 
-    // Способ связи решает, какой будет быстрая ссылка: mailto или tel.
     contactIcons: {
       Email: MdOutlineEmail,
       Telegram: MdOutlineChat,
@@ -264,10 +242,13 @@ const adminData = {
     detailsTitle: 'Карточка клиента',
     detailsOpen: 'Открыть карточку',
     detailsClose: 'Закрыть карточку',
+
+    dragTitle: 'Перетащить строку',
+    dragHint: 'Порядок списка меняется перетаскиванием за точки слева от имени.',
+    reorderFailed: 'Не удалось сохранить порядок',
+
     payloadLabel: 'Ответы калькулятора',
 
-    // Поля карточки правятся прямо в раскрытой строке. Статус сюда не входит:
-    // он меняется бейджем в самой строке списка.
     editTitle: 'Данные клиента',
     nameLabel: 'Имя',
     namePlaceholder: 'Имя клиента',
@@ -308,7 +289,6 @@ const adminData = {
 
     deleteModal: {
       title: 'Удалить клиента?',
-      // Имя подставляем в текст, чтобы из модалки было видно, что именно удаляем.
       text: (name) => `Клиент «${name}» и его заметка удалятся без возможности восстановления.`,
       confirm: 'Удалить',
       deleting: 'Удаляем…',

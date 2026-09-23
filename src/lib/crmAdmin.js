@@ -1,14 +1,5 @@
-/**
- * Запросы мини-CRM. Как и аналитика, всё идёт через Express по
- * NEXT_PUBLIC_API_URL с httpOnly-кукой — см. lib/apiClient.js.
- *
- * Сущность «клиент» на бэкенде — это строка таблицы leads: заявка с формы,
- * заявка из калькулятора и клиент, заведённый руками, различаются полем
- * `source` ('form' | 'calculator' | 'manual').
- */
 import { apiRequest } from './apiClient';
 
-/** Порядок статусов совпадает с бэкендом (enum LeadStatus). */
 export const CLIENT_STATUSES = ['new', 'in_progress', 'promotion', 'done'];
 
 /**
@@ -25,9 +16,11 @@ export const createClient = ({ name, company, contactMethod, contactValue, messa
     body: { name, company, contactMethod, contactValue, message, note },
   });
 
-/** Частичное обновление: передаём только то, что меняем. */
 export const updateClient = (id, patch) =>
   apiRequest(`/api/leads/${encodeURIComponent(id)}`, { method: 'PATCH', body: patch });
+
+export const reorderClients = (ids) =>
+  apiRequest('/api/leads/reorder', { method: 'PATCH', body: { ids } });
 
 export const deleteClient = (id) =>
   apiRequest(`/api/leads/${encodeURIComponent(id)}`, { method: 'DELETE' });

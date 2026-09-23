@@ -4,18 +4,19 @@ import { useCallback, useEffect, useState } from 'react';
 import ClientsList from './ClientsList';
 import AddClientModal from './AddClientModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
-import { getClients, createClient, updateClient, deleteClient } from '../../../lib/crmAdmin';
+import {
+  getClients,
+  createClient,
+  updateClient,
+  reorderClients,
+  deleteClient,
+} from '../../../lib/crmAdmin';
 import adminData from '../../../data/adminData';
 import './Crm.css';
 
 const { common, crm } = adminData;
 const AddIcon = crm.addIcon;
 
-/**
- * Список клиентов, фильтр по статусу и три действия над записью: сменить
- * статус, поправить заметку, удалить. Ничего похожего на воронку сделок здесь
- * нет и не планируется — админ один, суммы и ответственные не нужны.
- */
 const CrmContainer = () => {
   const [clients, setClients] = useState([]);
   const [counts, setCounts] = useState({});
@@ -23,14 +24,7 @@ const CrmContainer = () => {
   const [status, setStatus] = useState('');
   const [error, setError] = useState(null);
 
-  /**
-   * Два разных состояния загрузки вместо одного.
-   *
-   * `loaded` взводится после первого ответа и больше не сбрасывается: при
-   * смене фильтра список остаётся на экране и лишь притухает, иначе таблица
-   * схлопывалась бы в строчку «Загрузка…» и страница дёргалась на каждый клик
-   * по фильтру.
-   */
+
   const [loaded, setLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -60,11 +54,7 @@ const CrmContainer = () => {
     load();
   }, [load]);
 
-  /**
-   * Статус правим на месте, без перезагрузки списка: полный refetch при
-   * активном фильтре выдернул бы строку из-под курсора прямо в момент клика.
-   * Счётчики при этом разъезжаются, поэтому их поправляем вручную.
-   */
+
   const changeStatus = async (client, next) => {
     if (next === client.status) return;
 
@@ -84,7 +74,24 @@ const CrmContainer = () => {
     }
   };
 
-  // Ошибку отдаём наверх: её показывает сама карточка, рядом с полями.
+  const reorder = async (order) => {
+    const previous = clients;
+    const byId = new Map(clients.map((row) => [row.id, row]));
+    const placed = new Set(order);
+
+    setClients([
+      ...order.map((id) => byId.get(id)).filter(Boolean),
+      ...clients.filter((row) => !placed.has(row.id)),
+    ]);
+
+    try {
+      await reorderClients(order);
+    } catch (err) {
+      setClients(previous);
+      setError(err?.message || crm.reorderFailed);
+    }
+  };
+
   const saveCard = async (client, patch) => {
     const updated = await updateClient(client.id, patch);
     setClients((prev) => prev.map((row) => (row.id === client.id ? updated : row)));
@@ -101,15 +108,11 @@ const CrmContainer = () => {
     if (expandedId === client.id) setExpandedId(null);
   };
 
-  // Новый клиент приходит со статусом new и может не подойти под фильтр —
-  // проще перезагрузить список, чем угадывать, попадает он в выборку или нет.
   const addClient = async (form) => {
     await createClient(form);
     await load();
   };
 
-  // «Все» считаем суммой counts, а не по total: total — размер текущей
-  // (отфильтрованной) выборки и при активном фильтре показал бы не то.
   const allCount = crm.statusOrder.reduce((sum, key) => sum + (counts[key] || 0), 0);
 
   const filters = [
@@ -136,8 +139,6 @@ const CrmContainer = () => {
             key={filter.value || 'all'}
             type="button"
             className={`crm-filter ${status === filter.value ? 'is-active' : ''}`}
-            // Раскрытая карточка относится к строке, которой под новым
-            // фильтром может не быть — закрываем, чтобы не всплыла обратно.
             onClick={() => {
               setStatus(filter.value);
               setExpandedId(null);
@@ -169,6 +170,7 @@ const CrmContainer = () => {
           <>
             <p className="crm__total">
               {crm.totalLabel} {total}
+              <span className="crm__hint">{crm.dragHint}</span>
             </p>
             <ClientsList
               clients={clients}
@@ -178,6 +180,7 @@ const CrmContainer = () => {
               onStatusChange={changeStatus}
               onSave={saveCard}
               onDelete={setPendingDelete}
+              onReorder={reorder}
             />
           </>
         )}
