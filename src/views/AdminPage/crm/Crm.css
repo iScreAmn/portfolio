@@ -640,6 +640,11 @@
     padding: 16px;
   }
 
+  .crm-card__input,
+  .crm-input {
+    font-size: 16px;
+  }
+
   .crm-table__head {
     display: none;
   }

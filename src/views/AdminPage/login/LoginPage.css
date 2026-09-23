@@ -87,4 +87,8 @@
   .admin-gate__title {
     font-size: 20px;
   }
+
+  .admin-gate__input {
+    font-size: 16px;
+  }
 }
