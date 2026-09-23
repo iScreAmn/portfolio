@@ -10,30 +10,43 @@ import SectionTitle from "../section-title/SectionTitle";
 import { motion } from "motion/react";
 import Image from "next/image";
 import ReviewModal from "../review-modal/ReviewModal";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "../../context/LocaleContext";
 import { logo } from "../../assets/images";
+import { getPublishedReviews } from "../../lib/reviews";
+import { initials } from "../../utils/initials";
 
-/**
- * Монограмма компании — фолбэк, когда логотипа клиента нет в ассетах.
- * Из двух слов берём по первой букве, из одного — первые две, чтобы чип
- * не выглядел пустым с единственным символом.
- */
-const companyInitials = (company = "") => {
-  const words = company.split(/\s+/).filter(Boolean);
-  if (words.length === 0) return "";
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
-  return words
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-};
+const fromApi = (review) => ({
+  id: `review-${review.id}`,
+  imgSrc: review.photo,
+  description: review.text,
+  name: review.name,
+  company: review.company || "",
+  companyLogo: review.logo,
+});
 
 const Clients = () => {
   const { clientsData, clientsSectionData } = useLocaleHomeData();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [published, setPublished] = useState([]);
   const { locale } = useLocale();
+
+  useEffect(() => {
+    let cancelled = false;
+    getPublishedReviews()
+      .then((items) => {
+        if (!cancelled && Array.isArray(items)) setPublished(items.map(fromApi));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const reviews = useMemo(
+    () => [...published, ...clientsData],
+    [published, clientsData],
+  );
 
   return (
     <section className="section our-client" id="clients">
@@ -54,6 +67,7 @@ const Clients = () => {
               &ldquo;
             </span>
             <Swiper
+              key={reviews.length}
               modules={[Autoplay, Pagination]}
               slidesPerView={1}
               spaceBetween={30}
@@ -68,7 +82,7 @@ const Clients = () => {
               pagination={{ clickable: true }}
               className="reviews-swiper"
             >
-              {clientsData.map((client) => (
+              {reviews.map((client) => (
                 <SwiperSlide key={client.id}>
                   <figure className="review-slide">
                     <blockquote className="review-text">
@@ -76,11 +90,19 @@ const Clients = () => {
                     </blockquote>
                     <figcaption className="review-author">
                       <div className="review-avatar">
-                        <Image
-                          src={client.imgSrc}
-                          alt={client.name}
-                          sizes="64px"
-                        />
+                        {client.imgSrc ? (
+                          <Image
+                            src={client.imgSrc}
+                            alt={client.name}
+                            width={64}
+                            height={64}
+                            sizes="64px"
+                          />
+                        ) : (
+                          <span className="review-avatar-initials" aria-hidden>
+                            {initials(client.name)}
+                          </span>
+                        )}
                       </div>
                       <div className="review-author-meta">
                         <h3 className="review-author-name">{client.name}</h3>
@@ -93,6 +115,9 @@ const Clients = () => {
                           <Image
                             src={client.companyLogo}
                             alt={client.company}
+                            {...(typeof client.companyLogo === "string"
+                              ? { width: 110, height: 30 }
+                              : {})}
                             sizes="110px"
                           />
                         ) : (
@@ -100,7 +125,7 @@ const Clients = () => {
                             className="review-company-initials"
                             aria-label={client.company}
                           >
-                            {companyInitials(client.company)}
+                            {initials(client.company)}
                           </span>
                         )}
                       </div>

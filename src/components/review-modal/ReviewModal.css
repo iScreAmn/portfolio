@@ -14,9 +14,10 @@
 }
 
 .review-modal-content {
+  position: relative;
   background: var(--card-bg-color);
   border-radius: 14px;
-  padding: 40px;
+  padding: 32px 36px;
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
@@ -32,14 +33,14 @@
   font-size: 28px;
   font-weight: 700;
   color: var(--first-color);
-  margin-bottom: 30px;
+  margin: 0 40px 22px;
   text-align: center;
 }
 
 .review-modal-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .review-modal-field {
@@ -58,7 +59,7 @@
 .review-modal-field textarea {
   appearance: none;
   -webkit-appearance: none;
-  padding: 16px 20px;
+  padding: 13px 18px;
   border: 1px solid var(--liner-color);
   border-radius: 14px;
   font-size: var(--normal-font-size);
@@ -89,7 +90,200 @@
 
 .review-modal-field textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 88px;
+}
+
+/* Крестик в углу: появляется с поворотом, на hover доворачивается —
+   анимацию ведёт motion, поэтому transform здесь не задаём. */
+.review-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--liner-color);
+  border-radius: 50%;
+  font-size: 20px;
+  color: var(--first-color);
+  background: var(--bg-transparent-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.review-modal-close:hover:not(:disabled) {
+  color: #fff;
+  background: var(--second-color);
+  border-color: var(--second-color);
+}
+
+.review-modal-close:focus-visible {
+  outline: 2px solid var(--second-color);
+  outline-offset: 2px;
+}
+
+.review-modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Загрузка фото и логотипа ─────────────────────────────────────── */
+
+.review-modal-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.review-upload {
+  position: relative;
+  min-width: 0;
+}
+
+.review-upload-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 12px 14px;
+  border: 1px dashed var(--liner-color);
+  border-radius: 14px;
+  background: var(--bg-transparent-color);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.review-upload-tile:hover {
+  border-color: var(--second-color);
+  transform: translateY(-1px);
+}
+
+.review-upload-tile.has-image {
+  border-style: solid;
+}
+
+.review-upload-tile.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.review-upload-tile:has(+ .review-upload-input:focus-visible) {
+  outline: 2px solid var(--second-color);
+  outline-offset: 2px;
+}
+
+.review-upload-thumb {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: 12px;
+  font-size: 22px;
+  color: var(--second-color);
+  background: var(--card-bg-color);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.review-upload-thumb.is-round {
+  border-radius: 50%;
+}
+
+.review-upload-tile:hover .review-upload-thumb {
+  transform: scale(1.06);
+}
+
+.review-upload-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.review-upload-thumb.is-round img {
+  object-fit: cover;
+}
+
+.review-upload-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.review-upload-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--first-color);
+}
+
+.review-upload-hint {
+  font-size: 12px;
+  color: var(--third-color);
+}
+
+.review-upload-tile.has-image .review-upload-hint {
+  color: var(--second-color);
+}
+
+/* Не display: none — иначе input выпадает из порядка Tab и label
+   перестаёт открывать выбор файла с клавиатуры. */
+.review-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.review-upload-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  color: #fff;
+  background: var(--third-color);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.review-upload-remove:hover:not(:disabled) {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.dark-theme .review-upload-thumb {
+  background: rgb(23 34 58 / 80%);
+  box-shadow: none;
+}
+
+.review-modal-error {
+  margin: 0;
+  font-size: 14px;
+  color: #dc2626;
+}
+
+.review-modal-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .review-modal-buttons {
@@ -184,6 +378,41 @@
   margin-bottom: 30px;
 }
 
+/* Низкие экраны (ноутбуки 13", ландшафт): ужимаем отступы, чтобы форма
+   помещалась без прокрутки. */
+@media screen and (max-height: 820px) {
+  .review-modal-content {
+    padding: 24px 32px;
+  }
+
+  .review-modal-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .review-modal-form {
+    gap: 12px;
+  }
+
+  .review-modal-field input,
+  .review-modal-field textarea {
+    padding: 11px 16px;
+  }
+
+  .review-upload-thumb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .review-modal-btn {
+    padding: 11px 20px;
+  }
+
+  .review-modal-buttons {
+    margin-top: 4px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .review-modal-content {
     padding: 30px 20px;
@@ -195,6 +424,24 @@
 
   .review-modal-buttons {
     flex-direction: column;
+  }
+
+  /* На телефоне плитки остаются рядом, но содержимое встаёт столбиком
+     по центру: в строку иконка и подпись в половину ширины не влезают. */
+  .review-upload-tile {
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .review-upload-text {
+    align-items: center;
+  }
+
+  .review-upload-title {
+    font-size: 13px;
   }
 
   .review-modal-btn {
