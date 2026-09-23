@@ -6,6 +6,7 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import { getSummary } from '../../../lib/analyticsAdmin';
 import { getClients } from '../../../lib/crmAdmin';
 import StatTile from './StatTile';
+import ReviewsPanel from './ReviewsPanel';
 import StatusBadge from '../crm/StatusBadge';
 import { contactHref } from '../crm/ClientCard';
 import adminData from '../../../data/adminData';
@@ -96,39 +97,44 @@ const DashboardPage = () => {
       </div>
 
       <div className="dash__grid">
-        <section className="dash-card">
-          <div className="dash-card__head">
-            <h3 className="dash-card__title">
-              {overview.analytics.title}
-              <span className="dash-card__period">{overview.analytics.periodLabel}</span>
-            </h3>
-            <Link className="dash-card__link" href="/admin/analytics">
-              {overview.analytics.linkLabel}
-              <HiArrowNarrowRight aria-hidden />
-            </Link>
-          </div>
-
-          {summaryError ? (
-            <p className="dash-card__error">
-              {common.errorPrefix} {summaryError}
-            </p>
-          ) : (
-            <div className="dash-tiles">
-              {overview.analytics.metrics.map(({ key, label, icon }) => {
-                const value = Number(totals[key]) || 0;
-                return (
-                  <StatTile
-                    key={key}
-                    icon={icon}
-                    label={label}
-                    value={value}
-                    share={metricMax ? (value / metricMax) * 100 : 0}
-                  />
-                );
-              })}
+        {/* Левая колонка: сводка и под ней отзывы, справа — заявки. */}
+        <div className="dash__col">
+          <section className="dash-card">
+            <div className="dash-card__head">
+              <h3 className="dash-card__title">
+                {overview.analytics.title}
+                <span className="dash-card__period">{overview.analytics.periodLabel}</span>
+              </h3>
+              <Link className="dash-card__link" href="/admin/analytics">
+                {overview.analytics.linkLabel}
+                <HiArrowNarrowRight aria-hidden />
+              </Link>
             </div>
-          )}
-        </section>
+
+            {summaryError ? (
+              <p className="dash-card__error">
+                {common.errorPrefix} {summaryError}
+              </p>
+            ) : (
+              <div className="dash-tiles">
+                {overview.analytics.metrics.map(({ key, label, icon }) => {
+                  const value = Number(totals[key]) || 0;
+                  return (
+                    <StatTile
+                      key={key}
+                      icon={icon}
+                      label={label}
+                      value={value}
+                      share={metricMax ? (value / metricMax) * 100 : 0}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          <ReviewsPanel />
+        </div>
 
         <section className="dash-card">
           <div className="dash-card__head">

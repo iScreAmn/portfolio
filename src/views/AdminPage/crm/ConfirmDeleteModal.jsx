@@ -5,13 +5,8 @@ import CrmModal from './CrmModal';
 import adminData from '../../../data/adminData';
 
 const { crm } = adminData;
-const text = crm.deleteModal;
 
-/**
- * Удаление в один клик из списка запрещено намеренно: подтверждение здесь —
- * единственная точка, где реально уходит DELETE.
- */
-const ConfirmDeleteModal = ({ client, onClose, onConfirm }) => {
+const ConfirmDeleteModal = ({ client, onClose, onConfirm, text = crm.deleteModal }) => {
   const [error, setError] = useState(null);
   const [deleting, setDeleting] = useState(false);
 

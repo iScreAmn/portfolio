@@ -250,6 +250,255 @@ a.dash-lead__contact:hover {
   white-space: nowrap;
 }
 
+.dash__col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.dash-reviews .dash-card__head {
+  flex-wrap: wrap;
+}
+
+.dash-reviews__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dash-reviews__swiper {
+  --swiper-pagination-bottom: 0px;
+  width: 100%;
+  padding-bottom: 28px;
+}
+
+.dash-reviews__swiper .swiper-pagination-bullet {
+  background-color: #111827;
+  opacity: 0.25;
+  transition: 0.3s linear;
+}
+
+.dash-reviews__swiper .swiper-pagination-bullet-active {
+  width: 20px;
+  border-radius: 4px;
+  opacity: 0.85;
+}
+
+.dash-reviews__error {
+  margin-top: 10px;
+}
+
+.dash-review {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f1f3f6 100%);
+}
+
+.dash-review__text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.dash-review__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dash-review__avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  color: #6b7280;
+  background: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(17, 24, 39, 0.12);
+}
+
+.dash-review__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dash-review__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.dash-review__name {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-review__company {
+  overflow: hidden;
+  font-size: 12px;
+  color: #6b7280;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-review__logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #6b7280;
+}
+
+.dash-review__logo img {
+  max-width: 84px;
+  max-height: 24px;
+  object-fit: contain;
+  filter: brightness(0) opacity(0.7);
+}
+
+.dash-review__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dash-review__date {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.dash-review__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.dash-review__actions .crm-btn {
+  padding: 7px 12px;
+}
+
+.dash-review__delete:hover:not(:disabled) {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+
+.review-edit__images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.review-edit__image-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-edit__preview {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.review-edit__preview.is-round {
+  border-radius: 50%;
+}
+
+.review-edit__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.review-edit__preview.is-round img {
+  object-fit: cover;
+}
+
+.review-edit__image-actions {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.review-edit__image-actions .crm-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.review-edit__image-actions .crm-btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.review-edit__file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.review-edit__image-actions label:has(+ .review-edit__file:focus-visible) {
+  outline: 2px solid #ffa500;
+  outline-offset: 1px;
+}
+
+@media (max-width: 480px) {
+  .review-edit__images {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-review__actions {
+    width: 100%;
+  }
+
+  .dash-review__actions .crm-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 768px) {
   .dash {
     padding: 16px;
