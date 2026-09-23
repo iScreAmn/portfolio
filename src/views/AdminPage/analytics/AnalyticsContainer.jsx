@@ -4,10 +4,11 @@ import { useMemo, useState } from 'react';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import SessionsView from './SessionsView';
 import AnalyticsSettings from './AnalyticsSettings';
+import adminData from '../../../data/adminData';
 import './AnalyticsContainer.css';
-import { MdOutlineAnalytics, MdMenu, MdClose } from "react-icons/md";
-import { FaUsers } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
+
+const { tabs: TABS, menuIcons: MenuIcons, menuToggleLabel, ranges: RANGES, filters: filterText } =
+  adminData;
 
 // Списки соответствуют тому, что проставляет трекер в lib/analytics.js.
 const DEVICE_OPTIONS = ['desktop', 'mobile', 'tablet', 'tv', 'bot', 'unknown'];
@@ -59,46 +60,31 @@ const AnalyticsContainer = ({ user, onLogout }) => {
         <button
           className="analytics-mobile-burger"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
+          aria-label={menuToggleLabel}
         >
-          {mobileMenuOpen ? <MdClose /> : <MdMenu />}
+          {mobileMenuOpen ? <MenuIcons.close /> : <MenuIcons.open />}
           <span className="analytics-mobile-burger__text">
-            {activeTab === 'overview' && 'Overview'}
-            {activeTab === 'sessions' && 'Sessions'}
-            {activeTab === 'settings' && 'Settings'}
+            {TABS.find((tab) => tab.key === activeTab)?.label}
           </span>
         </button>
 
         <div className={`analytics-tabs ${mobileMenuOpen ? 'analytics-tabs--open' : ''}`}>
-          <button
-            className={`analytics-tab ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => handleTabChange('overview')}
-          >
-            <MdOutlineAnalytics /> Overview
-          </button>
-          <button
-            className={`analytics-tab ${activeTab === 'sessions' ? 'active' : ''}`}
-            onClick={() => handleTabChange('sessions')}
-          >
-            <FaUsers /> Users Sessions
-          </button>
-          <button
-            className={`analytics-tab ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => handleTabChange('settings')}
-          >
-            <IoMdSettings /> Settings
-          </button>
+          {TABS.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              className={`analytics-tab ${activeTab === key ? 'active' : ''}`}
+              onClick={() => handleTabChange(key)}
+            >
+              <Icon /> {label}
+            </button>
+          ))}
         </div>
       </div>
 
       {activeTab !== 'settings' && (
         <div className="analytics-filter-bar">
           <div className="analytics-filter-bar__range">
-            {[
-              { value: '7d', label: '7 days' },
-              { value: '30d', label: '30 days' },
-              { value: '90d', label: '90 days' },
-            ].map(({ value, label }) => (
+            {RANGES.map(({ value, label }) => (
               <button
                 key={value}
                 className={`analytics-filter-btn ${range === value ? 'active' : ''}`}
@@ -115,7 +101,7 @@ const AnalyticsContainer = ({ user, onLogout }) => {
             <div className="analytics-filter-bar__segments">
               <input
                 className="analytics-filter-bar__input"
-                placeholder="Country..."
+                placeholder={filterText.countryPlaceholder}
                 value={filters.country}
                 onChange={(e) => updateFilter('country', e.target.value)}
               />
@@ -125,7 +111,7 @@ const AnalyticsContainer = ({ user, onLogout }) => {
                 value={filters.device}
                 onChange={(e) => updateFilter('device', e.target.value)}
               >
-                <option value="">All devices</option>
+                <option value="">{filterText.allDevices}</option>
                 {DEVICE_OPTIONS.map((d) => (
                   <option key={d} value={d}>
                     {d.charAt(0).toUpperCase() + d.slice(1)}
@@ -135,7 +121,7 @@ const AnalyticsContainer = ({ user, onLogout }) => {
 
               <input
                 className="analytics-filter-bar__input"
-                placeholder="Browser..."
+                placeholder={filterText.browserPlaceholder}
                 value={filters.browser}
                 onChange={(e) => updateFilter('browser', e.target.value)}
               />
@@ -145,7 +131,7 @@ const AnalyticsContainer = ({ user, onLogout }) => {
                 value={filters.source}
                 onChange={(e) => updateFilter('source', e.target.value)}
               >
-                <option value="">All sources</option>
+                <option value="">{filterText.allSources}</option>
                 {SOURCE_OPTIONS.map((s) => (
                   <option key={s} value={s}>
                     {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -160,7 +146,7 @@ const AnalyticsContainer = ({ user, onLogout }) => {
                     setFilters({ country: '', device: '', browser: '', source: '' })
                   }
                 >
-                  Clear
+                  {filterText.clear}
                 </button>
               )}
             </div>

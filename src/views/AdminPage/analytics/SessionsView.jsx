@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import './SessionsView.css';
-import { FaArrowLeft } from "react-icons/fa";
-import { IoIosLaptop, IoIosTabletLandscape } from "react-icons/io";
-import { CiMobile1 } from "react-icons/ci";
 import { getSessionsList, getSessionEvents } from '../../../lib/analyticsAdmin';
+import adminData from '../../../data/adminData';
+
+const { common, sessionsView: text } = adminData;
+const BackIcon = text.backIcon;
 
 /** Длительность считаем из границ визита: сервер отдаёт их как ISO-строки. */
 const formatDuration = (startedAt, endedAt) => {
@@ -39,26 +40,38 @@ const formatDate = (value) => {
 };
 
 const getDeviceIcon = (deviceType) => {
-  if (deviceType === 'mobile') return <CiMobile1 />;
-  if (deviceType === 'tablet') return <IoIosTabletLandscape />;
-  return <IoIosLaptop />;
+  const Icon = text.deviceIcons[deviceType] || text.deviceIcons.desktop;
+  return <Icon />;
 };
 
-const SOURCE_LABELS = {
-  direct: 'Прямой заход',
-  search: 'Поиск',
-  social: 'Соцсеть',
-  referral: 'Переход',
-  internal: 'Внутренний переход',
-  campaign: 'Кампания',
-  unknown: 'Неизвестно',
+const SOURCE_URL_MAX_LENGTH = 34;
+
+/**
+ * В карточке источник целиком не помещается и вылезает за границы — там
+ * показываем укороченную версию (путь без домена, обрезанный многоточием),
+ * полный URL виден в детальной панели по клику на карточку.
+ */
+const shortenUrl = (url, maxLength = SOURCE_URL_MAX_LENGTH) => {
+  if (!url) return '';
+  let display = url;
+  try {
+    const parsed = new URL(url);
+    display = decodeURIComponent(parsed.pathname + parsed.search) || parsed.hostname;
+  } catch {
+    try {
+      display = decodeURIComponent(url);
+    } catch {
+      display = url;
+    }
+  }
+  return display.length > maxLength ? `${display.slice(0, maxLength - 1)}…` : display;
 };
 
-const getSourceLabel = (session) => {
-  const base = SOURCE_LABELS[session?.source_type] || 'Неизвестно';
+const getSourceLabel = (session, { short = false } = {}) => {
+  const base = text.sourceLabels[session?.source_type] || text.sourceLabels.unknown;
   const host = session?.utm_source || session?.referrer;
   if (session?.source_type === 'direct' || !host) return base;
-  return `${base}: ${host}`;
+  return `${base}: ${short ? shortenUrl(host) : host}`;
 };
 
 const SessionsView = ({ period, filters }) => {
@@ -77,7 +90,7 @@ const SessionsView = ({ period, filters }) => {
       setSessions(rows || []);
     } catch (err) {
       console.error('Failed to fetch sessions:', err);
-      setError(err?.message || 'Не удалось загрузить сессии');
+      setError(err?.message || text.loadSessionsFailed);
     } finally {
       setLoading(false);
     }
@@ -111,7 +124,7 @@ const SessionsView = ({ period, filters }) => {
       setSessionEvents(rows || []);
     } catch (err) {
       console.error('Failed to fetch session events:', err);
-      setError(err?.message || 'Не удалось загрузить события сессии');
+      setError(err?.message || text.loadEventsFailed);
     } finally {
       setDetailLoading(false);
     }
@@ -130,7 +143,7 @@ const SessionsView = ({ period, filters }) => {
   if (loading) {
     return (
       <div className="sessions-view">
-        <div className="sessions-loading">Загрузка сессий...</div>
+        <div className="sessions-loading">{text.loading}</div>
       </div>
     );
   }
@@ -139,9 +152,9 @@ const SessionsView = ({ period, filters }) => {
     return (
       <div className="sessions-view">
         <div className="sessions-error">
-          <p>Error: {error}</p>
+          <p>{common.errorPrefix} {error}</p>
           <button onClick={fetchSessions} className="sessions-retry">
-            Try again
+            {common.retry}
           </button>
         </div>
       </div>
@@ -151,20 +164,21 @@ const SessionsView = ({ period, filters }) => {
   return (
     <div className="sessions-view">
       <div className="sessions-header">
-        <h2 className="sessions-title">Сессии пользователей</h2>
+        <h2 className="sessions-title">{text.title}</h2>
       </div>
 
       <div className="sessions-layout">
         <div className={`sessions-list ${selectedSession ? 'sessions-list--hidden-mobile' : ''}`}>
           <div className="sessions-list-header">
             <span>
-              Всего сессий: {visibleSessions.length}
-              {visibleSessions.length !== sessions.length && ` из ${sessions.length}`}
+              {text.totalLabel} {visibleSessions.length}
+              {visibleSessions.length !== sessions.length &&
+                ` ${text.ofLabel} ${sessions.length}`}
             </span>
           </div>
 
           {visibleSessions.length === 0 && (
-            <div className="sessions-loading">Под фильтры ничего не подошло</div>
+            <div className="sessions-loading">{text.emptyFiltered}</div>
           )}
 
           {visibleSessions.map((session) => (
@@ -177,7 +191,7 @@ const SessionsView = ({ period, filters }) => {
             >
               <div className="session-card__header">
                 <span className="session-card__device">
-                  {getDeviceIcon(session.device_type)} {session.os || 'Unknown OS'}
+                  {getDeviceIcon(session.device_type)} {session.os || text.unknownOs}
                 </span>
                 <span className="session-card__duration">
                   {formatDuration(session.started_at, session.ended_at)}
@@ -185,36 +199,43 @@ const SessionsView = ({ period, filters }) => {
               </div>
               <div className="session-card__info">
                 <div className="session-card__row">
-                  <span className="session-card__label">Браузер:</span>
-                  <span className="session-card__value">{session.browser || 'Unknown'}</span>
-                </div>
-                <div className="session-card__row">
-                  <span className="session-card__label">Локация:</span>
+                  <span className="session-card__label">{text.labels.browser}</span>
                   <span className="session-card__value">
-                    {[session.country, session.city].filter(Boolean).join(', ') || 'N/A'}
+                    {session.browser || text.unknownBrowser}
                   </span>
                 </div>
                 <div className="session-card__row">
-                  <span className="session-card__label">Источник:</span>
-                  <span className="session-card__value">{getSourceLabel(session)}</span>
+                  <span className="session-card__label">{text.labels.location}</span>
+                  <span className="session-card__value">
+                    {[session.country, session.city].filter(Boolean).join(', ') ||
+                      text.notAvailable}
+                  </span>
                 </div>
                 <div className="session-card__row">
-                  <span className="session-card__label">Время:</span>
+                  <span className="session-card__label">{text.labels.source}</span>
+                  <span className="session-card__value" title={getSourceLabel(session)}>
+                    {getSourceLabel(session, { short: true })}
+                  </span>
+                </div>
+                <div className="session-card__row">
+                  <span className="session-card__label">{text.labels.time}</span>
                   <span className="session-card__value">{formatDate(session.started_at)}</span>
                 </div>
                 <div className="session-card__row">
-                  <span className="session-card__label">События:</span>
+                  <span className="session-card__label">{text.labels.events}</span>
                   <span className="session-card__value">{session.events}</span>
                 </div>
                 <div className="session-card__row">
-                  <span className="session-card__label">Страниц:</span>
+                  <span className="session-card__label">{text.labels.pages}</span>
                   <span className="session-card__value">{session.pageviews}</span>
                 </div>
               </div>
               {session.referrer && (
                 <div className="session-card__referrer">
-                  <span className="session-card__label">Откуда:</span>
-                  <span className="session-card__referrer-url">{session.referrer}</span>
+                  <span className="session-card__label">{text.labels.referrer}</span>
+                  <span className="session-card__referrer-url" title={session.referrer}>
+                    {shortenUrl(session.referrer)}
+                  </span>
                 </div>
               )}
             </div>
@@ -224,7 +245,7 @@ const SessionsView = ({ period, filters }) => {
         <div className={`session-detail ${selectedSession ? 'session-detail--visible-mobile' : ''}`}>
           {!selectedSession && (
             <div className="session-detail-empty">
-              <p>Выберите сессию для просмотра деталей</p>
+              <p>{text.selectHint}</p>
             </div>
           )}
 
@@ -234,64 +255,70 @@ const SessionsView = ({ period, filters }) => {
                 <button
                   onClick={handleBackToList}
                   className="session-detail-back-btn"
-                  title="Назад к списку"
+                  title={text.backTitle}
                 >
-                  <FaArrowLeft /> Назад
+                  <BackIcon /> {text.backButton}
                 </button>
-                <h3 className="session-detail-title">Детали сессии</h3>
+                <h3 className="session-detail-title">{text.detailTitle}</h3>
               </div>
 
               <div className="session-detail-section">
-                <h4 className="session-detail-section-title">Общая информация</h4>
+                <h4 className="session-detail-section-title">{text.sections.generalInfo}</h4>
                 <div className="session-detail-grid">
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Устройство:</span>
+                    <span className="session-detail-label">{text.labels.device}</span>
                     <span className="session-detail-value">
                       {getDeviceIcon(selectedSession.device_type)} {selectedSession.device_type}
                     </span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">ОС:</span>
+                    <span className="session-detail-label">{text.labels.os}</span>
                     <span className="session-detail-value">{selectedSession.os || '—'}</span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Браузер:</span>
+                    <span className="session-detail-label">{text.labels.browser}</span>
                     <span className="session-detail-value">{selectedSession.browser || '—'}</span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Страна:</span>
-                    <span className="session-detail-value">{selectedSession.country || 'N/A'}</span>
+                    <span className="session-detail-label">{text.labels.country}</span>
+                    <span className="session-detail-value">
+                      {selectedSession.country || text.notAvailable}
+                    </span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Регион:</span>
-                    <span className="session-detail-value">{selectedSession.region || 'N/A'}</span>
+                    <span className="session-detail-label">{text.labels.region}</span>
+                    <span className="session-detail-value">
+                      {selectedSession.region || text.notAvailable}
+                    </span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Город:</span>
-                    <span className="session-detail-value">{selectedSession.city || 'N/A'}</span>
+                    <span className="session-detail-label">{text.labels.city}</span>
+                    <span className="session-detail-value">
+                      {selectedSession.city || text.notAvailable}
+                    </span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Вход:</span>
+                    <span className="session-detail-label">{text.labels.entry}</span>
                     <span className="session-detail-value">{selectedSession.entry_path || '—'}</span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Выход:</span>
+                    <span className="session-detail-label">{text.labels.exit}</span>
                     <span className="session-detail-value">{selectedSession.exit_path || '—'}</span>
                   </div>
                   <div className="session-detail-item">
-                    <span className="session-detail-label">Длительность:</span>
+                    <span className="session-detail-label">{text.labels.duration}</span>
                     <span className="session-detail-value">
                       {formatDuration(selectedSession.started_at, selectedSession.ended_at)}
                     </span>
                   </div>
                   <div className="session-detail-item session-detail-item--full">
-                    <span className="session-detail-label">Источник трафика:</span>
+                    <span className="session-detail-label">{text.labels.trafficSource}</span>
                     <span className="session-detail-value">{getSourceLabel(selectedSession)}</span>
                   </div>
                 </div>
                 {selectedSession.referrer && (
                   <div className="session-detail-item session-detail-item--full">
-                    <span className="session-detail-label">URL источника:</span>
+                    <span className="session-detail-label">{text.labels.referrerUrl}</span>
                     <a
                       href={selectedSession.referrer}
                       target="_blank"
@@ -305,11 +332,11 @@ const SessionsView = ({ period, filters }) => {
               </div>
 
               {detailLoading ? (
-                <div className="session-detail-loading">Загрузка событий...</div>
+                <div className="session-detail-loading">{text.eventsLoading}</div>
               ) : (
                 <>
                   <div className="session-detail-section">
-                    <h4 className="session-detail-section-title">Посещенные страницы</h4>
+                    <h4 className="session-detail-section-title">{text.sections.visitedPages}</h4>
                     {visitedPages.length > 0 ? (
                       <ul className="session-detail-pages">
                         {visitedPages.map((page, idx) => (
@@ -317,13 +344,13 @@ const SessionsView = ({ period, filters }) => {
                         ))}
                       </ul>
                     ) : (
-                      <p className="analytics-empty">Нет данных</p>
+                      <p className="analytics-empty">{common.noData}</p>
                     )}
                   </div>
 
                   <div className="session-detail-section">
                     <h4 className="session-detail-section-title">
-                      События ({sessionEvents.length})
+                      {text.sections.events} ({sessionEvents.length})
                     </h4>
                     <div className="session-detail-events">
                       {sessionEvents.map((event, idx) => (

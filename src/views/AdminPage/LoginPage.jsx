@@ -3,7 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn, getSession } from '../../lib/analyticsAdmin';
+import adminData from '../../data/adminData';
 import './Admin.css';
+
+const { common, login } = adminData;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,7 +41,7 @@ export default function LoginPage() {
 
     const mail = email.trim();
     if (!mail || !password) {
-      setError('Введите email и пароль');
+      setError(login.missingFieldsError);
       return;
     }
 
@@ -49,7 +52,7 @@ export default function LoginPage() {
       setPassword('');
       router.replace('/admin');
     } catch (err) {
-      setError(err?.message || 'Не удалось войти');
+      setError(err?.message || login.genericError);
       setSubmitting(false);
     }
   };
@@ -58,7 +61,7 @@ export default function LoginPage() {
     return (
       <div className="admin-gate">
         <div className="admin-gate__card">
-          <p className="admin-gate__hint">Проверяем сессию…</p>
+          <p className="admin-gate__hint">{common.checkingSession}</p>
         </div>
       </div>
     );
@@ -67,13 +70,13 @@ export default function LoginPage() {
   return (
     <div className="admin-gate">
       <form className="admin-gate__card" onSubmit={handleSubmit}>
-        <h1 className="admin-gate__title">Admin Panel</h1>
-        <p className="admin-gate__hint">Login to access the analytics.</p>
+        <h1 className="admin-gate__title">{login.title}</h1>
+        <p className="admin-gate__hint">{login.hint}</p>
 
         <input
           type="email"
           className="admin-gate__input"
-          placeholder="Email"
+          placeholder={login.emailPlaceholder}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="username"
@@ -82,7 +85,7 @@ export default function LoginPage() {
         <input
           type="password"
           className="admin-gate__input"
-          placeholder="Password"
+          placeholder={login.passwordPlaceholder}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
@@ -92,7 +95,7 @@ export default function LoginPage() {
         {error && <p className="admin-gate__err">{error}</p>}
 
         <button type="submit" className="admin-gate__btn" disabled={submitting}>
-          {submitting ? 'Entering...' : 'Enter'}
+          {submitting ? login.submittingLabel : login.submitLabel}
         </button>
       </form>
     </div>

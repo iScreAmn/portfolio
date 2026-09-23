@@ -1,6 +1,9 @@
 "use client";
 
 import { useMemo, useState } from 'react';
+import adminData from '../../../data/adminData';
+
+const { dashboard } = adminData;
 
 /**
  * Столбчатый график активности по дням.
@@ -38,7 +41,7 @@ export default function DailyActivityChart({ daily = [] }) {
 
   return (
     <div className="hourly-chart">
-      <div className="hourly-chart__plot" role="img" aria-label="Daily activity bar chart">
+      <div className="hourly-chart__plot" role="img" aria-label={dashboard.chartAriaLabel}>
         {data.points.map((point, idx) => {
           const isHovered = hovered === point.day;
           const dimmed = hovered !== null && !isHovered;
@@ -66,7 +69,8 @@ export default function DailyActivityChart({ daily = [] }) {
 
               {isHovered && (
                 <div className="hourly-chart__tooltip">
-                  {formatDay(point.day)} — {point.pageviews} просмотров, {point.sessions} сессий
+                  {formatDay(point.day)} — {point.pageviews} {dashboard.pageviewsUnit},{' '}
+                  {point.sessions} {dashboard.sessionsUnit}
                 </div>
               )}
             </div>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSession, signOut } from '../../lib/analyticsAdmin';
 import AnalyticsContainer from './analytics/AnalyticsContainer';
+import adminData from '../../data/adminData';
 import './Admin.css';
 
 export default function Admin() {
@@ -51,7 +52,7 @@ export default function Admin() {
     return (
       <div className="admin-gate">
         <div className="admin-gate__card">
-          <p className="admin-gate__hint">Проверяем сессию…</p>
+          <p className="admin-gate__hint">{adminData.common.checkingSession}</p>
         </div>
       </div>
     );

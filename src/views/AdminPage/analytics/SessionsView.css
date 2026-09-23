@@ -170,15 +170,21 @@
 .session-card__row {
   display: flex;
   justify-content: space-between;
+  gap: 8px;
   font-size: 13px;
 }
 
 .session-card__label {
+  flex-shrink: 0;
   color: #6b7280;
   font-weight: 500;
 }
 
 .session-card__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: #111827;
   font-weight: 400;
 }
@@ -193,8 +199,10 @@
 .session-card__referrer-url {
   display: block;
   margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: #047857;
-  word-break: break-all;
   font-weight: 500;
 }
 
