@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import './Analytics.css';
 import DailyActivityChart from './DailyActivityChart';
+import AnimatedNumber from './AnimatedNumber';
 import { getSummary, getDevices } from '../../../lib/analyticsAdmin';
 import adminData from '../../../data/adminData';
 
@@ -98,7 +99,6 @@ const AnalyticsDashboard = ({ period }) => {
   const daily = fillDailyGaps(summary?.daily, period.from, period.to);
   const topPages = summary?.top_pages || [];
   const sources = summary?.sources || [];
-  const countries = summary?.countries || [];
   const bounceRate = Math.round((Number(summary?.bounce_rate) || 0) * 100);
   const hasAnyData = (Number(totals.events) || 0) > 0;
 
@@ -116,7 +116,7 @@ const AnalyticsDashboard = ({ period }) => {
             <h3 className="analytics-card__title">{dashboard.cards.pageviews}</h3>
           </div>
           <div className="analytics-card__value">
-            {(Number(totals.pageviews) || 0).toLocaleString()}
+            <AnimatedNumber value={totals.pageviews} />
           </div>
         </div>
 
@@ -125,7 +125,7 @@ const AnalyticsDashboard = ({ period }) => {
             <h3 className="analytics-card__title">{dashboard.cards.sessions}</h3>
           </div>
           <div className="analytics-card__value">
-            {(Number(totals.sessions) || 0).toLocaleString()}
+            <AnimatedNumber value={totals.sessions} />
           </div>
         </div>
 
@@ -134,7 +134,7 @@ const AnalyticsDashboard = ({ period }) => {
             <h3 className="analytics-card__title">{dashboard.cards.visitors}</h3>
           </div>
           <div className="analytics-card__value">
-            {(Number(totals.visitors) || 0).toLocaleString()}
+            <AnimatedNumber value={totals.visitors} />
           </div>
         </div>
 
@@ -143,119 +143,107 @@ const AnalyticsDashboard = ({ period }) => {
             <h3 className="analytics-card__title">{dashboard.cards.events}</h3>
           </div>
           <div className="analytics-card__value">
-            {(Number(totals.events) || 0).toLocaleString()}
+            <AnimatedNumber value={totals.events} />
           </div>
         </div>
 
-        <div className="analytics-card">
-          <div className="analytics-card__header">
-            <h3 className="analytics-card__title">{dashboard.cards.avgSession}</h3>
-          </div>
-          <div className="analytics-card__value">
-            {formatSeconds(summary?.avg_session_seconds)}
-          </div>
-        </div>
+        <div className="analytics-split">
+          <div className="analytics-split__col">
+            <div className="analytics-split__pair">
+              <div className="analytics-card">
+                <div className="analytics-card__header">
+                  <h3 className="analytics-card__title">{dashboard.cards.avgSession}</h3>
+                </div>
+                <div className="analytics-card__value">
+                  <AnimatedNumber value={summary?.avg_session_seconds} format={formatSeconds} />
+                </div>
+              </div>
 
-        <div className="analytics-card">
-          <div className="analytics-card__header">
-            <h3 className="analytics-card__title">{dashboard.cards.bounceRate}</h3>
-          </div>
-          <div className="analytics-card__value">{bounceRate}%</div>
-        </div>
+              <div className="analytics-card">
+                <div className="analytics-card__header">
+                  <h3 className="analytics-card__title">{dashboard.cards.bounceRate}</h3>
+                </div>
+                <div className="analytics-card__value">
+                  <AnimatedNumber value={bounceRate} format={(n) => `${n}%`} />
+                </div>
+              </div>
+            </div>
 
-        <div className="analytics-card analytics-card--wide">
-          <div className="analytics-card__header">
-            <h3 className="analytics-card__title">{dashboard.cards.topPages}</h3>
+            <div className="analytics-card analytics-card--grow">
+              <div className="analytics-card__header">
+                <h3 className="analytics-card__title">{dashboard.cards.sources}</h3>
+              </div>
+              <div className="analytics-card__content">
+                {sources.length > 0 ? (
+                  <ul className="analytics-list">
+                    {sources.map((source, i) => (
+                      <li key={`${source.source_type}-${i}`} className="analytics-list__item">
+                        <span className="analytics-list__name">
+                          <span className="analytics-event-badge">
+                            {source.source_type || 'unknown'}
+                          </span>
+                        </span>
+                        <span className="analytics-list__value">
+                          {source.sessions} {dashboard.sessionsUnit}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="analytics-empty">{common.noData}</p>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="analytics-card__content">
-            {topPages.length > 0 ? (
-              <ul className="analytics-list">
-                {topPages.map((page, i) => (
-                  <li key={`${page.path}-${i}`} className="analytics-list__item">
-                    <span className="analytics-list__name">{page.path || '—'}</span>
-                    <span className="analytics-list__value">
-                      {page.pageviews} {dashboard.pageviewsUnit}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="analytics-empty">{common.noData}</p>
-            )}
-          </div>
-        </div>
 
-        <div className="analytics-card analytics-card--wide">
-          <div className="analytics-card__header">
-            <h3 className="analytics-card__title">{dashboard.cards.sources}</h3>
-          </div>
-          <div className="analytics-card__content">
-            {sources.length > 0 ? (
-              <ul className="analytics-list">
-                {sources.map((source, i) => (
-                  <li key={`${source.source_type}-${i}`} className="analytics-list__item">
-                    <span className="analytics-list__name">
-                      <span className="analytics-event-badge">
-                        {source.source_type || 'unknown'}
-                      </span>
-                    </span>
-                    <span className="analytics-list__value">
-                      {source.sessions} {dashboard.sessionsUnit}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="analytics-empty">{common.noData}</p>
-            )}
-          </div>
-        </div>
+          <div className="analytics-split__col">
+            <div className="analytics-card">
+              <div className="analytics-card__header">
+                <h3 className="analytics-card__title">{dashboard.cards.topPages}</h3>
+              </div>
+              <div className="analytics-card__content">
+                {topPages.length > 0 ? (
+                  <ul className="analytics-list">
+                    {topPages.map((page, i) => (
+                      <li key={`${page.path}-${i}`} className="analytics-list__item">
+                        <span className="analytics-list__name">{page.path || '—'}</span>
+                        <span className="analytics-list__value">
+                          {page.pageviews} {dashboard.pageviewsUnit}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="analytics-empty">{common.noData}</p>
+                )}
+              </div>
+            </div>
 
-        <div className="analytics-card analytics-card--wide">
-          <div className="analytics-card__header">
-            <h3 className="analytics-card__title">{dashboard.cards.geography}</h3>
-          </div>
-          <div className="analytics-card__content">
-            {countries.length > 0 ? (
-              <ul className="analytics-list">
-                {countries.map((row, i) => (
-                  <li key={`${row.country}-${i}`} className="analytics-list__item">
-                    <span className="analytics-list__name">{row.country || '—'}</span>
-                    <span className="analytics-list__value">
-                      {row.sessions} {dashboard.sessionsUnit}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="analytics-empty">{common.noData}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="analytics-card analytics-card--wide">
-          <div className="analytics-card__header">
-            <h3 className="analytics-card__title">{dashboard.cards.devices}</h3>
-          </div>
-          <div className="analytics-card__content">
-            {devices.length > 0 ? (
-              <ul className="analytics-list">
-                {devices.map((row, i) => (
-                  <li key={`${row.device_type}-${row.browser}-${i}`} className="analytics-list__item">
-                    <span className="analytics-list__name">
-                      <span className="analytics-event-badge">{row.device_type}</span>
-                      <span className="analytics-event-action">{row.os}</span>
-                      <span className="analytics-event-label">· {row.browser}</span>
-                    </span>
-                    <span className="analytics-list__value">
-                      {row.sessions} {dashboard.sessionsUnit}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="analytics-empty">{common.noData}</p>
-            )}
+            <div className="analytics-card">
+              <div className="analytics-card__header">
+                <h3 className="analytics-card__title">{dashboard.cards.devices}</h3>
+              </div>
+              <div className="analytics-card__content">
+                {devices.length > 0 ? (
+                  <ul className="analytics-list">
+                    {devices.map((row, i) => (
+                      <li key={`${row.device_type}-${row.browser}-${i}`} className="analytics-list__item">
+                        <span className="analytics-list__name">
+                          <span className="analytics-event-badge">{row.device_type}</span>
+                          <span className="analytics-event-action">{row.os}</span>
+                          <span className="analytics-event-label">· {row.browser}</span>
+                        </span>
+                        <span className="analytics-list__value">
+                          {row.sessions} {dashboard.sessionsUnit}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="analytics-empty">{common.noData}</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
