@@ -1,38 +1,27 @@
 "use client";
 
 import ContactsForm from "../../components/contacts/ContactsForm";
-import contactsData from "../../data/contactsData";
+import { getContactsData } from "../../data/contactsData";
+import { contactsHeroData } from "../../data/contactsHeroData";
+import { useLocale } from "../../context/LocaleContext";
 import "./ContactsPage.css";
 
 const ContactsPage = () => {
+  const { locale } = useLocale();
+  const hero = contactsHeroData[locale] || contactsHeroData.en;
+  const contactsData = getContactsData(locale);
+
   return (
     <div className="contacts-page">
       <section className="contacts-hero">
         <div className="contacts-hero__container">
           <div className="contacts-hero__content">
-            <div className="contacts-hero__eyebrow">Contact</div>
-            <h1 className="contacts-hero__title">
-              Ready to build your next digital experience?
-            </h1>
-            <p className="contacts-hero__subtitle">
-              I handle user research, UI systems, front-end implementation, and
-              launch guidance. Let’s map your goals, define the scope, and turn
-              it into a polished, responsive product that feels alive on both
-              light and dark themes.
-            </p>
+            <div className="contacts-hero__eyebrow">{hero.eyebrow}</div>
+            <h1 className="contacts-hero__title">{hero.title}</h1>
+            <p className="contacts-hero__subtitle">{hero.subtitle}</p>
             <p className="contacts-hero__subtitle contacts-hero__subtitle--secondary">
-              Drop a note with the project details, timeline, or budget — I
-              usually reply within 24 hours.
+              {hero.subtitleSecondary}
             </p>
-          </div>
-          <div className="contacts-hero__chips">
-            {["UI/UX", "Responsive", "Design Systems", "React", "Motion"].map(
-              (chip) => (
-                <span key={chip} className="contacts-hero__chip">
-                  {chip}
-                </span>
-              )
-            )}
           </div>
         </div>
       </section>
@@ -40,11 +29,8 @@ const ContactsPage = () => {
       <section className="contacts-panel">
         <div className="contacts-panel__container">
           <div className="contacts-panel__info">
-            <h2 className="contacts-panel__title">Drop a message</h2>
-            <p className="contacts-panel__lead">
-              Choose a preferred channel or share the story. Everything below is
-              monitored daily.
-            </p>
+            <h2 className="contacts-panel__title">{hero.panelTitle}</h2>
+            <p className="contacts-panel__lead">{hero.panelLead}</p>
             <ul className="contacts-panel__list">
               {contactsData.map((item) => (
                 <li key={item.id} className="contacts-panel__item">

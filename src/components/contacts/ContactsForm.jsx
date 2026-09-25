@@ -7,10 +7,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { slideInVariants } from "../../utils/animation";
 import { getApiBase } from "../../utils/apiBase";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
+import { useLocale } from "../../context/LocaleContext";
+import { contactsFormData } from "../../data/contactsFormData";
 import "./ContactsForm.css";
 
 const ContactsForm = () => {
   const { track } = useAnalytics();
+  const { locale } = useLocale();
+  const t = contactsFormData[locale] || contactsFormData.en;
   const [formData, setFormData] = useState({
     name: "",
     contactMethod: "",
@@ -26,29 +30,29 @@ const ContactsForm = () => {
   const validateField = (name, value) => {
     switch (name) {
       case "name":
-        if (!value.trim()) return "Name is required";
-        if (value.length < 2) return "Name must be at least 2 characters";
-        if (!/^[a-zA-Z\s]+$/.test(value)) return "Name can only contain letters and spaces";
+        if (!value.trim()) return t.errors.nameRequired;
+        if (value.length < 2) return t.errors.nameMinLength;
+        if (!/^[a-zA-Z\s]+$/.test(value)) return t.errors.nameInvalid;
         return "";
       case "contactMethod":
-        if (!value.trim()) return "Choose a contact method";
+        if (!value.trim()) return t.errors.contactMethodRequired;
         return "";
       case "contactValue": {
         const method = formData.contactMethod;
-        if (!value.trim()) return method === "Email" ? "Email is required" : "Phone is required";
+        if (!value.trim()) return method === "Email" ? t.errors.emailRequired : t.errors.phoneRequired;
         if (method === "Email") {
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Enter a valid email";
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t.errors.emailInvalid;
         } else {
-          if (value.replace(/\D/g, "").length < 10) return "Enter a valid phone number (at least 10 digits)";
+          if (value.replace(/\D/g, "").length < 10) return t.errors.phoneInvalid;
         }
         return "";
       }
       case "message":
-        if (!value.trim()) return "Message is required";
-        if (value.length < 10) return "Message must be at least 10 characters";
+        if (!value.trim()) return t.errors.messageRequired;
+        if (value.length < 10) return t.errors.messageMinLength;
         return "";
       case "agreeToPrivacy":
-        return value ? "" : "You must agree to the processing of personal data";
+        return value ? "" : t.errors.agreeToPrivacy;
       default:
         return "";
     }
@@ -152,12 +156,12 @@ const ContactsForm = () => {
             {submitStatus === 'success' ? (
               <>
                 <FaCheck />
-                <span>Message sent successfully!</span>
+                <span>{t.notificationSuccess}</span>
               </>
             ) : (
               <>
                 <FaExclamationTriangle />
-                <span>Failed to send message. Please try again.</span>
+                <span>{t.notificationError}</span>
               </>
             )}
           </motion.div>
@@ -175,7 +179,7 @@ const ContactsForm = () => {
         >
           <div className="input-group">
             <input
-              placeholder="Name"
+              placeholder={t.namePlaceholder}
               type="text"
               name="name"
               value={formData.name}
@@ -210,7 +214,7 @@ const ContactsForm = () => {
               className={`contact-field contact-field--select ${errors.contactMethod ? "error" : ""}`}
             >
               <option value="" disabled>
-                Preferred contact method
+                {t.contactMethodPlaceholder}
               </option>
               <option value="Telegram">Telegram</option>
               <option value="WhatsApp">WhatsApp</option>
@@ -250,7 +254,7 @@ const ContactsForm = () => {
                   name="contactValue"
                   value={formData.contactValue}
                   onChange={handleInputChange}
-                  placeholder={formData.contactMethod === "Email" ? "Your email" : "Your phone number"}
+                  placeholder={formData.contactMethod === "Email" ? t.emailPlaceholder : t.phonePlaceholder}
                   className={`contact-field ${errors.contactValue ? "error" : ""}`}
                 />
                 {errors.contactValue && (
@@ -277,7 +281,7 @@ const ContactsForm = () => {
             variants={slideInVariants("top", 0.7, 50, true)}
           >
             <textarea
-              placeholder="Message"
+              placeholder={t.messagePlaceholder}
               name="message"
               value={formData.message}
               onChange={handleInputChange}
@@ -311,9 +315,9 @@ const ContactsForm = () => {
             className="contact-privacy__input"
           />
           <span className="contact-privacy__text">
-            By clicking the button, you agree to the terms of{" "}
+            {t.privacyPrefix}{" "}
             <a href={PRIVACY_LINK} className="contact-privacy__link" target="_blank" rel="noopener noreferrer">
-              processing of personal data
+              {t.privacyLink}
             </a>
           </span>
         </motion.label>
@@ -342,11 +346,11 @@ const ContactsForm = () => {
           {isSubmitting ? (
             <>
               <FaSpinner className="spinner" />
-              Sending...
+              {t.sendingLabel}
             </>
           ) : (
             <>
-              Send Message
+              {t.submitLabel}
               <FaPaperPlane />
             </>
           )}

@@ -24,6 +24,7 @@ const AboutPage = () => {
         <div className="about-page__container">
           <div className="about-page__content">
             <h1 className="about-page__title">{heroData.title}</h1>
+            <p className="about-page__lead">{heroData.lead}</p>
             <p className="about-page__subtitle">
               {heroData.subtitle}
             </p>

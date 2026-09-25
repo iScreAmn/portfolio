@@ -1,16 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
-import { MdOutlineEmail } from "react-icons/md";
+import { MdOutlineEmail, MdClose } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useLocale } from "../../context/LocaleContext";
-import { calculatorData } from "../../data/calculatorData";
+import { calculatorData, phoneCountryCodes } from "../../data/calculatorData";
 import { logo } from "../../assets/images";
 import SectionTitle from "../section-title/SectionTitle";
 import "./Calculator.css";
+
+const PRIVACY_LINK = "/privacy";
+const PHONE_METHOD = "whatsapp";
+
+const emptyCtaForm = {
+  name: "",
+  contactMethod: "",
+  countryCode: phoneCountryCodes[0].value,
+  contact: "",
+  message: "",
+  agreeToPrivacy: false,
+};
 
 const contactMethodIcons = {
   telegram: FaTelegramPlane,
@@ -44,12 +56,7 @@ const Calculator = () => {
     contact: "",
     message: "",
   });
-  const [ctaFormData, setCtaFormData] = useState({
-    name: "",
-    contactMethod: "",
-    contact: "",
-    message: "",
-  });
+  const [ctaFormData, setCtaFormData] = useState(emptyCtaForm);
 
   const steps = t.steps;
   const contactMethods = t.contactMethods.map((method) => ({
@@ -58,6 +65,27 @@ const Calculator = () => {
   }));
 
   const currentStepData = steps[currentStep - 1];
+
+  const isCtaPhone = ctaFormData.contactMethod === PHONE_METHOD;
+  const canSubmitCta =
+    ctaFormData.name.trim() &&
+    ctaFormData.contactMethod &&
+    ctaFormData.contact.trim() &&
+    ctaFormData.agreeToPrivacy &&
+    !isCtaSubmitting;
+
+  const closeCtaModal = () => {
+    if (!isCtaSubmitting) setIsCtaModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (!isCtaModalOpen) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") closeCtaModal();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  });
 
   const handleOptionSelect = (value) => {
     if (currentStep === totalSteps) return;
@@ -143,7 +171,13 @@ const Calculator = () => {
 
   const handleCtaSubmit = async (event) => {
     event.preventDefault();
-    if (!ctaFormData.name.trim() || !ctaFormData.contactMethod || !ctaFormData.contact.trim()) return;
+    if (!canSubmitCta) return;
+
+    const { countryCode, agreeToPrivacy, ...payload } = ctaFormData;
+    if (isCtaPhone) {
+      const dial = phoneCountryCodes.find((c) => c.value === countryCode)?.dial || "";
+      payload.contact = `${dial} ${ctaFormData.contact.trim()}`;
+    }
 
     setIsCtaSubmitting(true);
     try {
@@ -154,7 +188,8 @@ const Calculator = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...ctaFormData,
+          ...payload,
+          agreeToPrivacy,
           source: "cta-modal",
         }),
       });
@@ -164,12 +199,7 @@ const Calculator = () => {
         setTimeout(() => {
           setIsCtaModalOpen(false);
           setCtaSubmitDone(false);
-          setCtaFormData({
-            name: "",
-            contactMethod: "",
-            contact: "",
-            message: "",
-          });
+          setCtaFormData(emptyCtaForm);
         }, 1200);
       }
     } catch (error) {
@@ -417,7 +447,7 @@ const Calculator = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => !isCtaSubmitting && setIsCtaModalOpen(false)}
+            onClick={closeCtaModal}
           >
             <motion.div
               className="calculator-modal"
@@ -425,7 +455,18 @@ const Calculator = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
             >
+              <button
+                type="button"
+                className="calculator-modal-close"
+                onClick={closeCtaModal}
+                disabled={isCtaSubmitting}
+                aria-label={t.ctaCloseLabel}
+              >
+                <MdClose />
+              </button>
               {ctaSubmitDone ? (
                 <div className="calculator-modal-success">{t.ctaSuccess}</div>
               ) : (
@@ -450,7 +491,33 @@ const Calculator = () => {
                       </option>
                     ))}
                   </select>
-                  {ctaFormData.contactMethod && (
+                  {ctaFormData.contactMethod && (isCtaPhone ? (
+                    <div className="calculator-phone-field">
+                      <select
+                        className="calculator-contact-input calculator-phone-code"
+                        value={ctaFormData.countryCode}
+                        onChange={(e) => setCtaFormData({ ...ctaFormData, countryCode: e.target.value })}
+                        aria-label={t.ctaCountryCodeLabel}
+                      >
+                        {phoneCountryCodes.map((country) => (
+                          <option key={country.value} value={country.value}>
+                            {country.flag} {country.dial}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        className="calculator-contact-input"
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel-national"
+                        placeholder={contactMethods.find((method) => method.id === PHONE_METHOD)?.placeholder}
+                        value={ctaFormData.contact}
+                        onChange={(e) =>
+                          setCtaFormData({ ...ctaFormData, contact: e.target.value.replace(/[^\d\s()-]/g, "") })
+                        }
+                      />
+                    </div>
+                  ) : (
                     <input
                       className="calculator-contact-input"
                       type="text"
@@ -461,11 +528,25 @@ const Calculator = () => {
                       value={ctaFormData.contact}
                       onChange={(e) => setCtaFormData({ ...ctaFormData, contact: e.target.value })}
                     />
-                  )}
+                  ))}
+                  <label className="calculator-privacy">
+                    <input
+                      type="checkbox"
+                      className="calculator-privacy__input"
+                      checked={ctaFormData.agreeToPrivacy}
+                      onChange={(e) => setCtaFormData({ ...ctaFormData, agreeToPrivacy: e.target.checked })}
+                    />
+                    <span className="calculator-privacy__text">
+                      {t.ctaPrivacyPrefix}{" "}
+                      <a href={PRIVACY_LINK} className="calculator-privacy__link" target="_blank" rel="noopener noreferrer">
+                        {t.ctaPrivacyLink}
+                      </a>
+                    </span>
+                  </label>
                   <button
                     type="submit"
                     className="calculator-btn calculator-btn--next"
-                    disabled={!ctaFormData.name.trim() || !ctaFormData.contactMethod || !ctaFormData.contact.trim() || isCtaSubmitting}
+                    disabled={!canSubmitCta}
                   >
                     {isCtaSubmitting ? (
                       <>

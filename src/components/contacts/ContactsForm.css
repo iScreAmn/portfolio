@@ -306,6 +306,7 @@
 @media (max-width: 768px) {
   .second-row {
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
   }
   

@@ -36,8 +36,8 @@
   align-items: center;
   padding: 8px 14px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(22, 83, 225, 0.1);
+  border: 1px solid rgba(22, 83, 225, 0.25);
   color: var(--first-color);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -45,11 +45,24 @@
   backdrop-filter: blur(8px);
 }
 
+.dark-theme .about-page__eyebrow {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .about-page__title {
   margin: 0;
   font-size: clamp(2rem, 3vw, 2.9rem);
   letter-spacing: 0.02em;
   line-height: 1.2;
+}
+
+.about-page__lead {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--first-color);
 }
 
 .about-page__subtitle {

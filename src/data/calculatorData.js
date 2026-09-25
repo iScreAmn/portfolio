@@ -1,3 +1,21 @@
+// Коды стран для поля телефона в модалке «Заказать звонок».
+// value — ISO-код: у России и Казахстана одинаковый +7, а option нужен уникальный ключ.
+export const phoneCountryCodes = [
+  { value: "GE", flag: "🇬🇪", dial: "+995" },
+  { value: "RU", flag: "🇷🇺", dial: "+7" },
+  { value: "KZ", flag: "🇰🇿", dial: "+7" },
+  { value: "UA", flag: "🇺🇦", dial: "+380" },
+  { value: "BY", flag: "🇧🇾", dial: "+375" },
+  { value: "AM", flag: "🇦🇲", dial: "+374" },
+  { value: "AZ", flag: "🇦🇿", dial: "+994" },
+  { value: "UZ", flag: "🇺🇿", dial: "+998" },
+  { value: "TR", flag: "🇹🇷", dial: "+90" },
+  { value: "IL", flag: "🇮🇱", dial: "+972" },
+  { value: "DE", flag: "🇩🇪", dial: "+49" },
+  { value: "GB", flag: "🇬🇧", dial: "+44" },
+  { value: "US", flag: "🇺🇸", dial: "+1" },
+];
+
 export const calculatorData = {
   ru: {
     innerTitle: "Рассчитай стоимость проекта",
@@ -21,6 +39,10 @@ export const calculatorData = {
     ctaModalTitle: "Заказать звонок",
     ctaPhoneLinePrefix: "Или позвоните мне",
     ctaSuccess: "Заявка отправлена",
+    ctaCloseLabel: "Закрыть",
+    ctaCountryCodeLabel: "Код страны",
+    ctaPrivacyPrefix: "Нажимая кнопку, вы соглашаетесь с условиями",
+    ctaPrivacyLink: "обработки персональных данных",
     contactMethods: [
       { id: "telegram", label: "Telegram", placeholder: "@username или телефон" },
       { id: "whatsapp", label: "WhatsApp", placeholder: "Номер телефона" },
@@ -146,6 +168,10 @@ export const calculatorData = {
     ctaModalTitle: "Request a call",
     ctaPhoneLinePrefix: "Or call me at",
     ctaSuccess: "Request sent",
+    ctaCloseLabel: "Close",
+    ctaCountryCodeLabel: "Country code",
+    ctaPrivacyPrefix: "By clicking the button, you agree to the terms of",
+    ctaPrivacyLink: "processing of personal data",
     contactMethods: [
       { id: "telegram", label: "Telegram", placeholder: "@username or phone" },
       { id: "whatsapp", label: "WhatsApp", placeholder: "Phone number" },
