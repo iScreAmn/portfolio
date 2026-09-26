@@ -5,9 +5,6 @@ export const heroData = {
   title: "Development Packages",
   subtitle:
     "Modern UI/UX website development with clean code, scalable structure, and responsive performance. Choose a package or request a custom solution. I handle front-end, integrations, and technical optimization with smooth delivery and support.",
-  subtitleSecondary:
-    "Landing pages, multi-page sites, online stores, chatbots. Built with performance budgets, accessibility, and theme-ready design tokens.",
-  chips: ["UX/UI", "Animations", "Responsive", "i18n", "E-commerce"],
 };
 
 export const packages = [
@@ -41,11 +38,31 @@ export const uiTexts = {
   choosePlan: "Choose plan",
   closeButton: "Close",
   closeSymbol: "✕",
-  formLabels: {
-    name: "Name",
-    email: "Email",
-  },
   submitButton: "Request this service",
+  form: {
+    nameLabel: "Name",
+    namePlaceholder: "How should I address you?",
+    contactMethodLabel: "Preferred contact method",
+    contactMethods: [
+      { id: "telegram", label: "Telegram", placeholder: "@username or phone" },
+      { id: "whatsapp", label: "WhatsApp", placeholder: "Phone number" },
+      { id: "email", label: "Email", placeholder: "your@email.com" },
+    ],
+    countryCodeLabel: "Country code",
+    supportLabel: "I need website support after launch",
+    supportPrice: "$100/month",
+    privacyPrefix: "By clicking the button, you agree to the terms of",
+    privacyLink: "processing of personal data",
+    sending: "Sending...",
+    success: "Thank you! I'll get in touch with you shortly.",
+    error: "Failed to send the request. Please try again.",
+    errors: {
+      name: "Enter your name (at least 2 characters)",
+      telegram: "Enter a Telegram @username or phone number",
+      whatsapp: "Enter a valid phone number",
+      email: "Enter a valid email",
+    },
+  },
 };
 
 export const supportCtaData = {

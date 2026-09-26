@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 import "./ServicesPage.css";
+import ServicePackageForm from "./ServicePackageForm";
 import { useLocale } from "../../context/LocaleContext";
 import * as englishServicesData from "../../data/english/services";
 import * as russianServicesData from "../../data/russian/services";
@@ -43,11 +44,6 @@ const ServicesPage = () => {
     };
   }, [locale]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    closeModal();
-  };
-
   return (
     <div className="services-page">
       <div className="services-intro">
@@ -59,16 +55,6 @@ const ServicesPage = () => {
               <p className="services-hero__subtitle">
                 {heroData.subtitle}
               </p>
-              <p className="services-hero__subtitle services-hero__subtitle--secondary">
-                {heroData.subtitleSecondary}
-              </p>
-            </div>
-            <div className="services-hero__chips">
-              {heroData.chips.map((chip) => (
-                <span key={chip} className="services-hero__chip">
-                  {chip}
-                </span>
-              ))}
             </div>
           </div>
         </section>
@@ -205,23 +191,12 @@ const ServicesPage = () => {
                   ))}
                 </ul>
               </div>
-              <form
-                className="services-modal__form"
-                onSubmit={handleSubmit}
-                autoComplete="off"
-              >
-                <label className="services-modal__label">
-                  {uiTexts.formLabels.name}
-                  <input type="text" name="name" required />
-                </label>
-                <label className="services-modal__label">
-                  {uiTexts.formLabels.email}
-                  <input type="email" name="email" required />
-                </label>
-                <button className="services-modal__submit" type="submit">
-                  {uiTexts.submitButton}
-                </button>
-              </form>
+              <ServicePackageForm
+                key={selectedService.accent}
+                pkg={selectedService}
+                uiTexts={uiTexts}
+                onDone={closeModal}
+              />
             </div>
           </div>
         </div>

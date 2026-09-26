@@ -4,10 +4,7 @@ export const heroData = {
   eyebrow: "Услуги",
   title: "Пакеты разработки",
   subtitle:
-    "Современная разработка сайтов с продуманным UI/UX, чистым кодом, масштабируемой структурой и адаптивной версткой. Можно выбрать готовый пакет или запросить индивидуальное решение. Я беру на себя front-end, интеграции и техническую оптимизацию с аккуратной сдачей проекта и поддержкой.",
-  subtitleSecondary:
-    "Лендинги, многостраничные сайты, интернет-магазины, чат-боты. С учетом performance budget, accessibility и готовой системы дизайн-токенов для темизации.",
-  chips: ["UX/UI", "Анимации", "Адаптив", "i18n", "E-commerce"],
+    "Создаю быстрые, современные и удобные сайты под задачи бизнеса. От лендингов до интернет-магазинов и веб-приложений. Выберите готовый пакет или закажите индивидуальное решение. Беру на себя разработку, интеграции, оптимизацию и запуск проекта",
 };
 
 export const packages = [
@@ -41,11 +38,31 @@ export const uiTexts = {
   choosePlan: "Выбрать пакет",
   closeButton: "Закрыть",
   closeSymbol: "✕",
-  formLabels: {
-    name: "Имя",
-    email: "Email",
-  },
   submitButton: "Заказать эту услугу",
+  form: {
+    nameLabel: "Имя",
+    namePlaceholder: "Как к вам обращаться?",
+    contactMethodLabel: "Удобный способ связи",
+    contactMethods: [
+      { id: "telegram", label: "Telegram", placeholder: "@username или телефон" },
+      { id: "whatsapp", label: "WhatsApp", placeholder: "Номер телефона" },
+      { id: "email", label: "Email", placeholder: "your@email.com" },
+    ],
+    countryCodeLabel: "Код страны",
+    supportLabel: "Нужна поддержка сайта после запуска",
+    supportPrice: "$100/месяц",
+    privacyPrefix: "Нажимая кнопку, вы соглашаетесь с условиями",
+    privacyLink: "обработки персональных данных",
+    sending: "Отправка...",
+    success: "Спасибо! Я свяжусь с вами в ближайшее время.",
+    error: "Не удалось отправить заявку. Попробуйте ещё раз.",
+    errors: {
+      name: "Введите имя (минимум 2 символа)",
+      telegram: "Введите @username в Telegram или номер телефона",
+      whatsapp: "Введите корректный номер телефона",
+      email: "Введите корректный email",
+    },
+  },
 };
 
 export const supportCtaData = {
