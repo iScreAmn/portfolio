@@ -24,9 +24,12 @@ export const contactHref = (method, value) => {
   return digits.length >= 10 ? `tel:${raw.replace(/[^\d+]/g, '')}` : null;
 };
 
-/** Ответы калькулятора приходят произвольным объектом — печатаем как есть. */
-const renderPayloadValue = (value) =>
-  Array.isArray(value) ? value.join(', ') : String(value ?? '—');
+/** Ответы калькулятора и детали пакета приходят произвольным объектом — печатаем как есть. */
+const renderPayloadValue = (value) => {
+  if (typeof value === 'boolean') return value ? crm.payloadYes : crm.payloadNo;
+  if (Array.isArray(value)) return value.join(', ');
+  return String(value ?? '—');
+};
 
 /** Поля, которые карточка умеет править, — в том же виде, в каком их ждёт PATCH. */
 const toForm = (client) => ({
@@ -135,15 +138,15 @@ const ClientCard = ({ client, onSave }) => {
           />
         </label>
 
-        {/* Ответы калькулятора пришли с сайта и не правятся: это снимок того,
-            что человек выбрал в форме. */}
+        {/* Ответы калькулятора и детали пакета пришли с сайта и не правятся:
+            это снимок того, что человек выбрал в форме. */}
         {payloadEntries.length > 0 && (
           <>
             <h4 className="crm-card__label">{crm.payloadLabel}</h4>
             <ul className="crm-card__payload">
               {payloadEntries.map(([key, value]) => (
                 <li key={key}>
-                  <span className="crm-card__payload-key">{key}</span>
+                  <span className="crm-card__payload-key">{crm.payloadKeys[key] || key}</span>
                   <span>{renderPayloadValue(value)}</span>
                 </li>
               ))}

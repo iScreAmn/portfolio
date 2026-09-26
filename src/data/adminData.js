@@ -269,6 +269,7 @@ const adminData = {
     sourceLabels: {
       form: 'Форма',
       calculator: 'Калькулятор',
+      package: 'Пакет услуг',
       manual: 'Вручную',
     },
 
@@ -288,7 +289,16 @@ const adminData = {
     dragTitle: 'Перетащить строку',
     reorderFailed: 'Не удалось сохранить порядок',
 
-    payloadLabel: 'Ответы калькулятора',
+    payloadLabel: 'Детали заявки',
+    payloadYes: 'Да',
+    payloadNo: 'Нет',
+    // У заявок на пакет со страницы /services свои поля вместо шагов
+    // калькулятора — подписываем их по-человечески.
+    payloadKeys: {
+      package: 'Пакет',
+      price: 'Цена',
+      support: 'Поддержка после запуска',
+    },
 
     editTitle: 'Данные клиента',
     nameLabel: 'Имя',
