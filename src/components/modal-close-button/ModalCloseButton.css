@@ -1,0 +1,47 @@
+/* transform ведёт motion, поэтому здесь его не задаём. */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1;
+  color: #ffa500;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modal-close:hover:not(:disabled) {
+  background: rgba(196, 181, 160, 0.2);
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid #ffa500;
+  outline-offset: 2px;
+}
+
+.modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dark-theme .modal-close {
+  color: #1653e1;
+}
+
+.dark-theme .modal-close:hover:not(:disabled) {
+  background: rgba(22, 83, 225, 0.18);
+}
+
+.dark-theme .modal-close:focus-visible {
+  outline-color: #1653e1;
+}

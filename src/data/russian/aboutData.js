@@ -8,7 +8,6 @@ export const heroData = {
     "Создаю быстрые, современные и удобные сайты, от лендинг страниц до сложных веб-сервисов. Продумываю всё: структуру, дизайн интерфейса, анимации и взаимодействие с пользователем.",
   subtitleSecondary:
     "Пишу качественный и понятный код, чтобы проект было легко поддерживать и развивать. Моя цель сделать не просто красивый сайт, а удобный цифровой продукт, который помогает бизнесу решать свои задачи.",
-  chips: ["Сайты под бизнес", "Веб-приложения", "Цифровые продукты", "UI/UX", "Адаптивность", "SEO разработка"],
 };
 
 export const posterAlt = "Портрет Димитри Джмухадзе";
@@ -77,9 +76,14 @@ export const skills = [
   { skill: "Next.js", level: "" },
   { skill: "Node.js", level: "" },
   { skill: "Express.js", level: "" },
-  { skill: "CSS", level: "" },
+  { skill: "Tailwind CSS", level: "" },
   { skill: "Vue", level: "" },
   { skill: "TypeScript", level: "" },
+  { skill: "VPS", level: "" },
+  { skill: "Linux", level: "" },
+  { skill: "Docker", level: "" },
+  { skill: "Nginx", level: "" },
+  { skill: "PostgreSQL", level: "" },
   { skill: "GIT", level: "" },
   { skill: "AI Automation", level: "" },
 ];

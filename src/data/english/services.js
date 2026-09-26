@@ -37,7 +37,6 @@ export const packages = [
 export const uiTexts = {
   choosePlan: "Choose plan",
   closeButton: "Close",
-  closeSymbol: "✕",
   submitButton: "Request this service",
   form: {
     nameLabel: "Name",

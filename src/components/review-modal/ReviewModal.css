@@ -93,44 +93,6 @@
   min-height: 88px;
 }
 
-/* Крестик в углу: появляется с поворотом, на hover доворачивается —
-   анимацию ведёт motion, поэтому transform здесь не задаём. */
-.review-modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border: 1px solid var(--liner-color);
-  border-radius: 50%;
-  font-size: 20px;
-  color: var(--first-color);
-  background: var(--bg-transparent-color);
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.review-modal-close:hover:not(:disabled) {
-  color: #fff;
-  background: var(--second-color);
-  border-color: var(--second-color);
-}
-
-.review-modal-close:focus-visible {
-  outline: 2px solid var(--second-color);
-  outline-offset: 2px;
-}
-
-.review-modal-close:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* ── Загрузка фото и логотипа ─────────────────────────────────────── */
 
 .review-modal-images {

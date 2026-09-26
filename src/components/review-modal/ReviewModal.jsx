@@ -4,6 +4,7 @@ import { useState } from "react";
 import "./ReviewModal.css";
 import { motion, AnimatePresence } from "motion/react";
 import { MdClose } from "react-icons/md";
+import ModalCloseButton from "../modal-close-button/ModalCloseButton";
 import { HiOutlineCamera, HiOutlinePhotograph } from "react-icons/hi";
 import { submitReview } from "../../lib/reviews";
 import { resizeImage, ImageTooLargeError } from "../../utils/resizeImage";
@@ -187,20 +188,11 @@ const ReviewModal = ({ isOpen, onClose, locale }) => {
             exit={{ scale: 0.8, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <motion.button
-              type="button"
-              className="review-modal-close"
+            <ModalCloseButton
               onClick={handleClose}
               disabled={isSubmitting}
-              aria-label={t.close}
-              initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              whileHover={{ rotate: 90, scale: 1.08 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            >
-              <MdClose aria-hidden />
-            </motion.button>
+              label={t.close}
+            />
             {!isSuccess ? (
               <>
                 <h2 className="review-modal-title">{t.title}</h2>

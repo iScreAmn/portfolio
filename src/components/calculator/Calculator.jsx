@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
-import { MdOutlineEmail, MdClose } from "react-icons/md";
+import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useLocale } from "../../context/LocaleContext";
 import { calculatorData, phoneCountryCodes } from "../../data/calculatorData";
 import { logo } from "../../assets/images";
 import SectionTitle from "../section-title/SectionTitle";
+import ModalCloseButton from "../modal-close-button/ModalCloseButton";
 import "./Calculator.css";
 
 const PRIVACY_LINK = "/privacy";
@@ -458,15 +459,11 @@ const Calculator = () => {
               role="dialog"
               aria-modal="true"
             >
-              <button
-                type="button"
-                className="calculator-modal-close"
+              <ModalCloseButton
                 onClick={closeCtaModal}
                 disabled={isCtaSubmitting}
-                aria-label={t.ctaCloseLabel}
-              >
-                <MdClose />
-              </button>
+                label={t.ctaCloseLabel}
+              />
               {ctaSubmitDone ? (
                 <div className="calculator-modal-success">{t.ctaSuccess}</div>
               ) : (

@@ -8,7 +8,6 @@ export const heroData = {
     "I create fast, modern, and easy-to-use websites — from presentation pages to complex web services. I think through everything: structure, interface design, animations, and how people interact with the product.",
   subtitleSecondary:
     "I write clear, high-quality code so the project is easy to maintain and grow. My goal is a usable digital product that helps a business solve its tasks — not just a site that looks good.",
-  chips: ["Frontend", "Web apps", "Integrations", "UX Focus", "API"],
 };
 
 export const posterAlt = "Dimitri Jmukhadze portrait";

@@ -6,3 +6,7 @@ export const portfolioHeroData = {
   viewWorkButton: "Смотреть проекты",
   planProjectButton: "Обсудить проект",
 };
+
+export const projectCardLabels = {
+  categoryFallback: "Проект",
+};

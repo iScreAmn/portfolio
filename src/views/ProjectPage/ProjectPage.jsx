@@ -3,13 +3,17 @@
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { IoIosClose } from "react-icons/io";
+import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
 import portfolioData from "../../data/portfolioData";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { useLocale } from "../../context/LocaleContext";
 import { setPendingScroll } from "../../utils/pendingScroll";
 import "./ProjectPage.css";
+
+// Та же пружина, что у крестика в ModalCloseButton.
+const NAV_SPRING = { type: "spring", stiffness: 300, damping: 18 };
 
 const ProjectPage = ({ slug }) => {
   const router = useRouter();
@@ -222,16 +226,9 @@ const ProjectPage = ({ slug }) => {
         <div className="gallery-modal">
           <div className="gallery-modal__overlay" onClick={closeModal}></div>
           <div className="gallery-modal__content">
-            <button
-              type="button"
-              className="gallery-modal__close"
-              onClick={closeModal}
-              aria-label="Close gallery"
-            >
-              <IoIosClose />
-            </button>
-
             <div className="gallery-modal__slide">
+              <ModalCloseButton onClick={closeModal} label="Close gallery" />
+
               <Image
                 src={gallery[currentIndex]}
                 alt={`${project.title} full ${currentIndex + 1}`}
@@ -239,23 +236,29 @@ const ProjectPage = ({ slug }) => {
                 priority
               />
 
-              <button
+              <motion.button
                 type="button"
-                className="gallery-modal__nav-prev"
+                className="gallery-modal__nav gallery-modal__nav--prev"
                 onClick={showPrev}
                 aria-label="Previous image"
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.9 }}
+                transition={NAV_SPRING}
               >
-                <MdKeyboardArrowLeft />
-              </button>
+                <MdKeyboardArrowLeft aria-hidden="true" />
+              </motion.button>
 
-              <button
+              <motion.button
                 type="button"
-                className="gallery-modal__nav-next"
+                className="gallery-modal__nav gallery-modal__nav--next"
                 onClick={showNext}
                 aria-label="Next image"
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.9 }}
+                transition={NAV_SPRING}
               >
-                <MdKeyboardArrowRight />
-              </button>
+                <MdKeyboardArrowRight aria-hidden="true" />
+              </motion.button>
             </div>
 
             <div className="gallery-modal__thumbnails">

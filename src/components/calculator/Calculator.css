@@ -402,40 +402,6 @@
   position: relative;
 }
 
-.calculator-modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 50%;
-  color: var(--third-color);
-  font-size: 22px;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.calculator-modal-close:hover:not(:disabled) {
-  background: var(--bg-transparent-color);
-  color: var(--first-color);
-}
-
-.calculator-modal-close:focus-visible {
-  outline: 2px solid var(--second-color);
-  outline-offset: 2px;
-}
-
-.calculator-modal-close:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* Телефон: селект кода страны + сам номер в одну строку */
 .calculator-phone-field {
   display: flex;
