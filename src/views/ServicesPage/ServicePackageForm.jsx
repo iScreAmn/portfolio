@@ -40,10 +40,6 @@ const isContactValid = ({ contactMethod, contact, countryCode }) => {
   return /^@?[A-Za-z]\w{3,31}$/.test(value) || digits >= 8;
 };
 
-/**
- * Форма заявки на конкретный пакет. Уходит на /api/calculator/package:
- * сервер сохраняет её в CRM как заявку калькулятора и шлёт в телеграм.
- */
 const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
   const { track } = useAnalytics();
   const t = uiTexts.form;
@@ -56,8 +52,6 @@ const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     if (status === "error") setStatus(null);
   };
-  // Пустое поле не ругаем: что его надо заполнить, и так видно по
-  // неактивной кнопке, а сообщение на blur дёргало бы вёрстку.
   const touch = (key) => {
     if (form[key].trim()) setTouched((prev) => ({ ...prev, [key]: true }));
   };
@@ -86,7 +80,7 @@ const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
     setIsSubmitting(true);
     setStatus(null);
     try {
-      const response = await fetch(`${getApiBase()}/api/calculator/package`, {
+      const response = await fetch(`${getApiBase()}/api/packages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -160,8 +154,6 @@ const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
                 role="radio"
                 aria-checked={selected}
                 className={`services-modal__method ${selected ? "is-selected" : ""}`}
-                // Не забираем фокус у поля: иначе blur успевает показать
-                // ошибку контакта, которую смена способа тут же сбрасывает.
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => selectMethod(method.id)}
               >
