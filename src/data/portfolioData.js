@@ -61,7 +61,7 @@ const portfolioData = [
       "Multi-page website for a Georgian Polygraph Services with a modern design and a responsive layout.",
     categoryRu: "Полиграфические услуги",
     descriptionRu:
-      "Многостраничный сайт для Georgian Polygraph Services с современным дизайном и адаптивной версткой.",
+      "Многостраничный сайт для компании по продаже полиграфических устройств",
     gallery: [portfolio21, portfolio22, portfolio24, portfolio23 ],
   },
   {
@@ -77,7 +77,7 @@ const portfolioData = [
       "Multi-page website for a clinic with a modern design and a responsive layout.",
     categoryRu: "Частная клиника",
     descriptionRu:
-      "Многостраничный сайт для клиники с современным дизайном и адаптивной версткой.",
+      "Многостраничный сайт для частной клиники с функционалом онлайн записи",
     gallery: [portfolio11, portfolio12, portfolio13, portfolio14],
   },
   {
@@ -93,7 +93,7 @@ const portfolioData = [
       "Multi-page website for a design agency with a modern design and a responsive layout.",
     categoryRu: "Дизайн-агентство",
     descriptionRu:
-      "Многостраничный сайт для дизайн-агентства с современным дизайном и адаптивной версткой.",
+      "Многостраничный сайт для сдудии коммерческого дизайна",
     gallery: [portfolio16, portfolio17, portfolio18, portfolio19],
   },
   {

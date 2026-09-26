@@ -4,12 +4,17 @@ import { useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import portfolioData from "../../data/portfolioData";
+import { useLocale } from "../../context/LocaleContext";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
 import "./FeaturedPortfolio.css";
 
 const FeaturedPortfolio = () => {
   const router = useRouter();
+  const { locale } = useLocale();
   const { featuredPortfolioSectionData } = useLocaleHomeData();
+  const { projectCardLabels } = useLocalePortfolioData();
+  const isRu = locale === "ru";
   const featured = useMemo(
     () =>
       portfolioData.slice(0, featuredPortfolioSectionData.featuredCount),
@@ -52,20 +57,16 @@ const FeaturedPortfolio = () => {
                   placeholder="blur"
                 />
                 <span className="featured-portfolio__category">
-                  {item.category || "Project"}
+                  {(isRu && item.categoryRu) ||
+                    item.category ||
+                    projectCardLabels.categoryFallback}
                 </span>
               </div>
               <div className="featured-portfolio__body">
                 <h3 className="featured-portfolio__name">{item.title}</h3>
-                <p className="featured-portfolio__description">{item.description}</p>
-                <div className="featured-portfolio__meta">
-                  <span>{item.year || "---"}</span>
-                  {(item.tags || []).slice(0, 2).map((tag) => (
-                    <span key={tag} className="featured-portfolio__tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                <p className="featured-portfolio__description">
+                  {(isRu && item.descriptionRu) || item.description}
+                </p>
               </div>
             </article>
           ))}

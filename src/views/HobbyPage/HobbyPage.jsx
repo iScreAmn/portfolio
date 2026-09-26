@@ -4,44 +4,18 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { hobby1, hobby2, hobby3 } from "../../assets/images";
+import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
+import { useLocaleHobbyData } from "../../hooks/useLocaleHobbyData";
 import "./HobbyPage.css";
 
 // Анимированная обёртка над next/image: motion.img не умеет работать со
 // статическим импортом, а motion.create сохраняет ту же разметку, что и <Image>.
 const MotionImage = motion.create(Image);
 
-const chips = ["Drone filming", "Video making", "Storytelling", "Aerial visuals"];
-
-const videos = [
-  {
-    id: "52MGK5WuBCw",
-    title: "Mountain flow",
-    url: "https://www.youtube.com/embed/52MGK5WuBCw",
-    desc: "Smooth alpine passes, soft dolly moves, and gentle tilt reveals.",
-  },
-  {
-    id: "ck8Tmd8fyEw",
-    title: "City orbit",
-    url: "https://www.youtube.com/embed/ck8Tmd8fyEw",
-    desc: "Tight orbits around architecture with precise horizon control.",
-  },
-  {
-    id: "DUKtu-r9MlE",
-    title: "Coastline run",
-    url: "https://www.youtube.com/embed/DUKtu-r9MlE",
-    desc: "Low, fast coastal shots with seamless speed ramps and fades.",
-  },
-  {
-    id: "wozqmt-zbKU",
-    title: "Forest light",
-    url: "https://www.youtube.com/embed/wozqmt-zbKU",
-    desc: "Golden-hour canopy glides and clean parallax between trees.",
-  },
-];
-
 const HobbyPage = () => {
   const { track } = useAnalytics();
+  const { heroData, videosSection, videos, flyData } = useLocaleHobbyData();
   const [activeVideo, setActiveVideo] = useState(null);
 
   const openVideo = (video) => {
@@ -64,28 +38,21 @@ const HobbyPage = () => {
 
   return (
     <div className="hobby-page">
-      <section className="hobby-hero">
+      <section className="hobby-hero" data-header-contrast="dark">
         <div className="hobby-hero__bg" aria-hidden="true">
           <Image src={hobby1} alt="" sizes="100vw" priority />
         </div>
         <div className="hobby-hero__container">
           <div className="hobby-hero__content">
-            <div className="hobby-hero__eyebrow">Hobby</div>
-            <h1 className="hobby-hero__title">Drone filming & video making</h1>
-            <p className="hobby-hero__subtitle">
-              I love capturing cities and nature from above, crafting smooth
-              aerial moves and cinematic cuts. Each shot is planned for light,
-              motion, and rhythm to tell a concise story without clutter.
-            </p>
+            <div className="hobby-hero__eyebrow">{heroData.eyebrow}</div>
+            <h1 className="hobby-hero__title">{heroData.title}</h1>
+            <p className="hobby-hero__subtitle">{heroData.subtitle}</p>
             <p className="hobby-hero__subtitle hobby-hero__subtitle--secondary">
-              From scouting locations and timing golden hour, to stabilizing,
-              grading, and sound design — I keep the workflow lean so the final
-              clip feels polished and alive. Short edits, precise transitions,
-              and color that supports the mood.
+              {heroData.subtitleSecondary}
             </p>
 
             <div className="hobby-hero__chips">
-              {chips.map((chip) => (
+              {heroData.chips.map((chip) => (
                 <span className="hobby-hero__chip" key={chip}>
                   {chip}
                 </span>
@@ -102,7 +69,7 @@ const HobbyPage = () => {
           >
             <MotionImage
               src={hobby2}
-              alt="Drone hobby preview"
+              alt={heroData.posterAlt}
               sizes="(max-width: 1024px) 100vw, 40vw"
               placeholder="blur"
               initial={{ opacity: 0, x: 40 }}
@@ -117,11 +84,9 @@ const HobbyPage = () => {
       <section className="hobby-videos">
         <div className="hobby-videos__container">
           <div className="hobby-videos__header">
-            <span className="hobby-hero__eyebrow">Showreel</span>
-            <h2 className="hobby-videos__title">Selected drone clips</h2>
-            <p className="hobby-videos__subtitle">
-              Four short cuts that capture different moods: mountains, city, coast, and forest. Each clip is framed for flow, light, and rhythm.
-            </p>
+            <span className="hobby-hero__eyebrow">{videosSection.eyebrow}</span>
+            <h2 className="hobby-videos__title">{videosSection.title}</h2>
+            <p className="hobby-videos__subtitle">{videosSection.subtitle}</p>
           </div>
           <div className="hobby-videos__grid">
             {videos.map((video) => (
@@ -130,7 +95,7 @@ const HobbyPage = () => {
                   type="button"
                   className="hobby-video-card__player"
                   onClick={() => openVideo(video)}
-                  aria-label={`Play ${video.title}`}
+                  aria-label={`${videosSection.playLabel} ${video.title}`}
                 >
                   <Image
                     src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
@@ -154,36 +119,29 @@ const HobbyPage = () => {
       <section className="hobby-fly">
         <div className="hobby-fly__container">
           <div className="hobby-fly__content">
-            <span className="hobby-fly__eyebrow">Fly with me</span>
-            <h2 className="hobby-fly__title">
-              Book a drone session and let the world rotate around your idea.
-            </h2>
-            <p className="hobby-fly__text">
-              We plan light, movement, and transitions to deliver a cinematic
-              narrative: scouting, shooting, stabilizing, and polishing with a
-              short turnaround. Bring an event, project, or brand story and I
-              will capture it from above.
-            </p>
+            <span className="hobby-fly__eyebrow">{flyData.eyebrow}</span>
+            <h2 className="hobby-fly__title">{flyData.title}</h2>
+            <p className="hobby-fly__text">{flyData.text}</p>
             <div className="hobby-fly__actions">
               <button
                 className="hobby-fly__btn hobby-fly__btn--primary"
                 type="button"
                 onClick={() => track("cta", "click", "book-flight")}
               >
-                Book a flight
+                {flyData.primaryButton}
               </button>
               <button
                 className="hobby-fly__btn hobby-fly__btn--ghost"
                 type="button"
               >
-                See the gallery
+                {flyData.secondaryButton}
               </button>
             </div>
           </div>
           <div className="hobby-fly__visual">
             <Image
               src={hobby3}
-              alt="Drone controller"
+              alt={flyData.imageAlt}
               sizes="(max-width: 1024px) 100vw, 50vw"
               placeholder="blur"
             />
@@ -195,14 +153,7 @@ const HobbyPage = () => {
         <div className="hobby-video-modal">
           <div className="hobby-video-modal__overlay" onClick={closeVideo} />
           <div className="hobby-video-modal__content" role="dialog" aria-modal="true">
-            <button
-              type="button"
-              className="hobby-video-modal__close"
-              onClick={closeVideo}
-              aria-label="Close video"
-            >
-              ✕
-            </button>
+            <ModalCloseButton onClick={closeVideo} label={videosSection.closeLabel} />
             <div className="hobby-video-modal__frame">
               <iframe
                 src={`${activeVideo.url}?autoplay=1&rel=0&modestbranding=1`}

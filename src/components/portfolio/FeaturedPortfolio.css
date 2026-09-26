@@ -79,6 +79,8 @@
   box-shadow: var(--box-shadow);
   cursor: pointer;
   display: grid;
+  grid-template-rows: auto 1fr;
+  container-type: inline-size;
   min-height: 360px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -119,38 +121,28 @@
   text-transform: uppercase;
 }
 
+/* Карточки в ряду одной высоты: текст прижат к верху, чтобы строки
+   не растягивались и заголовки не съезжали. */
 .featured-portfolio__body {
   padding: 20px;
   display: grid;
+  align-content: start;
   gap: 10px;
   position: relative;
   z-index: 1;
 }
 
+/* Размер зависит от ширины карточки, чтобы длинные названия
+   («Georgian Polygraph Services») помещались в одну строку. */
 .featured-portfolio__name {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: clamp(1.05rem, 6cqi, 1.3rem);
 }
 
 .featured-portfolio__description {
   margin: 0;
   color: var(--third-color);
   line-height: 1.5;
-}
-
-.featured-portfolio__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  color: var(--third-color);
-  font-size: 0.9rem;
-}
-
-.featured-portfolio__tag {
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--liner-color);
 }
 
 @media (max-width: 768px) {

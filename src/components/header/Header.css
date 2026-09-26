@@ -31,6 +31,20 @@
   mix-blend-mode: screen;
 }
 
+/* Над тёмной секцией логотип всегда белый, независимо от темы. */
+.header--on-dark .logo img {
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+.header--on-dark .burger:not([data-open="true"]) {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.header--on-dark .burger:hover {
+  color: #fff;
+}
+
 .header__wrapper {
   display: flex;
   justify-content: space-between;

@@ -76,23 +76,6 @@
   color: var(--first-color);
 }
 
-.about-page__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.about-page__chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: var(--card-bg-color);
-  border: 1px solid var(--liner-color);
-  color: var(--first-color);
-  box-shadow: var(--box-shadow);
-}
-
 .about-page__actions {
   display: flex;
   flex-wrap: wrap;
@@ -410,14 +393,6 @@
 
   .about-page__social-btn {
     width: 100%;
-  }
-
-  .about-page__chips {
-    gap: 8px;
-  }
-
-  .about-page__chip {
-    padding: 8px 12px;
   }
 
   .about-page__card-top {

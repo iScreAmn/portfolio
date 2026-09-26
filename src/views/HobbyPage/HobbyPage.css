@@ -69,8 +69,16 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Hero всегда лежит на тёмном фото, поэтому палитра в нём не зависит от темы. */
+.hobby-hero .hobby-hero__eyebrow {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
 .hobby-hero__title {
   margin: 0;
+  color: #fff;
   font-size: clamp(2rem, 3vw, 2.9rem);
   letter-spacing: 0.02em;
   line-height: 1.2;
@@ -80,11 +88,11 @@
   margin: 0;
   font-size: 1.05rem;
   line-height: 1.7;
-  color: var(--third-color);
+  color: rgba(226, 232, 245, 0.78);
 }
 
 .hobby-hero__subtitle--secondary {
-  color: var(--first-color);
+  color: #fff;
 }
 
 .hobby-hero__chips {
@@ -98,10 +106,10 @@
   align-items: center;
   padding: 10px 16px;
   border-radius: 999px;
-  background: var(--card-bg-color);
-  border: 1px solid var(--liner-color);
-  color: var(--first-color);
-  box-shadow: var(--box-shadow);
+  background: rgba(10, 16, 40, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(8px);
 }
 
 .hobby-hero__poster {
@@ -199,6 +207,7 @@
 }
 
 .hobby-fly {
+  display: none;
   padding: 60px 0 120px;
   background: var(--card-bg-color);
 }
@@ -456,27 +465,6 @@
   margin: 6px 0 0;
   color: var(--third-color);
   line-height: 1.5;
-}
-
-.hobby-video-modal__close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--liner-color);
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  cursor: pointer;
-  font-size: 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  z-index: 2;
-}
-
-.hobby-video-modal__close:hover {
-  transform: scale(1.06);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
 }
 
 @media (max-width: 768px) {
