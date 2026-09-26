@@ -1,362 +1,253 @@
 "use client";
 
 import { useState } from "react";
-import { FaPaperPlane, FaCheck, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
-import { MdOutlineArrowDropDown } from "react-icons/md";
-import { motion, AnimatePresence } from "motion/react";
-import { slideInVariants } from "../../utils/animation";
+import { FaTelegramPlane, FaWhatsapp, FaSpinner, FaCheck } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { useLocale } from "../../context/LocaleContext";
 import { contactsFormData } from "../../data/contactsFormData";
+import { phoneCountryCodes } from "../../data/calculatorData";
+import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contactValidation";
 import "./ContactsForm.css";
+
+const PRIVACY_LINK = "/privacy";
+// Ответ простой капчи; должен совпадать с CONTACT_CAPTCHA_ANSWER на сервере.
+const CAPTCHA_ANSWER = "portfolio2024";
+const MESSAGE_MIN = 10;
+const MESSAGE_MAX = 1000;
+
+const contactMethodIcons = {
+  telegram: FaTelegramPlane,
+  whatsapp: FaWhatsapp,
+  email: MdOutlineEmail,
+};
+
+const emptyForm = {
+  name: "",
+  contactMethod: "telegram",
+  countryCode: phoneCountryCodes[0].value,
+  contact: "",
+  message: "",
+  agreeToPrivacy: false,
+};
 
 const ContactsForm = () => {
   const { track } = useAnalytics();
   const { locale } = useLocale();
   const t = contactsFormData[locale] || contactsFormData.en;
-  const [formData, setFormData] = useState({
-    name: "",
-    contactMethod: "",
-    contactValue: "",
-    message: "",
-    agreeToPrivacy: false
-  });
-  
-  const [errors, setErrors] = useState({});
+  const [form, setForm] = useState(emptyForm);
+  const [touched, setTouched] = useState({});
+  const [status, setStatus] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
 
-  const validateField = (name, value) => {
-    switch (name) {
-      case "name":
-        if (!value.trim()) return t.errors.nameRequired;
-        if (value.length < 2) return t.errors.nameMinLength;
-        if (!/^[a-zA-Z\s]+$/.test(value)) return t.errors.nameInvalid;
-        return "";
-      case "contactMethod":
-        if (!value.trim()) return t.errors.contactMethodRequired;
-        return "";
-      case "contactValue": {
-        const method = formData.contactMethod;
-        if (!value.trim()) return method === "Email" ? t.errors.emailRequired : t.errors.phoneRequired;
-        if (method === "Email") {
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t.errors.emailInvalid;
-        } else {
-          if (value.replace(/\D/g, "").length < 10) return t.errors.phoneInvalid;
-        }
-        return "";
-      }
-      case "message":
-        if (!value.trim()) return t.errors.messageRequired;
-        if (value.length < 10) return t.errors.messageMinLength;
-        return "";
-      case "agreeToPrivacy":
-        return value ? "" : t.errors.agreeToPrivacy;
-      default:
-        return "";
-    }
+  const update = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    if (status === "error") setStatus(null);
+  };
+  const touch = (key) => {
+    if (form[key].trim()) setTouched((prev) => ({ ...prev, [key]: true }));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    let finalValue = type === "checkbox" ? checked : value;
-    
-    if (name === "contactValue" && formData.contactMethod !== "Email") {
-      finalValue = value.replace(/[^\d+]/g, "").replace(/\+/g, (match, offset) => offset === 0 ? match : "");
-    }
-    
-    const next = { ...formData, [name]: finalValue };
-    if (name === "contactMethod") next.contactValue = "";
-    setFormData(next);
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
+  const nameValid = form.name.trim().length >= 2;
+  const contactValid = isContactValid(form);
+  const messageLength = form.message.trim().length;
+  const messageValid = messageLength >= MESSAGE_MIN && messageLength <= MESSAGE_MAX;
+  const canSubmit =
+    nameValid && contactValid && messageValid && form.agreeToPrivacy && !isSubmitting;
+
+  const isPhone = form.contactMethod === PHONE_METHOD;
+  const activeMethod = t.contactMethods.find((m) => m.id === form.contactMethod);
+
+  const selectMethod = (id) => {
+    if (id === form.contactMethod) return;
+    setForm((prev) => ({ ...prev, contactMethod: id, contact: "" }));
+    setTouched((prev) => ({ ...prev, contact: false }));
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!canSubmit) return;
 
-  const PRIVACY_LINK = "/privacy";
-
-  const contactValueValid =
-    !formData.contactMethod
-      ? false
-      : formData.contactMethod === "Email"
-        ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactValue.trim())
-        : formData.contactValue.replace(/\D/g, "").length >= 10;
-
-  const isFormValid =
-    formData.name.trim().length >= 2 &&
-    /^[a-zA-Z\s]+$/.test(formData.name) &&
-    formData.contactMethod.trim() !== "" &&
-    contactValueValid &&
-    formData.message.trim().length >= 10 &&
-    formData.agreeToPrivacy === true;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
     setIsSubmitting(true);
-    setSubmitStatus(null);
-    
+    setStatus(null);
     try {
-      const apiBase = getApiBase();
-      const response = await fetch(`${apiBase}/api/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...formData, captcha: "portfolio2024" }),
+      const response = await fetch(`${getApiBase()}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          contactMethod: form.contactMethod,
+          contactValue: formatContact(form),
+          message: form.message.trim(),
+          agreeToPrivacy: form.agreeToPrivacy,
+          captcha: CAPTCHA_ANSWER,
+        }),
       });
-      
       const data = await response.json();
-      
-      if (data.success) {
-        setSubmitStatus('success');
-        track('form', 'submit', 'contact', { status: 'success', method: formData.contactMethod });
-        setFormData({ name: "", contactMethod: "", contactValue: "", message: "", agreeToPrivacy: false });
-      } else {
-        setSubmitStatus('error');
-        track('form', 'submit', 'contact', { status: 'error', method: formData.contactMethod });
-        if (data.errors?.length) {
-          const serverErrors = {};
-          data.errors.forEach(error => {
-            serverErrors[error.path] = error.msg;
-          });
-          setErrors(serverErrors);
-        }
-      }
+      const ok = Boolean(data?.success);
+      track("form", "submit", "contact", {
+        status: ok ? "success" : "error",
+        method: form.contactMethod,
+      });
+      if (!ok) throw new Error(data?.message);
+
+      setStatus("success");
+      setForm(emptyForm);
+      setTouched({});
     } catch {
-      setSubmitStatus('error');
-      track('form', 'submit', 'contact', { status: 'error', method: formData.contactMethod });
+      setStatus("error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (status === "success") {
+    return (
+      <div className="contact-form contact-form__success" role="status">
+        <span className="contact-form__success-icon" aria-hidden="true">
+          <FaCheck />
+        </span>
+        <p>{t.success}</p>
+        <button type="button" className="contact-form__again" onClick={() => setStatus(null)}>
+          {t.sendAnother}
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="contact-form-container">
-      <AnimatePresence>
-        {submitStatus && (
-          <motion.div
-            className={`submit-notification ${submitStatus}`}
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            {submitStatus === 'success' ? (
-              <>
-                <FaCheck />
-                <span>{t.notificationSuccess}</span>
-              </>
-            ) : (
-              <>
-                <FaExclamationTriangle />
-                <span>{t.notificationError}</span>
-              </>
-            )}
-          </motion.div>
+    <form className="contact-form" onSubmit={handleSubmit} autoComplete="off" noValidate>
+      <div className="contact-form__head">
+        <h2 className="contact-form__title">{t.title}</h2>
+        <p className="contact-form__lead">{t.lead}</p>
+      </div>
+
+      <label className="contact-form__label">
+        {t.nameLabel}
+        <input
+          type="text"
+          name="name"
+          value={form.name}
+          placeholder={t.namePlaceholder}
+          onChange={(e) => update("name", e.target.value)}
+          onBlur={() => touch("name")}
+          className={touched.name && !nameValid ? "is-invalid" : ""}
+          maxLength={100}
+        />
+        {touched.name && !nameValid && (
+          <span className="contact-form__error">{t.errors.name}</span>
         )}
-      </AnimatePresence>
+      </label>
 
-      <form className="contact-form" onSubmit={handleSubmit}>
-        <motion.div
-          className="first-row"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          custom={1}
-          variants={slideInVariants("top", 0.7, 50, true)}
-        >
-          <div className="input-group">
-            <input
-              placeholder={t.namePlaceholder}
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className={`contact-field ${errors.name ? "error" : ""}`}
-            />
-            {errors.name && (
-              <motion.span
-                className="error-message"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
+      <div className="contact-form__label">
+        <span id="contacts-contact-method">{t.contactMethodLabel}</span>
+        <div className="contact-form__methods" role="radiogroup" aria-labelledby="contacts-contact-method">
+          {t.contactMethods.map((method) => {
+            const Icon = contactMethodIcons[method.id];
+            const selected = form.contactMethod === method.id;
+            return (
+              <button
+                key={method.id}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                className={`contact-form__method ${selected ? "is-selected" : ""}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => selectMethod(method.id)}
               >
-                {errors.name}
-              </motion.span>
-            )}
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="second-row"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          custom={2}
-          variants={slideInVariants("top", 0.7, 50, true)}
-        >
-          <div className="input-group contact-select-wrapper">
-            <select
-              name="contactMethod"
-              value={formData.contactMethod}
-              onChange={handleInputChange}
-              className={`contact-field contact-field--select ${errors.contactMethod ? "error" : ""}`}
-            >
-              <option value="" disabled>
-                {t.contactMethodPlaceholder}
-              </option>
-              <option value="Telegram">Telegram</option>
-              <option value="WhatsApp">WhatsApp</option>
-              <option value="Email">Email</option>
-            </select>
-            <motion.span
-              className="contact-select-icon"
-              animate={{ y: [0, 2, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <MdOutlineArrowDropDown />
-            </motion.span>
-            {errors.contactMethod && (
-              <motion.span
-                className="error-message"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                {errors.contactMethod}
-              </motion.span>
-            )}
-          </div>
-        </motion.div>
-
-        <AnimatePresence>
-          {formData.contactMethod && (
-            <motion.div
-              className="contact-value-row"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="input-group">
-                <input
-                  type={formData.contactMethod === "Email" ? "email" : "tel"}
-                  name="contactValue"
-                  value={formData.contactValue}
-                  onChange={handleInputChange}
-                  placeholder={formData.contactMethod === "Email" ? t.emailPlaceholder : t.phonePlaceholder}
-                  className={`contact-field ${errors.contactValue ? "error" : ""}`}
-                />
-                {errors.contactValue && (
-                  <motion.span
-                    className="error-message"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    {errors.contactValue}
-                  </motion.span>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="third-row">
-          <motion.div
-            className="input-group"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            custom={3}
-            variants={slideInVariants("top", 0.7, 50, true)}
-          >
-            <textarea
-              placeholder={t.messagePlaceholder}
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              className={`contact-field ${errors.message ? "error" : ""}`}
-            />
-            {errors.message && (
-              <motion.span
-                className="error-message"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                {errors.message}
-              </motion.span>
-            )}
-          </motion.div>
+                <Icon aria-hidden="true" />
+                {method.label}
+              </button>
+            );
+          })}
         </div>
+      </div>
 
-        <motion.label
-          className={`contact-privacy ${errors.agreeToPrivacy ? "contact-privacy--error" : ""}`}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          custom={4}
-          variants={slideInVariants("top", 0.7, 50, true)}
-        >
-          <input
-            type="checkbox"
-            name="agreeToPrivacy"
-            checked={formData.agreeToPrivacy}
-            onChange={handleInputChange}
-            className="contact-privacy__input"
-          />
-          <span className="contact-privacy__text">
-            {t.privacyPrefix}{" "}
-            <a href={PRIVACY_LINK} className="contact-privacy__link" target="_blank" rel="noopener noreferrer">
-              {t.privacyLink}
-            </a>
-          </span>
-        </motion.label>
-        {errors.agreeToPrivacy && (
-          <motion.span
-            className="error-message contact-privacy__error"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {errors.agreeToPrivacy}
-          </motion.span>
-        )}
-
-        <motion.button
-          className={`contact-btn inner-info-link ${isSubmitting ? "submitting" : ""} ${!isFormValid ? "contact-btn--disabled" : ""}`}
-          type="submit"
-          disabled={!isFormValid || isSubmitting}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          custom={5}
-          variants={slideInVariants("top", 0.7, 50, true)}
-          whileHover={isFormValid && !isSubmitting ? { scale: 1.05 } : {}}
-          whileTap={isFormValid && !isSubmitting ? { scale: 0.95 } : {}}
-        >
-          {isSubmitting ? (
-            <>
-              <FaSpinner className="spinner" />
-              {t.sendingLabel}
-            </>
-          ) : (
-            <>
-              {t.submitLabel}
-              <FaPaperPlane />
-            </>
+      <div className="contact-form__label">
+        <div className="contact-form__contact">
+          {isPhone && (
+            <select
+              className="contact-form__code"
+              value={form.countryCode}
+              onChange={(e) => update("countryCode", e.target.value)}
+              aria-label={t.countryCodeLabel}
+            >
+              {phoneCountryCodes.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.flag} {country.dial}
+                </option>
+              ))}
+            </select>
           )}
-        </motion.button>
-      </form>
-    </div>
+          <input
+            type={form.contactMethod === "email" ? "email" : isPhone ? "tel" : "text"}
+            inputMode={form.contactMethod === "email" ? "email" : isPhone ? "tel" : "text"}
+            name="contact"
+            value={form.contact}
+            placeholder={activeMethod?.placeholder}
+            aria-label={activeMethod?.placeholder}
+            onChange={(e) =>
+              update("contact", isPhone ? e.target.value.replace(/[^\d\s()-]/g, "") : e.target.value)
+            }
+            onBlur={() => touch("contact")}
+            className={touched.contact && !contactValid ? "is-invalid" : ""}
+            maxLength={100}
+          />
+        </div>
+        {touched.contact && !contactValid && (
+          <span className="contact-form__error">{t.errors[form.contactMethod]}</span>
+        )}
+      </div>
+
+      <label className="contact-form__label">
+        <span className="contact-form__label-row">
+          {t.messageLabel}
+          <span className="contact-form__counter">
+            {form.message.length}/{MESSAGE_MAX}
+          </span>
+        </span>
+        <textarea
+          name="message"
+          rows={5}
+          value={form.message}
+          placeholder={t.messagePlaceholder}
+          onChange={(e) => update("message", e.target.value)}
+          onBlur={() => touch("message")}
+          className={touched.message && !messageValid ? "is-invalid" : ""}
+          maxLength={MESSAGE_MAX}
+        />
+        {touched.message && !messageValid && (
+          <span className="contact-form__error">{t.errors.message}</span>
+        )}
+      </label>
+
+      <label className="contact-form__check">
+        <input
+          type="checkbox"
+          checked={form.agreeToPrivacy}
+          onChange={(e) => update("agreeToPrivacy", e.target.checked)}
+        />
+        <span className="contact-form__check-text">
+          {t.privacyPrefix}{" "}
+          <a href={PRIVACY_LINK} target="_blank" rel="noopener noreferrer">
+            {t.privacyLink}
+          </a>
+        </span>
+      </label>
+
+      {status === "error" && <p className="contact-form__error">{t.error}</p>}
+
+      <button className="contact-form__submit" type="submit" disabled={!canSubmit}>
+        {isSubmitting ? (
+          <>
+            <FaSpinner className="contact-form__spinner" aria-hidden="true" /> {t.sending}
+          </>
+        ) : (
+          t.submit
+        )}
+      </button>
+    </form>
   );
 };
 

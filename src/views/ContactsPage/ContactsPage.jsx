@@ -19,9 +19,6 @@ const ContactsPage = () => {
             <div className="contacts-hero__eyebrow">{hero.eyebrow}</div>
             <h1 className="contacts-hero__title">{hero.title}</h1>
             <p className="contacts-hero__subtitle">{hero.subtitle}</p>
-            <p className="contacts-hero__subtitle contacts-hero__subtitle--secondary">
-              {hero.subtitleSecondary}
-            </p>
           </div>
         </div>
       </section>

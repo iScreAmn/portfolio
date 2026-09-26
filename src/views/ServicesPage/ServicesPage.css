@@ -515,42 +515,6 @@
     var(--modal-bg-color);
 }
 
-.services-modal__close {
-  position: absolute;
-  top: 13px;
-  right: 11px;
-  background: transparent;
-  color: #ffa500;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  font-size: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 4;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.services-modal__close:hover {
-  background: rgba(196, 181, 160, 0.2);
-  color: #ffa500;
-  transform: rotate(90deg);
-}
-
-.dark-theme .services-modal__close {
-  color: #1653e1;
-}
-
-.dark-theme .services-modal__close:hover {
-  background: rgba(22, 83, 225, 0.18);
-  color: #1653e1;
-  transform: rotate(90deg);
-}
-
 .services-modal__body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -558,9 +522,14 @@
 }
 
 .services-modal__info {
-  display: grid;
-  gap: 12px;
-  align-content: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100%;
+  padding-right: 28px;
+  border-right: 1px solid var(--liner-color);
+  overflow: hidden;
 }
 
 .services-modal__pill {
@@ -574,28 +543,31 @@
   font-size: 0.8rem;
   line-height: 1.4;
   width: fit-content;
-  justify-self: start;
-  align-self: start;
 }
 
 .services-modal__title {
   margin: 0;
   font-size: 2rem;
+  line-height: 1.15;
 }
 
 .services-modal__description {
   margin: 0;
+  max-width: 34ch;
   color: var(--third-color);
+  font-size: 1rem;
   line-height: 1.6;
 }
 
-.services-modal__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 6px;
-  color: var(--third-color);
+.services-modal__image {
+  margin-top: auto;
+  align-self: center;
+  width: auto;
+  height: auto;
+  max-width: 70%;
+  max-height: 180px;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .services-modal__form {
@@ -933,3 +905,17 @@
   }
 }
 
+@media (max-width: 768px) {
+  .services-modal__body {
+    grid-template-columns: 1fr;
+  }
+
+  .services-modal__info {
+    padding-right: 0;
+    border-right: none;
+  }
+
+  .services-modal__image {
+    display: none;
+  }
+}

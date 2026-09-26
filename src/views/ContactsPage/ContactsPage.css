@@ -57,10 +57,6 @@
   line-height: 1.7;
 }
 
-.contacts-hero__subtitle--secondary {
-  color: var(--first-color);
-}
-
 .contacts-panel {
   padding: 40px 0 110px;
 }
@@ -132,43 +128,20 @@
   display: inline-block;
 }
 
+/* Карточка формы — в стиле модалки заявки со страницы /services. */
 .contacts-panel__form {
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.9));
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 26px;
+  background: linear-gradient(160deg, rgba(255, 122, 78, 0.1), rgba(22, 83, 225, 0.12)),
+    var(--card-bg-color);
+  border: 1px solid var(--liner-color);
+  border-radius: 20px;
   padding: 32px;
   box-shadow: var(--box-shadow);
-  backdrop-filter: blur(18px);
-  position: relative;
-  overflow: hidden;
 }
 
 .dark-theme .contacts-panel__form {
-  background: linear-gradient(140deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.85));
-  border-color: rgba(148, 163, 184, 0.2);
+  background: linear-gradient(160deg, rgba(255, 122, 78, 0.15), rgba(22, 83, 225, 0.18)),
+    var(--modal-bg-color);
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
-}
-
-.contacts-panel__form::before {
-  content: "";
-  position: absolute;
-  inset: -40% -20% auto auto;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.18), transparent 70%);
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-.contacts-panel__form::after {
-  content: "";
-  position: absolute;
-  inset: auto auto -60% -30%;
-  width: 260px;
-  height: 260px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.18), transparent 70%);
-  opacity: 0.6;
-  pointer-events: none;
 }
 
 @media (max-width: 768px) {
@@ -178,6 +151,10 @@
 
   .contacts-panel__container {
     grid-template-columns: 1fr;
+  }
+
+  .contacts-panel__form {
+    padding: 24px 18px;
   }
 }
 

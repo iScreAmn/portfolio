@@ -6,9 +6,9 @@ import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { phoneCountryCodes } from "../../data/calculatorData";
+import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contactValidation";
 
 const PRIVACY_LINK = "/privacy";
-const PHONE_METHOD = "whatsapp";
 
 const contactMethodIcons = {
   telegram: FaTelegramPlane,
@@ -23,21 +23,6 @@ const emptyForm = {
   contact: "",
   withSupport: false,
   agreeToPrivacy: false,
-};
-
-const getDial = (countryCode) =>
-  phoneCountryCodes.find((c) => c.value === countryCode)?.dial || "";
-
-/** Те же правила, что и в packageValidationRules на сервере. */
-const isContactValid = ({ contactMethod, contact, countryCode }) => {
-  const value = contact.trim();
-  const digits = value.replace(/\D/g, "").length;
-  if (contactMethod === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  if (contactMethod === PHONE_METHOD) {
-    const total = digits + getDial(countryCode).replace(/\D/g, "").length;
-    return digits >= 6 && total <= 15;
-  }
-  return /^@?[A-Za-z]\w{3,31}$/.test(value) || digits >= 8;
 };
 
 const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
@@ -73,9 +58,7 @@ const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
     event.preventDefault();
     if (!canSubmit) return;
 
-    const contact = isPhone
-      ? `${getDial(form.countryCode)} ${form.contact.trim()}`
-      : form.contact.trim();
+    const contact = formatContact(form);
 
     setIsSubmitting(true);
     setStatus(null);

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
 import { IoIosArrowDown } from "react-icons/io";
 import "./ServicesPage.css";
 import ServicePackageForm from "./ServicePackageForm";
@@ -170,14 +171,7 @@ const ServicesPage = () => {
             aria-hidden="true"
           />
           <div className="services-modal__content" role="dialog" aria-modal="true">
-            <button
-              type="button"
-              className="services-modal__close"
-              onClick={closeModal}
-              aria-label={uiTexts.closeButton}
-            >
-              {uiTexts.closeSymbol}
-            </button>
+            <ModalCloseButton onClick={closeModal} label={uiTexts.closeButton} />
             <div className="services-modal__body">
               <div className="services-modal__info">
                 <span className="services-modal__pill">{selectedService.price}</span>
@@ -185,11 +179,13 @@ const ServicesPage = () => {
                 <p className="services-modal__description">
                   {selectedService.text}
                 </p>
-                <ul className="services-modal__list">
-                  {selectedService.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
+                <Image
+                  src={selectedService.image}
+                  alt=""
+                  aria-hidden="true"
+                  sizes="200px"
+                  className="services-modal__image"
+                />
               </div>
               <ServicePackageForm
                 key={selectedService.accent}
