@@ -1,0 +1,300 @@
+/* Сцена благодарности после отправки формы: шторка, ленты, 3D-карточка, искры и заголовок.
+   Содержимое карточки подставляют отзывы и заявка на звонок. Цвета — токены: светлая тема
+   на «бумаге» с оранжевой лентой, тёмная — ночная сцена с синей. */
+.promo-success {
+  --ps-bg: linear-gradient(160deg, #fbf5ea 0%, #f4e9d6 100%);
+  --ps-glow: rgba(255, 165, 0, 0.35);
+  --ps-ink: #17140f;
+  --ps-muted: rgba(23, 20, 15, 0.62);
+  --ps-accent: #ffa500;
+  --ps-tape-front-bg: #ffa500;
+  --ps-tape-front-ink: #17140f;
+  --ps-tape-back-bg: #17140f;
+  --ps-tape-back-ink: #fbf5ea;
+  --ps-card-bg: #ffffff;
+  --ps-card-border: rgba(23, 20, 15, 0.08);
+  --ps-card-shadow: 0 30px 60px -20px rgba(120, 70, 0, 0.35), 0 8px 20px -8px rgba(23, 20, 15, 0.18);
+  --ps-avatar-bg: #17140f;
+  --ps-avatar-ink: #ffa500;
+  --ps-stamp: #1653e1;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 520px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: inherit;
+  perspective: 1200px;
+}
+
+.dark-theme .promo-success {
+  --ps-bg: radial-gradient(120% 90% at 50% 0%, #0f1d4a 0%, #070d22 60%);
+  --ps-glow: rgba(22, 83, 225, 0.55);
+  --ps-ink: #f4f1ec;
+  --ps-muted: rgba(244, 241, 236, 0.62);
+  --ps-accent: #ffa500;
+  --ps-tape-front-bg: #1653e1;
+  --ps-tape-front-ink: #f4f1ec;
+  --ps-tape-back-bg: #ffa500;
+  --ps-tape-back-ink: #070d22;
+  --ps-card-bg: #111c3d;
+  --ps-card-border: rgba(255, 255, 255, 0.1);
+  --ps-card-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(22, 83, 225, 0.25);
+  --ps-avatar-bg: #1653e1;
+  --ps-avatar-ink: #f4f1ec;
+  --ps-stamp: #ffa500;
+}
+
+/* ── Фон ──────────────────────────────────────────────────────────── */
+
+.promo-success__curtain {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--ps-bg);
+  overflow: hidden;
+}
+
+.promo-success__glow {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ps-glow) 0%, transparent 62%);
+  filter: blur(40px);
+  transform: translate(-50%, -50%);
+  animation: promo-success-breathe 9s ease-in-out infinite;
+}
+
+@keyframes promo-success-breathe {
+  50% {
+    transform: translate(-46%, -54%) scale(1.12);
+  }
+}
+
+.promo-success__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Ленты ────────────────────────────────────────────────────────── */
+
+.promo-success__tapes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.promo-success__tape {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 30%;
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.35);
+}
+
+.promo-success__tape.is-front {
+  rotate: -8deg;
+  background: var(--ps-tape-front-bg);
+  color: var(--ps-tape-front-ink);
+}
+
+.promo-success__tape.is-back {
+  rotate: 6deg;
+  background: var(--ps-tape-back-bg);
+  color: var(--ps-tape-back-ink);
+}
+
+.promo-success__tape-track {
+  display: inline-flex;
+  animation: promo-success-marquee 22s linear infinite;
+}
+
+.promo-success__tape-track.is-reverse {
+  animation-direction: reverse;
+  animation-duration: 28s;
+}
+
+@keyframes promo-success-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.promo-success__tape-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 18px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.promo-success__tape-star {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ── Контент ──────────────────────────────────────────────────────── */
+
+.promo-success__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 56px 28px 40px;
+  text-align: center;
+}
+
+.promo-success__stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.promo-success__spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--ps-accent);
+  pointer-events: none;
+}
+
+.promo-success__spark.is-alt {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--ps-stamp);
+}
+
+.promo-success__float {
+  width: min(340px, 100%);
+  transform-style: preserve-3d;
+}
+
+.promo-success__card {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 26px 26px 22px;
+  border: 1px solid var(--ps-card-border);
+  border-radius: 18px;
+  background: var(--ps-card-bg);
+  box-shadow: var(--ps-card-shadow);
+  color: var(--ps-ink);
+  text-align: left;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.promo-success__stamp {
+  position: absolute;
+  right: -14px;
+  bottom: -14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border: 2px dashed currentColor;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ps-stamp);
+  background: var(--ps-card-bg);
+  transform: translateZ(40px);
+}
+
+.promo-success__title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.26em;
+  margin: 0;
+  font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ps-ink);
+}
+
+.promo-success__word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.promo-success__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.promo-success__char {
+  display: inline-block;
+  padding-bottom: 0.08em;
+  transform-origin: left bottom;
+}
+
+.promo-success__message {
+  max-width: 380px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ps-muted);
+}
+
+/* ── Адаптив и reduced motion ─────────────────────────────────────── */
+
+@media screen and (max-width: 480px) {
+  .promo-success__inner {
+    padding: 52px 18px 32px;
+  }
+
+  .promo-success__card {
+    padding: 22px 20px 20px;
+  }
+
+  .promo-success__stamp {
+    right: -4px;
+    width: 46px;
+    height: 46px;
+    font-size: 19px;
+  }
+
+  .promo-success__tape {
+    top: 26%;
+    padding: 9px 0;
+  }
+
+  .promo-success__tape-word {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-success__glow,
+  .promo-success__tape-track {
+    animation: none;
+  }
+}

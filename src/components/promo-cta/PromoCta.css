@@ -1,0 +1,323 @@
+/* Призыв в карточке рядом с калькулятором и отзывами — в одной стилистике с благодарностью за отзыв:
+   светлая тема на «бумаге» с оранжевой лентой, тёмная — ночная сцена с синей. */
+.promo-cta {
+  --pc-bg: linear-gradient(160deg, #fbf5ea 0%, #f4e9d6 100%);
+  --pc-glow: rgba(255, 165, 0, 0.35);
+  --pc-ink: #17140f;
+  --pc-muted: rgba(23, 20, 15, 0.62);
+  --pc-accent: #ffa500;
+  --pc-tape-front-bg: #ffa500;
+  --pc-tape-front-ink: #17140f;
+  --pc-tape-back-bg: #17140f;
+  --pc-tape-back-ink: #fbf5ea;
+  --pc-button-bg: #17140f;
+  --pc-button-ink: #fbf5ea;
+  --pc-button-fill: #ffa500;
+  --pc-button-fill-ink: #17140f;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  min-height: 520px;
+  padding: 40px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: inherit;
+}
+
+.dark-theme .promo-cta {
+  --pc-bg: radial-gradient(120% 90% at 50% 0%, #0f1d4a 0%, #070d22 60%);
+  --pc-glow: rgba(22, 83, 225, 0.55);
+  --pc-ink: #f4f1ec;
+  --pc-muted: rgba(244, 241, 236, 0.62);
+  --pc-accent: #ffa500;
+  --pc-tape-front-bg: #1653e1;
+  --pc-tape-front-ink: #f4f1ec;
+  --pc-tape-back-bg: #ffa500;
+  --pc-tape-back-ink: #070d22;
+  --pc-button-bg: #f4f1ec;
+  --pc-button-ink: #070d22;
+  --pc-button-fill: #1653e1;
+  --pc-button-fill-ink: #f4f1ec;
+}
+
+/* ── Фон ──────────────────────────────────────────────────────────── */
+
+.promo-cta__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: var(--pc-bg);
+}
+
+.promo-cta__glow {
+  position: absolute;
+  right: -20%;
+  top: -20%;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--pc-glow) 0%, transparent 62%);
+  filter: blur(40px);
+  animation: promo-cta-breathe 9s ease-in-out infinite;
+}
+
+@keyframes promo-cta-breathe {
+  50% {
+    transform: translate(-8%, 10%) scale(1.12);
+  }
+}
+
+.promo-cta__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Ленты ────────────────────────────────────────────────────────── */
+
+.promo-cta__tapes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.promo-cta__tape {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 24%;
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.35);
+}
+
+.promo-cta__tape.is-front {
+  rotate: -7deg;
+  background: var(--pc-tape-front-bg);
+  color: var(--pc-tape-front-ink);
+}
+
+.promo-cta__tape.is-back {
+  rotate: 5deg;
+  background: var(--pc-tape-back-bg);
+  color: var(--pc-tape-back-ink);
+}
+
+.promo-cta__tape-track {
+  display: inline-flex;
+  animation: promo-cta-marquee 26s linear infinite;
+}
+
+.promo-cta__tape-track.is-reverse {
+  animation-direction: reverse;
+  animation-duration: 32s;
+}
+
+@keyframes promo-cta-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.promo-cta__tape-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 18px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.promo-cta__tape-star {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ── Текст и кнопка ───────────────────────────────────────────────── */
+
+.promo-cta__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.promo-cta__title {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.26em;
+  margin: 0;
+  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--pc-ink);
+}
+
+.promo-cta__word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.promo-cta__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.promo-cta__char {
+  display: inline-block;
+  padding-bottom: 0.08em;
+  transform-origin: left bottom;
+}
+
+.promo-cta__text {
+  max-width: 420px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--pc-muted);
+}
+
+/* Заливка «растекается» снизу, подпись прокручивается, стрелка поворачивается. */
+.promo-cta__button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 14px 18px 14px 26px;
+  overflow: hidden;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pc-button-ink);
+  background: var(--pc-button-bg);
+  cursor: pointer;
+  isolation: isolate;
+  transition: color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.promo-cta__button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--pc-button-fill);
+  transform: translateY(101%);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.promo-cta__button:hover,
+.promo-cta__button:focus-visible {
+  color: var(--pc-button-fill-ink);
+}
+
+.promo-cta__button:hover::before,
+.promo-cta__button:focus-visible::before {
+  transform: translateY(0);
+}
+
+.promo-cta__button:focus-visible {
+  outline: 2px solid var(--pc-accent);
+  outline-offset: 3px;
+}
+
+.promo-cta__button-label {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.2;
+}
+
+.promo-cta__button-label > span,
+.promo-cta__button-label::after {
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.promo-cta__button-label::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+
+.promo-cta__button:hover .promo-cta__button-label > span,
+.promo-cta__button:hover .promo-cta__button-label::after {
+  transform: translateY(-100%);
+}
+
+.promo-cta__button-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--pc-accent);
+  color: #17140f;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.promo-cta__button:hover .promo-cta__button-arrow {
+  transform: rotate(-45deg);
+}
+
+/* ── Адаптив и reduced motion ─────────────────────────────────────── */
+
+@media screen and (max-width: 768px) {
+  .promo-cta {
+    min-height: 480px;
+    padding: 30px;
+  }
+
+  .promo-cta__text {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Заголовок здесь переносится на две строки — даём ему место под лентами. */
+  .promo-cta {
+    min-height: 500px;
+    padding: 24px 20px;
+  }
+
+  .promo-cta__tape {
+    top: 18%;
+    padding: 9px 0;
+  }
+
+  .promo-cta__tape-word {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-cta__glow,
+  .promo-cta__tape-track {
+    animation: none;
+  }
+
+  .promo-cta__button::before,
+  .promo-cta__button-label > span,
+  .promo-cta__button-label::after,
+  .promo-cta__button-arrow {
+    transition: none;
+  }
+}
