@@ -10,13 +10,12 @@ import "./About.css";
 import ProfileCard from "../widgets/profileCard/ProfileCard";
 import { useRouter } from "next/navigation";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 const About = () => {
   const { profList, aboutSectionData } = useLocaleHomeData();
   const router = useRouter();
-  const isMobileViewport =
-    typeof window !== "undefined" &&
-    window.matchMedia("(max-width: 768px)").matches;
+  const isMobileViewport = useMediaQuery("(max-width: 768px)");
   const professionalListVariants = {
     hidden: { opacity: 0 },
     visible: {
