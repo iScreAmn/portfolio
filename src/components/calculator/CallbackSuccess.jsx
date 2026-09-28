@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { BsCalculatorFill } from "react-icons/bs";
 import PromoSuccess, { EASE_OUT, T0 } from "../promo-cta/PromoSuccess";
 import "./CallbackSuccess.css";
 
@@ -19,6 +20,7 @@ const CallbackSuccess = ({ eyebrow, title, message, request, icon: Icon, origin 
       title={title}
       message={message}
       tapeWords={[eyebrow, title]}
+      tapeIcon={<BsCalculatorFill />}
       origin={origin}
       className="callback-success"
     >

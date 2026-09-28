@@ -15,6 +15,7 @@ import CalculatorCompletion from "./CalculatorCompletion";
 import CallbackSuccess from "./CallbackSuccess";
 import CallbackForm from "./CallbackForm";
 import PromoCta from "../promo-cta/PromoCta";
+import { BsCalculatorFill } from "react-icons/bs";
 import "./Calculator.css";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
@@ -433,6 +434,7 @@ const Calculator = () => {
                     title={t.ctaTitle}
                     text={t.ctaText}
                     buttonLabel={t.ctaButton}
+                    tapeIcon={<BsCalculatorFill />}
                     onOpen={openCtaForm}
                     buttonRef={ctaButtonRef}
                   />

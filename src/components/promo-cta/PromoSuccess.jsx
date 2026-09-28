@@ -13,7 +13,7 @@ export const T0 = 0.45;
 const DEFAULT_ORIGIN = "20% 70%";
 const SPARKS = 10;
 
-const Tape = ({ words, className, reverse, delay }) => {
+const Tape = ({ words, icon, className, reverse, delay }) => {
   // Слова повторяем с запасом: трек сдвигается на −50% и бесшовно зацикливается.
   const track = words.length < 4 ? [...words, ...words, ...words, ...words] : [...words, ...words];
   return (
@@ -29,7 +29,7 @@ const Tape = ({ words, className, reverse, delay }) => {
         {track.map((word, i) => (
           <span className="promo-success__tape-word" key={i}>
             {word}
-            <span className="promo-success__tape-star">✦</span>
+            <span className="promo-success__tape-star">{icon}</span>
           </span>
         ))}
       </div>
@@ -63,7 +63,7 @@ const Spark = ({ index }) => {
  * 3D-карточка с печатью (содержимое — children), искры, заголовок по буквам.
  * Варианты hidden/visible наследуются, поэтому детям хватает своих variants.
  */
-const PromoSuccess = ({ title, message, tapeWords, origin = DEFAULT_ORIGIN, className = "", children }) => {
+const PromoSuccess = ({ title, message, tapeWords, tapeIcon = "✦", origin = DEFAULT_ORIGIN, className = "", children }) => {
   const reduceMotion = useReducedMotion();
   const initial = reduceMotion ? false : "hidden";
 
@@ -112,8 +112,8 @@ const PromoSuccess = ({ title, message, tapeWords, origin = DEFAULT_ORIGIN, clas
       </motion.div>
 
       <div className="promo-success__tapes">
-        <Tape words={tapeWords} className="is-back" reverse delay={T0 + 0.1} />
-        <Tape words={tapeWords} className="is-front" delay={T0} />
+        <Tape words={tapeWords} icon={tapeIcon} className="is-back" reverse delay={T0 + 0.1} />
+        <Tape words={tapeWords} icon={tapeIcon} className="is-front" delay={T0} />
       </div>
 
       <div className="promo-success__inner">

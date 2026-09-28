@@ -1,5 +1,5 @@
 /* Призыв в карточке рядом с калькулятором и отзывами — в одной стилистике с благодарностью за отзыв:
-   светлая тема на «бумаге» с оранжевой лентой, тёмная — ночная сцена с синей. */
+   светлая тема на «бумаге» с оранжевой и синей лентами, тёмная — ночная сцена с синей. */
 .promo-cta {
   --pc-bg: linear-gradient(160deg, #fbf5ea 0%, #f4e9d6 100%);
   --pc-glow: rgba(255, 165, 0, 0.35);
@@ -8,12 +8,12 @@
   --pc-accent: #ffa500;
   --pc-tape-front-bg: #ffa500;
   --pc-tape-front-ink: #17140f;
-  --pc-tape-back-bg: #17140f;
+  --pc-tape-back-bg: #1653e1;
   --pc-tape-back-ink: #fbf5ea;
-  --pc-button-bg: #17140f;
-  --pc-button-ink: #fbf5ea;
-  --pc-button-fill: #ffa500;
-  --pc-button-fill-ink: #17140f;
+  --pc-button-bg: #ffa500;
+  --pc-button-ink: #ffffff;
+  --pc-button-fill: #1653e1;
+  --pc-button-fill-ink: #ffffff;
 
   position: relative;
   display: flex;
@@ -37,10 +37,10 @@
   --pc-tape-front-ink: #f4f1ec;
   --pc-tape-back-bg: #ffa500;
   --pc-tape-back-ink: #070d22;
-  --pc-button-bg: #f4f1ec;
-  --pc-button-ink: #070d22;
-  --pc-button-fill: #1653e1;
-  --pc-button-fill-ink: #f4f1ec;
+  --pc-button-bg: #1653e1;
+  --pc-button-ink: #ffffff;
+  --pc-button-fill: #ffa500;
+  --pc-button-fill-ink: #ffffff;
 }
 
 /* ── Фон ──────────────────────────────────────────────────────────── */
@@ -139,7 +139,8 @@
 }
 
 .promo-cta__tape-star {
-  font-size: 12px;
+  display: inline-flex;
+  font-size: 14px;
   opacity: 0.7;
 }
 
@@ -200,7 +201,7 @@
   padding: 14px 18px 14px 26px;
   overflow: hidden;
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   font: inherit;
   font-size: 16px;
   font-weight: 700;
@@ -266,11 +267,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--pc-accent);
-  color: #17140f;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 

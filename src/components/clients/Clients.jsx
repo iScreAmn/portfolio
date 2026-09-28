@@ -13,6 +13,7 @@ import ReviewForm from "../review-form/ReviewForm";
 import ReviewSuccess from "../review-form/ReviewSuccess";
 import ReviewFormModal from "../review-form/ReviewFormModal";
 import PromoCta from "../promo-cta/PromoCta";
+import { VscCodeReview } from "react-icons/vsc";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../context/LocaleContext";
 import { getPublishedReviews } from "../../lib/reviews";
@@ -215,6 +216,7 @@ const Clients = () => {
                     title={clientsSectionData.ctaTitle}
                     text={clientsSectionData.ctaText}
                     buttonLabel={clientsSectionData.addReviewButton}
+                    tapeIcon={<VscCodeReview />}
                     onOpen={openForm}
                     buttonRef={ctaButtonRef}
                   />

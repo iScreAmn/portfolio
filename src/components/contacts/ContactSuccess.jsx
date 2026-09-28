@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { RiMessageAi3Line } from "react-icons/ri";
 import PromoSuccess, { EASE_OUT, T0 } from "../promo-cta/PromoSuccess";
 import "./ContactSuccess.css";
 
@@ -32,6 +33,7 @@ const ContactSuccess = ({ t, request, icon: Icon, origin }) => {
       title={t.successTitle}
       message={t.success}
       tapeWords={[t.successEyebrow, t.successTitle]}
+      tapeIcon={<RiMessageAi3Line />}
       origin={origin}
       className="contact-success"
     >

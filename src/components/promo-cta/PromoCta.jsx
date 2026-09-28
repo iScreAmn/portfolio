@@ -5,7 +5,7 @@ import "./PromoCta.css";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
-const Tape = ({ words, className, reverse, delay }) => {
+const Tape = ({ words, icon, className, reverse, delay }) => {
   // Слова повторяем с запасом: трек сдвигается на −50% и бесшовно зацикливается.
   const track = [...words, ...words, ...words, ...words];
   return (
@@ -21,7 +21,7 @@ const Tape = ({ words, className, reverse, delay }) => {
         {track.map((word, i) => (
           <span className="promo-cta__tape-word" key={i}>
             {word}
-            <span className="promo-cta__tape-star">✦</span>
+            <span className="promo-cta__tape-star">{icon}</span>
           </span>
         ))}
       </div>
@@ -33,7 +33,7 @@ const Tape = ({ words, className, reverse, delay }) => {
  * Призыв в карточке рядом с калькулятором и отзывами: ленты с текстами блока,
  * заголовок по буквам и кнопка, открывающая форму.
  */
-const PromoCta = ({ title, text, buttonLabel, onOpen, buttonRef }) => {
+const PromoCta = ({ title, text, buttonLabel, onOpen, buttonRef, tapeIcon = "✦" }) => {
   const reduceMotion = useReducedMotion();
   const tapeWords = [buttonLabel, title];
   let charIndex = 0;
@@ -51,8 +51,8 @@ const PromoCta = ({ title, text, buttonLabel, onOpen, buttonRef }) => {
       </span>
 
       <div className="promo-cta__tapes">
-        <Tape words={tapeWords} className="is-back" reverse delay={0.1} />
-        <Tape words={tapeWords} className="is-front" delay={0} />
+        <Tape words={tapeWords} icon={tapeIcon} className="is-back" reverse delay={0.1} />
+        <Tape words={tapeWords} icon={tapeIcon} className="is-front" delay={0} />
       </div>
 
       <div className="promo-cta__content">

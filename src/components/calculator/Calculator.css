@@ -212,7 +212,8 @@
 .calculator-actions {
   display: flex;
   gap: 15px;
-  padding: 1.5rem 2rem 2rem;
+  /* Нижний отступ как у PromoCta, чтобы «Далее» и «Заказать звонок» стояли на одной линии. */
+  padding: 1.5rem 2rem 40px;
   justify-content: flex-end;
   min-height: 86px;
   align-items: center;
@@ -220,6 +221,7 @@
 
 .calculator-btn {
   padding: 15px 30px;
+  min-height: 56px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;

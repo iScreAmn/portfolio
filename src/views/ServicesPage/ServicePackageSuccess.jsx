@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
+import { BsCreditCard2Front } from "react-icons/bs";
 import PromoSuccess, { EASE_OUT, T0 } from "../../components/promo-cta/PromoSuccess";
 import "./ServicePackageSuccess.css";
 
@@ -46,6 +47,7 @@ const ServicePackageSuccess = ({ pkg, order, texts, icon: Icon, origin }) => (
     title={texts.successTitle}
     message={texts.success}
     tapeWords={[pkg.name, texts.successEyebrow]}
+    tapeIcon={<BsCreditCard2Front />}
     origin={origin}
     className="package-success"
   >

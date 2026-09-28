@@ -1,6 +1,6 @@
 /* Сцена благодарности после отправки формы: шторка, ленты, 3D-карточка, искры и заголовок.
    Содержимое карточки подставляют отзывы и заявка на звонок. Цвета — токены: светлая тема
-   на «бумаге» с оранжевой лентой, тёмная — ночная сцена с синей. */
+   на «бумаге» с оранжевой и синей лентами, тёмная — ночная сцена с синей. */
 .promo-success {
   --ps-bg: linear-gradient(160deg, #fbf5ea 0%, #f4e9d6 100%);
   --ps-glow: rgba(255, 165, 0, 0.35);
@@ -9,12 +9,12 @@
   --ps-accent: #ffa500;
   --ps-tape-front-bg: #ffa500;
   --ps-tape-front-ink: #17140f;
-  --ps-tape-back-bg: #17140f;
+  --ps-tape-back-bg: #1653e1;
   --ps-tape-back-ink: #fbf5ea;
   --ps-card-bg: #ffffff;
   --ps-card-border: rgba(23, 20, 15, 0.08);
   --ps-card-shadow: 0 30px 60px -20px rgba(120, 70, 0, 0.35), 0 8px 20px -8px rgba(23, 20, 15, 0.18);
-  --ps-avatar-bg: #17140f;
+  --ps-avatar-bg: #1653e1;
   --ps-avatar-ink: #ffa500;
   --ps-stamp: #1653e1;
 
@@ -145,7 +145,8 @@
 }
 
 .promo-success__tape-star {
-  font-size: 12px;
+  display: inline-flex;
+  font-size: 14px;
   opacity: 0.7;
 }
 
