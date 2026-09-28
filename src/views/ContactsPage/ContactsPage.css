@@ -24,41 +24,183 @@
 }
 
 .contacts-hero__content {
+  --ch-ink: #0e1b31;
+  --ch-muted: #6b7185;
+  --ch-line: rgba(14, 27, 49, 0.12);
+  --ch-accent: linear-gradient(135deg, var(--second-color), var(--hover-color));
+
   display: grid;
-  gap: 12px;
+  gap: 22px;
+  color: var(--ch-ink);
 }
 
+.dark-theme .contacts-hero__content {
+  --ch-ink: #f4f6fb;
+  --ch-muted: #a9afc3;
+  --ch-line: rgba(255, 255, 255, 0.14);
+}
+
+/* Появление по очереди: eyebrow → заголовок → подзаголовок. */
+.contacts-hero__content > * {
+  animation: contacts-hero-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.contacts-hero__title {
+  animation-delay: 0.08s;
+}
+
+.contacts-hero__bottom {
+  animation-delay: 0.18s;
+}
+
+@keyframes contacts-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+/* Eyebrow: точка акцентного цвета и линия, уходящая вправо. */
 .contacts-hero__eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: rgba(22, 83, 225, 0.1);
-  border: 1px solid rgba(22, 83, 225, 0.25);
-  letter-spacing: 0.08em;
+  gap: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  width: fit-content;
-  font-size: 0.85rem;
+  color: var(--ch-muted);
 }
 
-.dark-theme .contacts-hero__eyebrow {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
+.contacts-hero__eyebrow::after {
+  content: "";
+  flex: 1;
+  max-width: 220px;
+  height: 1px;
+  background: var(--ch-line);
+  transform-origin: left;
+  animation: contacts-hero-line 1.2s 0.3s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes contacts-hero-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.contacts-hero__eyebrow-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ch-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--second-color) 22%, transparent);
 }
 
 .contacts-hero__title {
   margin: 0;
-  font-size: clamp(2.2rem, 3vw, 3rem);
+  max-width: 14ch;
+  font-size: clamp(2.6rem, 7vw, 5.6rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.contacts-hero__title-accent {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  background: var(--ch-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Рукописное подчёркивание «дорисовывается» после появления заголовка. */
+.contacts-hero__title-scribble {
+  position: absolute;
+  left: 0;
+  bottom: -0.08em;
+  width: 100%;
+  height: 0.28em;
+  overflow: visible;
+  fill: none;
+  stroke: var(--second-color);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: contacts-hero-draw 1s 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes contacts-hero-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.contacts-hero__bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--ch-line);
 }
 
 .contacts-hero__subtitle {
   margin: 0;
-  color: var(--third-color);
+  max-width: 54ch;
+  font-size: 1.05rem;
   line-height: 1.7;
+  color: var(--ch-muted);
+}
+
+.contacts-hero__scroll {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--ch-line);
+  color: var(--ch-ink);
+  font-size: 1.4rem;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+
+.contacts-hero__scroll svg {
+  animation: contacts-hero-bob 2s ease-in-out infinite;
+}
+
+@keyframes contacts-hero-bob {
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.contacts-hero__scroll:hover,
+.contacts-hero__scroll:focus-visible {
+  color: #fff;
+  border-color: transparent;
+  background: var(--ch-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacts-hero__content > *,
+  .contacts-hero__eyebrow::after,
+  .contacts-hero__scroll svg {
+    animation: none;
+  }
+
+  .contacts-hero__title-scribble {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }
 
 .contacts-panel {
   padding: 40px 0 110px;
+  scroll-margin-top: 40px;
 }
 
 .contacts-panel__container {
@@ -75,64 +217,439 @@
   min-width: 0;
 }
 
+/* Инфо-карточка: свои токены, чтобы обе темы переключались в одном месте. */
 .contacts-panel__info {
-  background: var(--card-bg-color);
-  border-radius: 22px;
-  padding: 28px;
-  box-shadow: var(--box-shadow);
+  --cp-ink: #0e1b31;
+  --cp-muted: #6b7185;
+  --cp-line: rgba(14, 27, 49, 0.1);
+  --cp-surface: #fff;
+  --cp-chip: rgba(14, 27, 49, 0.05);
+  --cp-orange: #ff7a4e;
+  --cp-blue: #1653e1;
+  --cp-accent: linear-gradient(135deg, var(--second-color), var(--hover-color));
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  container: contacts-info / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 32px;
+  border-radius: 28px;
+  border: 1px solid var(--cp-line);
+  color: var(--cp-ink);
+  background: var(--cp-surface);
+  box-shadow: 0 24px 60px -30px rgba(14, 27, 49, 0.35);
 }
 
 .dark-theme .contacts-panel__info {
-  background: #141e37f7;
+  --cp-ink: #f4f6fb;
+  --cp-muted: #a9afc3;
+  --cp-line: rgba(255, 255, 255, 0.1);
+  --cp-surface: #0f1c3a;
+  --cp-chip: rgba(255, 255, 255, 0.06);
+
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
+}
+
+.contacts-panel__glow {
+  position: absolute;
+  inset: -40% -30% auto auto;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 122, 78, 0.55), transparent 60%),
+    radial-gradient(circle at 65% 65%, rgba(22, 83, 225, 0.5), transparent 60%);
+  filter: blur(60px);
+  opacity: 0.45;
+  z-index: -1;
+  pointer-events: none;
+  animation: contacts-glow 14s ease-in-out infinite alternate;
+}
+
+.dark-theme .contacts-panel__glow {
+  opacity: 0.6;
+}
+
+@keyframes contacts-glow {
+  to {
+    transform: translate(-80px, 60px) scale(1.15);
+  }
+}
+
+.contacts-panel__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contacts-panel__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--cp-line);
+  background: var(--cp-chip);
+  backdrop-filter: blur(6px);
+}
+
+.contacts-panel__status-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.contacts-panel__status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: contacts-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes contacts-ping {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.contacts-panel__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .contacts-panel__title {
   margin: 0;
-  font-size: 1.7rem;
+  font-size: clamp(2.3rem, 4.6vw, 3.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  /* background-clip: text красит только внутри бокса — даём место хвостам g/y/p. */
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+  background: linear-gradient(100deg, var(--cp-ink) 40%, var(--cp-orange) 75%, var(--cp-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.contacts-panel__badge {
+  position: relative;
+  flex-shrink: 0;
+  width: 104px;
+  height: 104px;
+  display: grid;
+  place-items: center;
+}
+
+.contacts-panel__badge-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--second-color);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: contacts-spin 16s linear infinite;
+}
+
+.contacts-panel__badge-arrow {
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--cp-accent);
+}
+
+@keyframes contacts-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .contacts-panel__lead {
-  margin: 10px 0 18px;
-  color: var(--third-color);
+  margin: -6px 0 0;
+  max-width: 42ch;
+  color: var(--cp-muted);
+  line-height: 1.6;
 }
 
 .contacts-panel__list {
   list-style: none;
   margin: 0;
   padding: 0;
+  border-top: 1px solid var(--cp-line);
+}
+
+.contacts-panel__list li {
+  border-bottom: 1px solid var(--cp-line);
+}
+
+.contacts-panel__row {
+  position: relative;
+  isolation: isolate;
   display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
   gap: 16px;
+  padding: 18px 12px;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: color 0.35s ease, padding 0.35s ease;
 }
 
-.contacts-panel__item {
-  display: flex;
-  gap: 14px;
-  align-items: center;
+/* Заливка выезжает слева корпоративным цветом текущей темы. */
+.contacts-panel__row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cp-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.contacts-panel__item-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
-  background: var(--bg-transparent-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--first-color);
-  font-size: 1.2rem;
-  flex-shrink: 0;
+.contacts-panel__row-index {
+  font-family: "Arturito Slab", "Poppins", sans-serif;
+  font-size: 0.8rem;
+  color: var(--cp-muted);
+  transition: color 0.35s ease;
 }
 
-.contacts-panel__item-title {
-  margin: 0;
+.contacts-panel__row-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--cp-line);
+  background: var(--cp-chip);
+  font-size: 1rem;
+  transition: background 0.35s ease, border-color 0.35s ease, transform 0.45s ease;
+}
+
+.contacts-panel__row-body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.contacts-panel__row-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cp-muted);
+  transition: color 0.35s ease;
+}
+
+.contacts-panel__row-value {
+  font-size: 1.05rem;
   font-weight: 600;
-}
-
-.contacts-panel__item-link {
-  color: #727a8db5;
-  font-weight: 600;
-  display: inline-block;
   overflow-wrap: anywhere;
+}
+
+.contacts-panel__row-arrow {
+  font-size: 1.4rem;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.contacts-panel__row:hover,
+.contacts-panel__row:focus-visible {
+  color: #fff;
+  padding-inline: 20px;
+}
+
+.contacts-panel__row:hover::before,
+.contacts-panel__row:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.contacts-panel__row:hover .contacts-panel__row-index,
+.contacts-panel__row:hover .contacts-panel__row-title,
+.contacts-panel__row:focus-visible .contacts-panel__row-index,
+.contacts-panel__row:focus-visible .contacts-panel__row-title {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contacts-panel__row:hover .contacts-panel__row-icon,
+.contacts-panel__row:focus-visible .contacts-panel__row-icon {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: rotate(-12deg);
+}
+
+.contacts-panel__row:hover .contacts-panel__row-arrow,
+.contacts-panel__row:focus-visible .contacts-panel__row-arrow {
+  transform: rotate(45deg);
+}
+
+.contacts-panel__socials {
+  margin-top: auto;
+  display: grid;
+  gap: 12px;
+}
+
+.contacts-panel__socials-title {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cp-muted);
+}
+
+.contacts-panel__socials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.contacts-panel__social {
+  --brand: var(--cp-ink);
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  gap: 2px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--cp-line);
+  background: var(--cp-chip);
+  color: var(--cp-ink);
+  text-decoration: none;
+  transition: color 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+.contacts-panel__social--instagram {
+  --brand: linear-gradient(135deg, #feda75, #fa7e1e 25%, #d62976 55%, #962fbf 80%, #4f5bd5);
+}
+
+.contacts-panel__social--github {
+  --brand: linear-gradient(135deg, #24292f, #57606a);
+}
+
+.contacts-panel__social--linkedin {
+  --brand: linear-gradient(135deg, #0a66c2, #1653e1);
+}
+
+/* Заливка поднимается снизу кругом — фирменный цвет соцсети. */
+.contacts-panel__social::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 260%;
+  aspect-ratio: 1;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--brand);
+  transform: translate(-50%, 0) scale(0.2);
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.contacts-panel__social-icon {
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  transition: transform 0.45s ease;
+}
+
+.contacts-panel__social-name {
+  font-weight: 600;
+}
+
+.contacts-panel__social-handle {
+  font-size: 0.8rem;
+  color: var(--cp-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.35s ease;
+}
+
+.contacts-panel__social-arrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 1.1rem;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.contacts-panel__social:hover,
+.contacts-panel__social:focus-visible {
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-4px);
+}
+
+.contacts-panel__social:hover::before,
+.contacts-panel__social:focus-visible::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.contacts-panel__social:hover .contacts-panel__social-handle,
+.contacts-panel__social:focus-visible .contacts-panel__social-handle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contacts-panel__social:hover .contacts-panel__social-icon,
+.contacts-panel__social:focus-visible .contacts-panel__social-icon {
+  transform: scale(1.15) rotate(-8deg);
+}
+
+.contacts-panel__social:hover .contacts-panel__social-arrow,
+.contacts-panel__social:focus-visible .contacts-panel__social-arrow {
+  transform: rotate(45deg);
+}
+
+/* В узкой карточке плитки превращаются в строки: иконка, имя, хэндл, стрелка. */
+@container contacts-info (max-width: 440px) {
+  .contacts-panel__socials-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .contacts-panel__social {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 999px;
+  }
+
+  .contacts-panel__social-icon {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+  }
+
+  .contacts-panel__social-arrow {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacts-panel__glow,
+  .contacts-panel__badge-ring,
+  .contacts-panel__status-dot::after {
+    animation: none;
+  }
 }
 
 /* Карточка формы — в стиле модалки заявки со страницы /services. */
@@ -174,6 +691,12 @@
 
   .contacts-panel__info {
     padding: 24px 18px;
+    border-radius: 22px;
+  }
+
+  .contacts-panel__badge {
+    width: 84px;
+    height: 84px;
   }
 
   .contacts-panel__form {
@@ -187,18 +710,22 @@
     padding: 0 16px;
   }
 
-  .contacts-hero__title {
-    font-size: 2rem;
+  .contacts-hero__scroll {
+    display: none;
   }
 
-  .contacts-panel__title {
-    font-size: 1.45rem;
+  .contacts-panel__badge {
+    display: none;
   }
 
-  .contacts-panel__item-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
+  .contacts-panel__row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    padding-inline: 4px;
+  }
+
+  .contacts-panel__row-index {
+    display: none;
   }
 }
 

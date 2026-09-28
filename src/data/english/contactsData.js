@@ -1,4 +1,10 @@
-import { FaPhone, FaEnvelope, FaLocationDot } from "react-icons/fa6";
+import {
+  FaPhone,
+  FaEnvelope,
+  FaInstagram,
+  FaGithub,
+  FaLinkedinIn,
+} from "react-icons/fa6";
 
 export const contactsHeroData = {
   eyebrow: "Contact",
@@ -7,6 +13,9 @@ export const contactsHeroData = {
     "Tell me about your idea, goals, timeline, or budget. I’ll help turn it into a modern, fast, and user-friendly digital product.",
   panelTitle: "Drop a message",
   panelLead: "Choose a preferred channel or share the story. Everything below is monitored daily.",
+  panelStatus: "Available for new projects",
+  panelSocialsTitle: "Elsewhere",
+  panelBadge: "let’s talk • let’s talk • ",
 };
 
 export const contactsItems = [
@@ -24,12 +33,29 @@ export const contactsItems = [
     value: "jmukhadze.dimitri@gmail.com",
     link: "mailto:jmukhadze.dimitri@gmail.com",
   },
+];
+
+export const contactsSocials = [
   {
-    id: 3,
-    icon: FaLocationDot,
-    title: "Address",
-    value: "Mikheil Tsinamdzgvrishvili str #148",
-    link: "#",
+    id: "instagram",
+    icon: FaInstagram,
+    title: "Instagram",
+    handle: "@d.jmukhadze",
+    link: "https://www.instagram.com/d.jmukhadze/",
+  },
+  {
+    id: "github",
+    icon: FaGithub,
+    title: "GitHub",
+    handle: "iScreAmn",
+    link: "https://github.com/iScreAmn/",
+  },
+  {
+    id: "linkedin",
+    icon: FaLinkedinIn,
+    title: "LinkedIn",
+    handle: "Dimitri Jmukhadze",
+    link: "https://www.linkedin.com/in/dimitri-jmukhadze-2048b733a/",
   },
 ];
 
