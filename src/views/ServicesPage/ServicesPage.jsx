@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
 import { IoIosArrowDown } from "react-icons/io";
 import "./ServicesPage.css";
-import ServicePackageForm from "./ServicePackageForm";
+import ServicePackageForm, { contactMethodIcons } from "./ServicePackageForm";
+import ServicePackageSuccess from "./ServicePackageSuccess";
 import { useLocale } from "../../context/LocaleContext";
 import * as englishServicesData from "../../data/english/services";
 import * as russianServicesData from "../../data/russian/services";
@@ -19,6 +20,10 @@ const ServicesPage = () => {
   const { locale } = useLocale();
   const [selectedService, setSelectedService] = useState(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  // Заказ, принятый сервером: пока он есть, вместо формы в модалке сцена благодарности.
+  const [order, setOrder] = useState(null);
+  const [curtainOrigin, setCurtainOrigin] = useState(undefined);
+  const contentRef = useRef(null);
   const {
     packages,
     heroData,
@@ -27,17 +32,37 @@ const ServicesPage = () => {
   } = servicesDataByLocale[locale] ?? englishServicesData;
 
   const openModal = (pkg) => {
+    setOrder(null);
     setSelectedService(pkg);
     document.body.classList.add("no-scroll");
   };
 
   const closeModal = () => {
     setSelectedService(null);
+    setOrder(null);
     document.body.classList.remove("no-scroll");
+  };
+
+  const handleSuccess = (submittedOrder, submitRect) => {
+    // Шторка благодарности раскрывается из центра кнопки, которой отправили заявку.
+    const content = contentRef.current;
+    const box = content?.getBoundingClientRect();
+    if (box && submitRect) {
+      const x = ((submitRect.left + submitRect.width / 2 - box.left) / box.width) * 100;
+      const y = ((submitRect.top + submitRect.height / 2 - box.top) / box.height) * 100;
+      setCurtainOrigin(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
+    } else {
+      setCurtainOrigin(undefined);
+    }
+    setOrder(submittedOrder);
+    // Кнопка отправки исчезает вместе с формой — фокус остаётся внутри диалога.
+    content?.scrollTo({ top: 0 });
+    content?.focus({ preventScroll: true });
   };
 
   useEffect(() => {
     setSelectedService(null);
+    setOrder(null);
     document.body.classList.remove("no-scroll");
 
     return () => {
@@ -170,30 +195,46 @@ const ServicesPage = () => {
             onClick={closeModal}
             aria-hidden="true"
           />
-          <div className="services-modal__content" role="dialog" aria-modal="true">
+          <div
+            ref={contentRef}
+            className={`services-modal__content${order ? " is-success" : ""}`}
+            role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
+          >
             <ModalCloseButton onClick={closeModal} label={uiTexts.closeButton} />
-            <div className="services-modal__body">
-              <div className="services-modal__info">
-                <span className="services-modal__pill">{selectedService.price}</span>
-                <h3 className="services-modal__title">{selectedService.name}</h3>
-                <p className="services-modal__description">
-                  {selectedService.text}
-                </p>
-                <Image
-                  src={selectedService.image}
-                  alt=""
-                  aria-hidden="true"
-                  sizes="200px"
-                  className="services-modal__image"
+            {order ? (
+              <ServicePackageSuccess
+                pkg={selectedService}
+                order={order}
+                texts={uiTexts.form}
+                icon={contactMethodIcons[order.method]}
+                origin={curtainOrigin}
+              />
+            ) : (
+              <div className="services-modal__body">
+                <div className="services-modal__info">
+                  <span className="services-modal__pill">{selectedService.price}</span>
+                  <h3 className="services-modal__title">{selectedService.name}</h3>
+                  <p className="services-modal__description">
+                    {selectedService.text}
+                  </p>
+                  <Image
+                    src={selectedService.image}
+                    alt=""
+                    aria-hidden="true"
+                    sizes="200px"
+                    className="services-modal__image"
+                  />
+                </div>
+                <ServicePackageForm
+                  key={selectedService.accent}
+                  pkg={selectedService}
+                  uiTexts={uiTexts}
+                  onSuccess={handleSuccess}
                 />
               </div>
-              <ServicePackageForm
-                key={selectedService.accent}
-                pkg={selectedService}
-                uiTexts={uiTexts}
-                onDone={closeModal}
-              />
-            </div>
+            )}
           </div>
         </div>
       )}

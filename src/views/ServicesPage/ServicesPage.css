@@ -786,12 +786,15 @@
   }
 }
 
-.services-modal__success {
-  align-content: center;
-  text-align: center;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--first-color);
+/* После отправки модалка целиком отдаётся сцене благодарности. */
+.services-modal__content.is-success {
+  display: flex;
+  width: min(92vw, 640px);
+  padding: 0;
+}
+
+.services-modal__content:focus {
+  outline: none;
 }
 
 @media (max-width: 1024px) {

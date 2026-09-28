@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
+import { useLocale } from "../../context/LocaleContext";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { phoneCountryCodes } from "../../data/calculatorData";
 import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contactValidation";
 
 const PRIVACY_LINK = "/privacy";
 
-const contactMethodIcons = {
+// Иконки нужны и форме, и карточке благодарности.
+export const contactMethodIcons = {
   telegram: FaTelegramPlane,
   whatsapp: FaWhatsapp,
   email: MdOutlineEmail,
@@ -25,9 +27,11 @@ const emptyForm = {
   agreeToPrivacy: false,
 };
 
-const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
+const ServicePackageForm = ({ pkg, uiTexts, onSuccess }) => {
   const { track } = useAnalytics();
+  const { locale } = useLocale();
   const t = uiTexts.form;
+  const submitRef = useRef(null);
   const [form, setForm] = useState(emptyForm);
   const [touched, setTouched] = useState({});
   const [status, setStatus] = useState(null);
@@ -86,24 +90,21 @@ const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
       });
       if (!ok) throw new Error(data?.message);
 
-      setStatus("success");
-      setForm(emptyForm);
-      setTouched({});
-      setTimeout(onDone, 1800);
+      onSuccess(
+        {
+          contact,
+          method: form.contactMethod,
+          withSupport: form.withSupport,
+          time: new Date().toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }),
+        },
+        submitRef.current?.getBoundingClientRect(),
+      );
     } catch {
       setStatus("error");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (status === "success") {
-    return (
-      <div className="services-modal__form services-modal__success" role="status">
-        {t.success}
-      </div>
-    );
-  }
 
   return (
     <form className="services-modal__form" onSubmit={handleSubmit} autoComplete="off" noValidate>
@@ -212,7 +213,7 @@ const ServicePackageForm = ({ pkg, uiTexts, onDone }) => {
 
       {status === "error" && <p className="services-modal__error">{t.error}</p>}
 
-      <button className="services-modal__submit" type="submit" disabled={!canSubmit}>
+      <button className="services-modal__submit" type="submit" disabled={!canSubmit} ref={submitRef}>
         {isSubmitting ? (
           <>
             <FaSpinner className="services-modal__spinner" aria-hidden="true" /> {t.sending}

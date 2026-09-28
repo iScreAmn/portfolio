@@ -1,0 +1,129 @@
+/* Содержимое карточки в сцене благодарности за заказ пакета (сама сцена — PromoSuccess). */
+
+.package-receipt__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 24px;
+}
+
+.package-receipt__thumb {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 6px;
+  box-sizing: border-box;
+  border-radius: 14px;
+  background: var(--ps-avatar-bg);
+}
+
+.package-receipt__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.package-receipt__plan {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.package-receipt__name {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.package-receipt__price {
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--ps-accent);
+  color: #17140f;
+}
+
+/* Пункты пакета: галочка рисуется, как будто их отмечают ручкой. */
+.package-receipt__items {
+  display: grid;
+  gap: 9px;
+  margin: 18px 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.package-receipt__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.package-receipt__item.is-extra {
+  margin-top: 3px;
+  padding-top: 11px;
+  border-top: 1px solid var(--ps-card-border);
+}
+
+.package-receipt__check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ps-accent) 18%, transparent);
+  fill: none;
+  stroke: var(--ps-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Нижняя часть отделена «перфорацией», как отрывной чек. */
+.package-receipt__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 2px dashed var(--ps-card-border);
+  font-size: 12px;
+  color: var(--ps-muted);
+}
+
+.package-receipt__contact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.package-receipt__contact svg {
+  flex-shrink: 0;
+  color: var(--ps-accent);
+}
+
+.package-receipt__contact span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.package-receipt__time {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.package-receipt__time::before {
+  content: "·";
+  margin-right: 10px;
+}
