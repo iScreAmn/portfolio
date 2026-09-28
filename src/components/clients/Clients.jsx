@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import ReviewForm from "../review-form/ReviewForm";
 import ReviewSuccess from "../review-form/ReviewSuccess";
+import ReviewFormModal from "../review-form/ReviewFormModal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../context/LocaleContext";
 import { logo } from "../../assets/images";
@@ -18,6 +19,13 @@ import { getPublishedReviews } from "../../lib/reviews";
 import { initials } from "../../utils/initials";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
+
+// На телефонах в карточке тесно, там форма открывается в модалке.
+const MOBILE_QUERY = "(max-width: 768px)";
+
+// Шторка благодарности раскрывается из места, откуда отправили отзыв:
+// кнопка «Отправить» внизу формы в карточке или «Оставить отзыв» после модалки.
+const SUCCESS_ORIGIN = { inline: "80% 92%", modal: "20% 70%" };
 
 const fromApi = (review) => ({
   id: `review-${review.id}`,
@@ -32,7 +40,11 @@ const Clients = () => {
   const { clientsData, clientsSectionData } = useLocaleHomeData();
   // Карточка рядом со слайдером: призыв → форма отзыва → благодарность.
   const [view, setView] = useState("cta");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successOrigin, setSuccessOrigin] = useState(SUCCESS_ORIGIN.inline);
   const returnFocus = useRef(false);
+  const ctaButton = useRef(null);
+  const successTimer = useRef(null);
   const [published, setPublished] = useState([]);
   const [submittedReview, setSubmittedReview] = useState(null);
   const { locale } = useLocale();
@@ -49,9 +61,12 @@ const Clients = () => {
     };
   }, []);
 
+  useEffect(() => () => clearTimeout(successTimer.current), []);
+
   // После «Отмены» возвращаем фокус на кнопку, иначе он теряется вместе с формой.
   // Callback-ref, а не эффект: из-за mode="wait" кнопка монтируется позже смены view.
   const ctaButtonRef = (button) => {
+    ctaButton.current = button;
     if (button && returnFocus.current) {
       returnFocus.current = false;
       button.focus({ preventScroll: true });
@@ -61,6 +76,29 @@ const Clients = () => {
   const handleCancel = () => {
     returnFocus.current = true;
     setView("cta");
+  };
+
+  const openForm = () => {
+    if (window.matchMedia(MOBILE_QUERY).matches) setIsModalOpen(true);
+    else setView("form");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    ctaButton.current?.focus({ preventScroll: true });
+  };
+
+  const showSuccess = (review, origin) => {
+    setSubmittedReview(review);
+    setSuccessOrigin(origin);
+    setView("success");
+  };
+
+  // Ждём, пока модалка растворится, иначе шторка раскроется под оверлеем.
+  const handleModalSubmitted = (review) => {
+    setIsModalOpen(false);
+    clearTimeout(successTimer.current);
+    successTimer.current = setTimeout(() => showSuccess(review, SUCCESS_ORIGIN.modal), 350);
   };
 
   const reviews = useMemo(
@@ -193,7 +231,7 @@ const Clients = () => {
                       ref={ctaButtonRef}
                       type="button"
                       className="reviews-cta-btn"
-                      onClick={() => setView("form")}
+                      onClick={openForm}
                     >
                       {clientsSectionData.addReviewButton}
                     </button>
@@ -209,10 +247,7 @@ const Clients = () => {
                   <ReviewForm
                     locale={locale}
                     onCancel={handleCancel}
-                    onSubmitted={(review) => {
-                      setSubmittedReview(review);
-                      setView("success");
-                    }}
+                    onSubmitted={(review) => showSuccess(review, SUCCESS_ORIGIN.inline)}
                   />
                 </motion.div>
               )}
@@ -222,13 +257,19 @@ const Clients = () => {
                   title={clientsSectionData.successTitle}
                   message={clientsSectionData.successMessage}
                   review={submittedReview}
-                  origin="80% 92%"
+                  origin={successOrigin}
                 />
               )}
             </AnimatePresence>
           </motion.div>
         </div>
       </div>
+      <ReviewFormModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmitted={handleModalSubmitted}
+        locale={locale}
+      />
     </section>
   );
 };

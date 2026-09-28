@@ -22,7 +22,6 @@ const texts = {
     title: "Leave a Review",
     name: "Your Name",
     company: "Company",
-    optional: "optional",
     photo: "Your photo",
     logo: "Company logo",
     upload: "Upload",
@@ -41,7 +40,6 @@ const texts = {
     title: "Оставить отзыв",
     name: "Ваше имя",
     company: "Компания",
-    optional: "необязательно",
     photo: "Ваше фото",
     logo: "Логотип компании",
     upload: "Загрузить",
@@ -111,7 +109,7 @@ const rowVariants = {
   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: EASE_OUT } },
 };
 
-const ReviewForm = ({ onCancel, onSubmitted, locale }) => {
+const ReviewForm = ({ onCancel, onSubmitted, locale, autoFocus = true, showCancel = true }) => {
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -122,8 +120,8 @@ const ReviewForm = ({ onCancel, onSubmitted, locale }) => {
 
   // Форма появляется по клику, поэтому сразу переводим фокус в первое поле.
   useEffect(() => {
-    nameRef.current?.focus({ preventScroll: true });
-  }, []);
+    if (autoFocus) nameRef.current?.focus({ preventScroll: true });
+  }, [autoFocus]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -211,7 +209,7 @@ const ReviewForm = ({ onCancel, onSubmitted, locale }) => {
             type="text"
             id="review-company"
             name="company"
-            placeholder={`${t.company} (${t.optional})`}
+            placeholder={`${t.company}`}
             aria-label={`${t.company} (${t.optional})`}
             value={formData.company}
             onChange={handleChange}
@@ -261,14 +259,16 @@ const ReviewForm = ({ onCancel, onSubmitted, locale }) => {
         </p>
       )}
       <motion.div className="review-form-buttons" variants={rowVariants}>
-        <button
-          type="button"
-          className="review-form-btn review-form-btn-cancel"
-          onClick={onCancel}
-          disabled={isSubmitting}
-        >
-          {t.cancel}
-        </button>
+        {showCancel && (
+          <button
+            type="button"
+            className="review-form-btn review-form-btn-cancel"
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
+            {t.cancel}
+          </button>
+        )}
         <button
           type="submit"
           className="review-form-btn review-form-btn-submit"
