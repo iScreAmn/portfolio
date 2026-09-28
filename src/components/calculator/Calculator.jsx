@@ -14,7 +14,13 @@ import SectionTitle from "../section-title/SectionTitle";
 import ModalCloseButton from "../modal-close-button/ModalCloseButton";
 import ContactFields, { useContactForm } from "./ContactFields";
 import CalculatorCompletion from "./CalculatorCompletion";
+import CallbackForm from "./CallbackForm";
 import "./Calculator.css";
+
+const EASE_OUT = [0.22, 1, 0.36, 1];
+
+// На телефонах в карточке тесно, там форма звонка открывается в модалке.
+const MOBILE_QUERY = "(max-width: 768px)";
 
 const emptyCtaForm = {
   name: "",
@@ -52,13 +58,17 @@ const Calculator = () => {
   const [direction, setDirection] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Карточка рядом с калькулятором: призыв → форма звонка → благодарность.
+  const [ctaView, setCtaView] = useState("cta");
   const [isCtaModalOpen, setIsCtaModalOpen] = useState(false);
   const [isCtaSubmitting, setIsCtaSubmitting] = useState(false);
-  const [isCtaCompleted, setIsCtaCompleted] = useState(false);
-  // Точка, из которой раскрывается шторка в карточке, — центр кнопки «Заказать звонок».
+  // Точка, из которой раскрывается шторка в карточке, — центр кнопки, которой отправили заявку.
   const [ctaCurtainOrigin, setCtaCurtainOrigin] = useState(undefined);
   const ctaCardRef = useRef(null);
-  const ctaButtonRef = useRef(null);
+  const ctaButton = useRef(null);
+  const ctaSubmitRef = useRef(null);
+  const returnCtaFocus = useRef(false);
+  const ctaSuccessTimer = useRef(null);
   const [submitError, setSubmitError] = useState(false);
   const [ctaSubmitError, setCtaSubmitError] = useState(false);
 
@@ -77,8 +87,33 @@ const Calculator = () => {
   const isContactStep = currentStep === totalSteps;
   const canSubmitCta = ctaForm.isValid && !isCtaSubmitting;
 
+  useEffect(() => () => clearTimeout(ctaSuccessTimer.current), []);
+
+  // После «Отмены» возвращаем фокус на кнопку, иначе он теряется вместе с формой.
+  // Callback-ref, а не эффект: из-за mode="wait" кнопка монтируется позже смены ctaView.
+  const ctaButtonRef = (button) => {
+    ctaButton.current = button;
+    if (button && returnCtaFocus.current) {
+      returnCtaFocus.current = false;
+      button.focus({ preventScroll: true });
+    }
+  };
+
+  const openCtaForm = () => {
+    if (window.matchMedia(MOBILE_QUERY).matches) setIsCtaModalOpen(true);
+    else setCtaView("form");
+  };
+
+  const cancelCtaForm = () => {
+    returnCtaFocus.current = true;
+    setCtaSubmitError(false);
+    setCtaView("cta");
+  };
+
   const closeCtaModal = () => {
-    if (!isCtaSubmitting) setIsCtaModalOpen(false);
+    if (isCtaSubmitting) return;
+    setIsCtaModalOpen(false);
+    ctaButton.current?.focus({ preventScroll: true });
   };
 
   useEffect(() => {
@@ -205,17 +240,25 @@ const Calculator = () => {
       const data = await response.json();
       if (!data.success) throw new Error(data.message);
 
+      // Из модалки шторка раскрывается от «Заказать звонок», из карточки — от «Отправить».
+      const fromModal = isCtaModalOpen;
       const card = ctaCardRef.current?.getBoundingClientRect();
-      const button = ctaButtonRef.current?.getBoundingClientRect();
+      const button = (fromModal ? ctaButton.current : ctaSubmitRef.current)?.getBoundingClientRect();
       if (card && button) {
         const x = ((button.left + button.width / 2 - card.left) / card.width) * 100;
         const y = ((button.top + button.height / 2 - card.top) / card.height) * 100;
         setCtaCurtainOrigin(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
       }
 
-      setIsCtaModalOpen(false);
-      setIsCtaCompleted(true);
       ctaForm.reset();
+      if (fromModal) {
+        // Ждём, пока модалка растворится, иначе шторка раскроется под оверлеем.
+        setIsCtaModalOpen(false);
+        clearTimeout(ctaSuccessTimer.current);
+        ctaSuccessTimer.current = setTimeout(() => setCtaView("completed"), 350);
+      } else {
+        setCtaView("completed");
+      }
     } catch (error) {
       console.error("CTA submit error:", error);
       setCtaSubmitError(true);
@@ -360,46 +403,81 @@ const Calculator = () => {
             )}
           </motion.div>
 
-          <motion.div 
+          <motion.div
             ref={ctaCardRef}
-            className={`cta-card ${isCtaCompleted ? "cta-card--completed" : ""}`}
+            className={`cta-card cta-card--${ctaView}`}
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            {isCtaCompleted ? (
-              <CalculatorCompletion
-                eyebrow={t.completionEyebrow}
-                title={t.completionTitle}
-                message={t.ctaCompletionMessage}
-                origin={ctaCurtainOrigin}
+            {/* Логотип вне анимированных обёрток: их transform сместил бы
+                абсолютное позиционирование. В форме он гаснет через CSS. */}
+            {ctaView !== "completed" && (
+              <Image
+                src={logo}
+                alt=""
+                aria-hidden
+                className="cta-decoration"
+                sizes="300px"
               />
-            ) : (
-              <>
-                <div className="cta-content">
-                  <h3 className="cta-title">{t.ctaTitle}</h3>
-                  <p className="cta-text">
-                    {t.ctaText}
-                  </p>
-                  <button
-                    ref={ctaButtonRef}
-                    type="button"
-                    className="cta-btn"
-                    onClick={() => setIsCtaModalOpen(true)}
-                  >
-                    {t.ctaButton}
-                  </button>
-                </div>
-                <Image
-                  src={logo}
-                  alt=""
-                  aria-hidden
-                  className="cta-decoration"
-                  sizes="300px"
-                />
-              </>
             )}
+            <AnimatePresence mode="wait" initial={false}>
+              {ctaView === "cta" && (
+                <motion.div
+                  key="cta"
+                  className="cta-view"
+                  initial={{ opacity: 0, y: -24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -24, filter: "blur(6px)" }}
+                  transition={{ duration: 0.4, ease: EASE_OUT }}
+                >
+                  <div className="cta-content">
+                    <h3 className="cta-title">{t.ctaTitle}</h3>
+                    <p className="cta-text">
+                      {t.ctaText}
+                    </p>
+                    <button
+                      ref={ctaButtonRef}
+                      type="button"
+                      className="cta-btn"
+                      onClick={openCtaForm}
+                    >
+                      {t.ctaButton}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+              {ctaView === "form" && (
+                <motion.div
+                  key="form"
+                  className="cta-view"
+                  exit={{ opacity: 0, transition: { duration: 0.25 } }}
+                >
+                  <CallbackForm
+                    t={t}
+                    contactMethods={contactMethods}
+                    contactForm={ctaForm}
+                    isSubmitting={isCtaSubmitting}
+                    submitError={ctaSubmitError}
+                    onEdit={() => setCtaSubmitError(false)}
+                    onSubmit={handleCtaSubmit}
+                    onCancel={cancelCtaForm}
+                    submitRef={ctaSubmitRef}
+                    autoFocus
+                  />
+                </motion.div>
+              )}
+              {ctaView === "completed" && (
+                <CalculatorCompletion
+                  key="completed"
+                  eyebrow={t.completionEyebrow}
+                  title={t.completionTitle}
+                  message={t.ctaCompletionMessage}
+                  origin={ctaCurtainOrigin}
+                />
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
       </div>
@@ -427,30 +505,17 @@ const Calculator = () => {
                 disabled={isCtaSubmitting}
                 label={t.ctaCloseLabel}
               />
-                <form className="calculator-modal-form calculator-form" onSubmit={handleCtaSubmit} autoComplete="off" noValidate>
-                  <h4 className="calculator-modal-title">{t.ctaModalTitle}</h4>
-                  <ContactFields
-                    t={t}
-                    contactMethods={contactMethods}
-                    contactForm={ctaForm}
-                    idPrefix="calculator-cta"
-                    onEdit={() => setCtaSubmitError(false)}
-                  />
-                  {ctaSubmitError && <p className="calculator-form__error">{t.submitError}</p>}
-                  <button
-                    type="submit"
-                    className="calculator-btn calculator-btn--next"
-                    disabled={!canSubmitCta}
-                  >
-                    {isCtaSubmitting ? (
-                      <>
-                        <FaSpinner className="spinner" /> {t.sendingLabel}
-                      </>
-                    ) : (
-                      t.submitButton
-                    )}
-                  </button>
-                </form>
+              {/* Без автофокуса и «Отмены»: клавиатура телефона сразу перекрыла бы
+                  модалку, а закрывают её крестиком или тапом по фону. */}
+              <CallbackForm
+                t={t}
+                contactMethods={contactMethods}
+                contactForm={ctaForm}
+                isSubmitting={isCtaSubmitting}
+                submitError={ctaSubmitError}
+                onEdit={() => setCtaSubmitError(false)}
+                onSubmit={handleCtaSubmit}
+              />
             </motion.div>
           </motion.div>
         )}
