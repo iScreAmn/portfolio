@@ -54,6 +54,9 @@ export const uiTexts = {
     privacyLink: "processing of personal data",
     sending: "Sending...",
     success: "Thank you! I'll get in touch with you shortly.",
+    successTitle: "Great choice!",
+    successEyebrow: "Request received",
+    successSupportLabel: "Post-launch support",
     error: "Failed to send the request. Please try again.",
     errors: {
       name: "Enter your name (at least 2 characters)",

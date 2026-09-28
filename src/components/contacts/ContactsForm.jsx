@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { FaTelegramPlane, FaWhatsapp, FaSpinner, FaCheck } from "react-icons/fa";
+import { useRef, useState } from "react";
+import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { useLocale } from "../../context/LocaleContext";
-import { contactsFormData } from "../../data/contactsFormData";
+import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
 import { phoneCountryCodes } from "../../data/calculatorData";
 import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contactValidation";
+import ContactSuccess from "./ContactSuccess";
 import "./ContactsForm.css";
 
 const PRIVACY_LINK = "/privacy";
@@ -35,11 +36,16 @@ const emptyForm = {
 const ContactsForm = () => {
   const { track } = useAnalytics();
   const { locale } = useLocale();
-  const t = contactsFormData[locale] || contactsFormData.en;
+  const { contactsFormData: t } = useLocaleContactsData();
   const [form, setForm] = useState(emptyForm);
   const [touched, setTouched] = useState({});
   const [status, setStatus] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Что попадёт в карточку благодарности: форма к этому моменту уже сброшена.
+  const [request, setRequest] = useState(null);
+  const [curtainOrigin, setCurtainOrigin] = useState(undefined);
+  const formRef = useRef(null);
+  const submitRef = useRef(null);
 
   const update = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -92,6 +98,22 @@ const ContactsForm = () => {
       });
       if (!ok) throw new Error(data?.message);
 
+      // Шторка раскрывается из центра кнопки отправки — в координатах карточки вокруг формы.
+      const card = formRef.current?.parentElement?.getBoundingClientRect();
+      const button = submitRef.current?.getBoundingClientRect();
+      if (card && button) {
+        const x = ((button.left + button.width / 2 - card.left) / card.width) * 100;
+        const y = ((button.top + button.height / 2 - card.top) / card.height) * 100;
+        setCurtainOrigin(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
+      }
+
+      setRequest({
+        name: form.name.trim(),
+        contact: formatContact(form),
+        method: form.contactMethod,
+        message: form.message.trim(),
+        time: new Date().toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }),
+      });
       setStatus("success");
       setForm(emptyForm);
       setTouched({});
@@ -104,20 +126,23 @@ const ContactsForm = () => {
 
   if (status === "success") {
     return (
-      <div className="contact-form contact-form__success" role="status">
-        <span className="contact-form__success-icon" aria-hidden="true">
-          <FaCheck />
-        </span>
-        <p>{t.success}</p>
-        <button type="button" className="contact-form__again" onClick={() => setStatus(null)}>
-          {t.sendAnother}
-        </button>
-      </div>
+      <ContactSuccess
+        t={t}
+        request={request}
+        icon={contactMethodIcons[request.method]}
+        origin={curtainOrigin}
+      />
     );
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit} autoComplete="off" noValidate>
+    <form
+      ref={formRef}
+      className="contact-form"
+      onSubmit={handleSubmit}
+      autoComplete="off"
+      noValidate
+    >
       <div className="contact-form__head">
         <h2 className="contact-form__title">{t.title}</h2>
         <p className="contact-form__lead">{t.lead}</p>
@@ -238,7 +263,7 @@ const ContactsForm = () => {
 
       {status === "error" && <p className="contact-form__error">{t.error}</p>}
 
-      <button className="contact-form__submit" type="submit" disabled={!canSubmit}>
+      <button className="contact-form__submit" type="submit" disabled={!canSubmit} ref={submitRef}>
         {isSubmitting ? (
           <>
             <FaSpinner className="contact-form__spinner" aria-hidden="true" /> {t.sending}

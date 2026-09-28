@@ -151,6 +151,13 @@
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
 }
 
+/* После отправки карточка целиком отдаётся сцене благодарности. */
+.contacts-panel__form:has(> .promo-success) {
+  display: flex;
+  padding: 0;
+  overflow: hidden;
+}
+
 @media (max-width: 768px) {
   .contacts-hero {
     padding: 90px 0 0;

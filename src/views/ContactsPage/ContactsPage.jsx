@@ -1,15 +1,11 @@
 "use client";
 
 import ContactsForm from "../../components/contacts/ContactsForm";
-import { getContactsData } from "../../data/contactsData";
-import { contactsHeroData } from "../../data/contactsHeroData";
-import { useLocale } from "../../context/LocaleContext";
+import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
 import "./ContactsPage.css";
 
 const ContactsPage = () => {
-  const { locale } = useLocale();
-  const hero = contactsHeroData[locale] || contactsHeroData.en;
-  const contactsData = getContactsData(locale);
+  const { contactsHeroData: hero, contactsItems } = useLocaleContactsData();
 
   return (
     <div className="contacts-page">
@@ -29,7 +25,7 @@ const ContactsPage = () => {
             <h2 className="contacts-panel__title">{hero.panelTitle}</h2>
             <p className="contacts-panel__lead">{hero.panelLead}</p>
             <ul className="contacts-panel__list">
-              {contactsData.map((item) => (
+              {contactsItems.map((item) => (
                 <li key={item.id} className="contacts-panel__item">
                   <span className="contacts-panel__item-icon">
                     <item.icon />

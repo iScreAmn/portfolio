@@ -240,51 +240,6 @@
   }
 }
 
-.contact-form__success {
-  min-height: 320px;
-  align-content: center;
-  justify-items: center;
-  text-align: center;
-  gap: 16px;
-}
-
-.contact-form__success p {
-  margin: 0;
-  max-width: 34ch;
-  font-size: 1.05rem;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--first-color);
-}
-
-.contact-form__success-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--second-color);
-  color: #fff;
-  font-size: 1.4rem;
-}
-
-.contact-form__again {
-  border: 1px solid var(--liner-color);
-  border-radius: 10px;
-  padding: 10px 16px;
-  background: transparent;
-  color: var(--first-color);
-  font: inherit;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-
-.contact-form__again:hover {
-  border-color: var(--second-color);
-}
-
 /* iOS Safari зумит страницу при фокусе на поле со шрифтом меньше 16px. */
 @media (max-width: 768px) {
   .contact-form__label input,

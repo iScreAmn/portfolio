@@ -1,10 +1,12 @@
 "use client";
 
-import contactsData from "../../data/contactsData";
 import { motion } from "motion/react";
+import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
 import { slideInVariants } from "../../utils/animation";
 
 const ContactsLeft = () => {
+  const { contactsItems } = useLocaleContactsData();
+
   return (
     <div className="contact-left">
       <motion.h2
@@ -16,7 +18,7 @@ const ContactsLeft = () => {
         Let`s discuss your project
       </motion.h2>
       <ul className="contact-list">
-        {contactsData.map((item, index) => (
+        {contactsItems.map((item, index) => (
           <motion.li
             key={item.id}
             initial="hidden"
