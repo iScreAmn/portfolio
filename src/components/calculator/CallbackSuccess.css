@@ -1,0 +1,159 @@
+/* Содержимое карточки в сцене благодарности за заявку на звонок (сама сцена — PromoSuccess). */
+
+.callback-ticket__top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Аватар «звонит»: от него расходятся волны, как на экране входящего вызова. */
+.callback-ticket__avatar {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--ps-avatar-bg);
+  color: var(--ps-avatar-ink);
+}
+
+.callback-ticket__initial {
+  position: relative;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.callback-ticket__sonar {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--ps-accent);
+  animation: callback-ticket-sonar 2.4s ease-out infinite;
+}
+
+.callback-ticket__sonar.is-late {
+  animation-delay: 0.8s;
+}
+
+@keyframes callback-ticket-sonar {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.callback-ticket__who {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.callback-ticket__name {
+  font-size: 17px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.callback-ticket__contact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--ps-muted);
+}
+
+.callback-ticket__contact svg {
+  flex-shrink: 0;
+  color: var(--ps-accent);
+}
+
+.callback-ticket__contact span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Звуковая дорожка: столбики вырастают по очереди, потом «говорят» бесконечно. */
+.callback-ticket__wave {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 44px;
+  margin: 20px 0 18px;
+}
+
+.callback-ticket__bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: calc(var(--bar) * 100%);
+  transform-origin: center;
+}
+
+.callback-ticket__bar > span {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ps-accent);
+  animation: callback-ticket-talk 1.1s ease-in-out infinite alternate;
+}
+
+.callback-ticket__bar:nth-child(3n) > span {
+  background: var(--ps-stamp);
+}
+
+@keyframes callback-ticket-talk {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.35);
+  }
+}
+
+/* Нижняя часть отделена «перфорацией», как отрывной талон. */
+.callback-ticket__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 2px dashed var(--ps-card-border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ps-muted);
+}
+
+.callback-ticket__time {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.callback-ticket__time::before {
+  content: "·";
+  margin-right: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .callback-ticket__sonar,
+  .callback-ticket__bar > span {
+    animation: none;
+  }
+
+  .callback-ticket__sonar {
+    opacity: 0;
+  }
+}

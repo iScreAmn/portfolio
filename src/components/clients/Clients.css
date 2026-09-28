@@ -198,7 +198,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 40px;
+  /* Отступы задают сами состояния: призыв и шторка идут до краёв, форма — с полями. */
+  padding: 0;
   border-radius: 20px;
   background: linear-gradient(
     135deg,
@@ -222,79 +223,11 @@
   flex-direction: column;
   justify-content: center;
   flex: 1;
+  border-radius: inherit;
 }
 
-/* Благодарность раскрывает шторку до краёв карточки. */
-.reviews-cta-card.reviews-cta-card--success {
-  padding: 0;
-  transition: none;
-}
-
-.reviews-cta-content {
-  position: relative;
-  z-index: 2;
-}
-
-.reviews-cta-title {
-  margin-bottom: 20px;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--first-color);
-}
-
-.reviews-cta-text {
-  margin-bottom: 30px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--third-color);
-}
-
-.reviews-cta-btn {
-  padding: 15px 35px;
-  background: var(--second-color);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.reviews-cta-btn:hover {
-  background: var(--hover-color);
-  transform: scale(1.05);
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Водяной знак логотипа, как на CTA калькулятора. Исходник белый, поэтому
-   на светлой теме его переворачивает общий --color-filter. */
-.reviews-cta-decoration {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1;
-  width: 45%;
-  max-width: 300px;
-  height: auto;
-  filter: var(--color-filter);
-  opacity: 0.14;
-  pointer-events: none;
-  user-select: none;
-}
-
-.dark-theme .reviews-cta-decoration {
-  opacity: 0.45;
-}
-
-.reviews-cta-decoration {
-  transition: opacity 0.4s ease;
-}
-
-.reviews-cta-card--form .reviews-cta-decoration {
-  opacity: 0;
+.reviews-cta-view--form {
+  padding: 40px;
 }
 
 /* ── Адаптив ─────────────────────────────────────────────────────────── */
@@ -313,15 +246,11 @@
     max-width: 760px;
     margin: 0 auto;
   }
-
-  .reviews-cta-title {
-    font-size: 32px;
-  }
 }
 
 @media (max-width: 768px) {
   .reviews-card,
-  .reviews-cta-card {
+  .reviews-cta-view--form {
     padding: 30px;
   }
 
@@ -333,19 +262,11 @@
     font-size: 160px;
     top: -28px;
   }
-
-  .reviews-cta-title {
-    font-size: 28px;
-  }
-
-  .reviews-cta-text {
-    font-size: 14px;
-  }
 }
 
 @media (max-width: 560px) {
   .reviews-card,
-  .reviews-cta-card {
+  .reviews-cta-view--form {
     padding: 24px 20px;
   }
 
@@ -381,13 +302,5 @@
 
   .review-author-role {
     font-size: 14px;
-  }
-
-  .reviews-cta-title {
-    font-size: 24px;
-  }
-
-  .reviews-cta-btn {
-    width: 100%;
   }
 }

@@ -12,9 +12,9 @@ import Image from "next/image";
 import ReviewForm from "../review-form/ReviewForm";
 import ReviewSuccess from "../review-form/ReviewSuccess";
 import ReviewFormModal from "../review-form/ReviewFormModal";
+import PromoCta from "../promo-cta/PromoCta";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "../../context/LocaleContext";
-import { logo } from "../../assets/images";
 import { getPublishedReviews } from "../../lib/reviews";
 import { initials } from "../../utils/initials";
 
@@ -201,17 +201,6 @@ const Clients = () => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Логотип вне анимированных обёрток: их transform сместил бы
-                абсолютное позиционирование. В форме он гаснет через CSS. */}
-            {view !== "success" && (
-              <Image
-                src={logo}
-                alt=""
-                aria-hidden
-                className="reviews-cta-decoration"
-                sizes="300px"
-              />
-            )}
             <AnimatePresence mode="wait" initial={false}>
               {view === "cta" && (
                 <motion.div
@@ -222,26 +211,19 @@ const Clients = () => {
                   exit={{ opacity: 0, y: -24, filter: "blur(6px)" }}
                   transition={{ duration: 0.4, ease: EASE_OUT }}
                 >
-                  <div className="reviews-cta-content">
-                    <h3 className="reviews-cta-title">
-                      {clientsSectionData.ctaTitle}
-                    </h3>
-                    <p className="reviews-cta-text">{clientsSectionData.ctaText}</p>
-                    <button
-                      ref={ctaButtonRef}
-                      type="button"
-                      className="reviews-cta-btn"
-                      onClick={openForm}
-                    >
-                      {clientsSectionData.addReviewButton}
-                    </button>
-                  </div>
+                  <PromoCta
+                    title={clientsSectionData.ctaTitle}
+                    text={clientsSectionData.ctaText}
+                    buttonLabel={clientsSectionData.addReviewButton}
+                    onOpen={openForm}
+                    buttonRef={ctaButtonRef}
+                  />
                 </motion.div>
               )}
               {view === "form" && (
                 <motion.div
                   key="form"
-                  className="reviews-cta-view"
+                  className="reviews-cta-view reviews-cta-view--form"
                   exit={{ opacity: 0, transition: { duration: 0.25 } }}
                 >
                   <ReviewForm

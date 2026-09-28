@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -9,12 +8,13 @@ import { getApiBase } from "../../utils/apiBase";
 import { useLocale } from "../../context/LocaleContext";
 import { calculatorData, phoneCountryCodes } from "../../data/calculatorData";
 import { formatContact } from "../../utils/contactValidation";
-import { logo } from "../../assets/images";
 import SectionTitle from "../section-title/SectionTitle";
 import ModalCloseButton from "../modal-close-button/ModalCloseButton";
 import ContactFields, { useContactForm } from "./ContactFields";
 import CalculatorCompletion from "./CalculatorCompletion";
+import CallbackSuccess from "./CallbackSuccess";
 import CallbackForm from "./CallbackForm";
+import PromoCta from "../promo-cta/PromoCta";
 import "./Calculator.css";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
@@ -64,6 +64,8 @@ const Calculator = () => {
   const [isCtaSubmitting, setIsCtaSubmitting] = useState(false);
   // Точка, из которой раскрывается шторка в карточке, — центр кнопки, которой отправили заявку.
   const [ctaCurtainOrigin, setCtaCurtainOrigin] = useState(undefined);
+  // Что попадёт в карточку благодарности: форма к этому моменту уже сброшена.
+  const [callbackRequest, setCallbackRequest] = useState(null);
   const ctaCardRef = useRef(null);
   const ctaButton = useRef(null);
   const ctaSubmitRef = useRef(null);
@@ -250,6 +252,12 @@ const Calculator = () => {
         setCtaCurtainOrigin(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
       }
 
+      setCallbackRequest({
+        name: ctaForm.form.name.trim(),
+        contact: formatContact(ctaForm.form),
+        method: ctaForm.form.contactMethod,
+        time: new Date().toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }),
+      });
       ctaForm.reset();
       if (fromModal) {
         // Ждём, пока модалка растворится, иначе шторка раскроется под оверлеем.
@@ -411,17 +419,6 @@ const Calculator = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            {/* Логотип вне анимированных обёрток: их transform сместил бы
-                абсолютное позиционирование. В форме он гаснет через CSS. */}
-            {ctaView !== "completed" && (
-              <Image
-                src={logo}
-                alt=""
-                aria-hidden
-                className="cta-decoration"
-                sizes="300px"
-              />
-            )}
             <AnimatePresence mode="wait" initial={false}>
               {ctaView === "cta" && (
                 <motion.div
@@ -432,26 +429,19 @@ const Calculator = () => {
                   exit={{ opacity: 0, y: -24, filter: "blur(6px)" }}
                   transition={{ duration: 0.4, ease: EASE_OUT }}
                 >
-                  <div className="cta-content">
-                    <h3 className="cta-title">{t.ctaTitle}</h3>
-                    <p className="cta-text">
-                      {t.ctaText}
-                    </p>
-                    <button
-                      ref={ctaButtonRef}
-                      type="button"
-                      className="cta-btn"
-                      onClick={openCtaForm}
-                    >
-                      {t.ctaButton}
-                    </button>
-                  </div>
+                  <PromoCta
+                    title={t.ctaTitle}
+                    text={t.ctaText}
+                    buttonLabel={t.ctaButton}
+                    onOpen={openCtaForm}
+                    buttonRef={ctaButtonRef}
+                  />
                 </motion.div>
               )}
               {ctaView === "form" && (
                 <motion.div
                   key="form"
-                  className="cta-view"
+                  className="cta-view cta-view--form"
                   exit={{ opacity: 0, transition: { duration: 0.25 } }}
                 >
                   <CallbackForm
@@ -469,11 +459,13 @@ const Calculator = () => {
                 </motion.div>
               )}
               {ctaView === "completed" && (
-                <CalculatorCompletion
+                <CallbackSuccess
                   key="completed"
                   eyebrow={t.completionEyebrow}
                   title={t.completionTitle}
                   message={t.ctaCompletionMessage}
+                  request={callbackRequest}
+                  icon={contactMethodIcons[callbackRequest.method]}
                   origin={ctaCurtainOrigin}
                 />
               )}

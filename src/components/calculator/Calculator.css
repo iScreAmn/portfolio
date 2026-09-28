@@ -456,83 +456,14 @@
   justify-content: center;
   background: linear-gradient(135deg, var(--card-bg-color) 0%, var(--bg-transparent-color) 100%);
   border-radius: 20px;
-  padding: 40px;
+  /* Отступы задают сами состояния: призыв и шторка идут до краёв, форма — с полями. */
+  padding: 0;
   box-shadow: var(--box-shadow);
   transition: all 0.3s ease;
 }
 
 .dark-theme .cta-card {
   background: linear-gradient(220deg, #203c7c 0%, rgb(255 255 255 / 0%) 100%);
-}
-
-.cta-content {
-  position: relative;
-  z-index: 2;
-}
-
-.cta-title {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--first-color);
-  margin-bottom: 20px;
-  line-height: 1.2;
-}
-
-.cta-text {
-  font-size: 16px;
-  color: var(--third-color);
-  line-height: 1.6;
-  margin-bottom: 30px;
-}
-
-.cta-btn {
-  padding: 15px 35px;
-  background: var(--second-color);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-}
-
-.cta-btn:hover {
-  background: var(--hover-color);
-  transform: scale(1.05);
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-  color: #fff;
-}
-
-/* Водяной знак логотипа в нижнем правом углу карточки. Исходник белый, поэтому
-   на светлой теме его переворачивает общий --color-filter. */
-.cta-decoration {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1;
-  width: 45%;
-  max-width: 300px;
-  height: auto;
-  filter: var(--color-filter);
-  opacity: 0.14;
-  pointer-events: none;
-  user-select: none;
-}
-
-.dark-theme .cta-decoration {
-  opacity: 0.45;
-}
-
-.cta-decoration {
-  transition: opacity 0.4s ease;
-}
-
-.cta-card--form .cta-decoration {
-  opacity: 0;
 }
 
 /* Каждое состояние карточки (призыв, форма) занимает её целиком. */
@@ -543,6 +474,11 @@
   flex-direction: column;
   justify-content: center;
   flex: 1;
+  border-radius: inherit;
+}
+
+.cta-view--form {
+  padding: 40px;
 }
 
 /* В карточке нет крестика, место под него у заголовка не нужно. */
@@ -698,10 +634,6 @@
   .calculator-question {
     font-size: 28px;
   }
-
-  .cta-title {
-    font-size: 32px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -710,7 +642,7 @@
   }
 
   .calculator-card,
-  .cta-card {
+  .cta-view--form {
     padding: 30px;
   }
 
@@ -742,14 +674,6 @@
     width: 100%;
   }
 
-  .cta-title {
-    font-size: 28px;
-  }
-
-  .cta-text {
-    font-size: 14px;
-  }
-
   .calculator-completion {
     min-height: 440px;
   }
@@ -771,16 +695,12 @@
 
 @media (max-width: 480px) {
   .calculator-card,
-  .cta-card {
+  .cta-view--form {
     padding: 20px;
   }
 
   .calculator-question {
     font-size: 20px;
-  }
-
-  .cta-title {
-    font-size: 24px;
   }
 
   .calculator-form__method {
