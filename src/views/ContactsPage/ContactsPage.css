@@ -67,7 +67,12 @@
   padding: 0 24px;
   display: grid;
   gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+/* Без min-width: 0 длинный email раздувает колонку грида шире экрана. */
+.contacts-panel__container > * {
+  min-width: 0;
 }
 
 .contacts-panel__info {
@@ -115,6 +120,7 @@
   justify-content: center;
   color: var(--first-color);
   font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
 .contacts-panel__item-title {
@@ -126,6 +132,7 @@
   color: #727a8db5;
   font-weight: 600;
   display: inline-block;
+  overflow-wrap: anywhere;
 }
 
 /* Карточка формы — в стиле модалки заявки со страницы /services. */
@@ -149,12 +156,42 @@
     padding: 90px 0 0;
   }
 
+  .contacts-panel {
+    padding: 28px 0 80px;
+  }
+
   .contacts-panel__container {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .contacts-panel__info {
+    padding: 24px 18px;
   }
 
   .contacts-panel__form {
     padding: 24px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contacts-hero__container,
+  .contacts-panel__container {
+    padding: 0 16px;
+  }
+
+  .contacts-hero__title {
+    font-size: 2rem;
+  }
+
+  .contacts-panel__title {
+    font-size: 1.45rem;
+  }
+
+  .contacts-panel__item-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
   }
 }
 
