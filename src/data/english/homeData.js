@@ -182,6 +182,8 @@ export const clientsSectionData = {
   ctaTitle: "Worked together?",
   ctaText:
     "Tell me how the project went. A couple of minutes of your time — and your review shows up in this block.",
+  successTitle: "Thank you for your feedback!",
+  successMessage: "Your review will appear on the site soon.",
 };
 
 export const clientsData = [

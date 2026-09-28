@@ -1,0 +1,380 @@
+/* Экран благодарности, которым становится карточка рядом с отзывами. Цвета — токены: светлая тема
+   на «бумаге» с оранжевой лентой, тёмная — ночная сцена с синей. */
+.review-success {
+  --rs-bg: linear-gradient(160deg, #fbf5ea 0%, #f4e9d6 100%);
+  --rs-glow: rgba(255, 165, 0, 0.35);
+  --rs-ink: #17140f;
+  --rs-muted: rgba(23, 20, 15, 0.62);
+  --rs-accent: #ffa500;
+  --rs-tape-front-bg: #ffa500;
+  --rs-tape-front-ink: #17140f;
+  --rs-tape-back-bg: #17140f;
+  --rs-tape-back-ink: #fbf5ea;
+  --rs-card-bg: #ffffff;
+  --rs-card-border: rgba(23, 20, 15, 0.08);
+  --rs-card-shadow: 0 30px 60px -20px rgba(120, 70, 0, 0.35), 0 8px 20px -8px rgba(23, 20, 15, 0.18);
+  --rs-avatar-bg: #17140f;
+  --rs-avatar-ink: #ffa500;
+  --rs-stamp: #1653e1;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 520px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: inherit;
+  perspective: 1200px;
+}
+
+.dark-theme .review-success {
+  --rs-bg: radial-gradient(120% 90% at 50% 0%, #0f1d4a 0%, #070d22 60%);
+  --rs-glow: rgba(22, 83, 225, 0.55);
+  --rs-ink: #f4f1ec;
+  --rs-muted: rgba(244, 241, 236, 0.62);
+  --rs-accent: #ffa500;
+  --rs-tape-front-bg: #1653e1;
+  --rs-tape-front-ink: #f4f1ec;
+  --rs-tape-back-bg: #ffa500;
+  --rs-tape-back-ink: #070d22;
+  --rs-card-bg: #111c3d;
+  --rs-card-border: rgba(255, 255, 255, 0.1);
+  --rs-card-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(22, 83, 225, 0.25);
+  --rs-avatar-bg: #1653e1;
+  --rs-avatar-ink: #f4f1ec;
+  --rs-stamp: #ffa500;
+}
+
+/* ── Фон ──────────────────────────────────────────────────────────── */
+
+.review-success__curtain {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--rs-bg);
+  overflow: hidden;
+}
+
+.review-success__glow {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--rs-glow) 0%, transparent 62%);
+  filter: blur(40px);
+  transform: translate(-50%, -50%);
+  animation: review-success-breathe 9s ease-in-out infinite;
+}
+
+@keyframes review-success-breathe {
+  50% {
+    transform: translate(-46%, -54%) scale(1.12);
+  }
+}
+
+.review-success__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Ленты ────────────────────────────────────────────────────────── */
+
+.review-success__tapes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.review-success__tape {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 30%;
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.35);
+}
+
+.review-success__tape.is-front {
+  rotate: -8deg;
+  background: var(--rs-tape-front-bg);
+  color: var(--rs-tape-front-ink);
+}
+
+.review-success__tape.is-back {
+  rotate: 6deg;
+  background: var(--rs-tape-back-bg);
+  color: var(--rs-tape-back-ink);
+}
+
+.review-success__tape-track {
+  display: inline-flex;
+  animation: review-success-marquee 22s linear infinite;
+}
+
+.review-success__tape-track.is-reverse {
+  animation-direction: reverse;
+  animation-duration: 28s;
+}
+
+@keyframes review-success-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.review-success__tape-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 18px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.review-success__tape-star {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ── Контент ──────────────────────────────────────────────────────── */
+
+.review-success__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 56px 28px 40px;
+  text-align: center;
+}
+
+.review-success__stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.review-success__spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--rs-accent);
+  pointer-events: none;
+}
+
+.review-success__spark.is-alt {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--rs-stamp);
+}
+
+.review-success__float {
+  width: min(340px, 100%);
+  transform-style: preserve-3d;
+}
+
+.review-success__card {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 26px 26px 22px;
+  border: 1px solid var(--rs-card-border);
+  border-radius: 18px;
+  background: var(--rs-card-bg);
+  box-shadow: var(--rs-card-shadow);
+  color: var(--rs-ink);
+  text-align: left;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.review-success__quote {
+  position: absolute;
+  top: -34px;
+  right: 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 120px;
+  line-height: 1;
+  color: var(--rs-accent);
+  transform: translateZ(30px);
+  pointer-events: none;
+}
+
+.review-success__stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.review-success__star {
+  width: 18px;
+  height: 18px;
+  fill: #ffa500;
+}
+
+.review-success__text {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--rs-ink);
+  overflow-wrap: anywhere;
+}
+
+.review-success__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-success__avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 17px;
+  background: var(--rs-avatar-bg);
+  color: var(--rs-avatar-ink);
+}
+
+.review-success__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-success__who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.review-success__name {
+  font-size: 14px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review-success__company {
+  font-size: 12px;
+  color: var(--rs-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review-success__stamp {
+  position: absolute;
+  right: -14px;
+  bottom: -14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border: 2px dashed currentColor;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--rs-stamp);
+  background: var(--rs-card-bg);
+  transform: translateZ(40px);
+}
+
+.review-success__title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.26em;
+  margin: 0;
+  font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--rs-ink);
+}
+
+.review-success__word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.review-success__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.review-success__char {
+  display: inline-block;
+  padding-bottom: 0.08em;
+  transform-origin: left bottom;
+}
+
+.review-success__message {
+  max-width: 380px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--rs-muted);
+}
+
+/* ── Адаптив и reduced motion ─────────────────────────────────────── */
+
+@media screen and (max-width: 480px) {
+  .review-success__inner {
+    padding: 52px 18px 32px;
+  }
+
+  .review-success__card {
+    padding: 22px 20px 20px;
+  }
+
+  .review-success__stamp {
+    right: -4px;
+    width: 46px;
+    height: 46px;
+    font-size: 19px;
+  }
+
+  .review-success__tape {
+    top: 26%;
+    padding: 9px 0;
+  }
+
+  .review-success__tape-word {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-success__glow,
+  .review-success__tape-track {
+    animation: none;
+  }
+}

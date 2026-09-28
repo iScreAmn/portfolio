@@ -182,6 +182,8 @@ export const clientsSectionData = {
   ctaTitle: "Работали вместе?",
   ctaText:
     "Расскажите, как прошёл проект. Пара минут вашего времени — и отзыв появится в этом блоке.",
+  successTitle: "Спасибо за обратную связь!",
+  successMessage: "Скоро отзыв появится на сайте.",
 };
 
 export const clientsData = [
