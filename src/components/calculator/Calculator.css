@@ -121,50 +121,67 @@
   border-color: var(--second-color);
 }
 
-.calculator-contact-methods {
+.calculator-form {
+  gap: 14px;
+}
+
+.calculator-form .calculator-question {
+  margin-bottom: 4px;
+}
+
+.calculator-form__field {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 15px;
-}
-
-.calculator-contact-method {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 15px;
-  background: var(--body-bg-color);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  color: var(--first-color);
+  gap: 6px;
   font-size: 14px;
-  font-weight: 500;
+  color: var(--third-color);
+}
+
+.calculator-form__methods {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calculator-form__method {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 8px;
+  border-radius: 10px;
+  border: 2px solid var(--liner-color);
+  background: var(--body-bg-color);
+  color: var(--first-color);
+  font: inherit;
+  font-size: 15px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.calculator-contact-method:hover {
+.calculator-form__method:hover {
   border-color: var(--second-color);
-  background: var(--bg-transparent-color);
-  transform: translateY(-4px);
 }
 
-.calculator-contact-method.selected {
+.calculator-form__method.is-selected {
   border-color: var(--second-color);
-  background: var(--bg-transparent-color);
-  transform: translateY(-4px);
+  background: #2d2d2d;
+  color: #fff;
 }
 
-.calculator-contact-icon {
-  font-size: 32px;
-  color: var(--second-color);
-  transition: transform 0.3s ease;
+.calculator-form__method:focus-visible {
+  outline: 2px solid var(--second-color);
+  outline-offset: 2px;
 }
 
-.calculator-contact-method:hover .calculator-contact-icon,
-.calculator-contact-method.selected .calculator-contact-icon {
-  transform: scale(1.1);
+.calculator-form__error {
+  margin: 0;
+  font-size: 13px;
+  color: #e5484d;
+}
+
+.calculator-contact-input.is-invalid {
+  border-color: #e5484d;
 }
 
 .calculator-contact-input,
@@ -247,59 +264,188 @@
   transform: none !important;
 }
 
+/* Экран завершения: тёмная шторка + типографика, выезжающая из-под маски */
+/* Светлая тема: тёплая шторка в фирменном оранжевом, акценты — синие, как прогресс-бар */
 .calculator-completion {
+  --completion-bg: linear-gradient(150deg, #ffb21f 0%, #f59a00 45%, #d97e00 100%);
+  --completion-glow: rgba(255, 236, 190, 0.3);
+  --completion-accent: #1653e1;
+  --completion-text: #ffffff;
+  --completion-muted: rgba(255, 255, 255, 0.88);
+  --completion-track: rgba(255, 255, 255, 0.35);
+  --completion-text-shadow: 0 2px 18px rgba(150, 70, 0, 0.35);
+  --completion-ring-width: 2;
+
+  position: relative;
+  flex: 1;
   min-height: 520px;
-  padding: 4rem 2rem;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.dark-theme .calculator-completion {
+  --completion-bg: #070d22;
+  --completion-glow: rgba(22, 83, 225, 0.45);
+  --completion-accent: #ffa500;
+  --completion-text: #f4f1ec;
+  --completion-muted: rgba(244, 241, 236, 0.62);
+  --completion-track: rgba(244, 241, 236, 0.1);
+  --completion-text-shadow: none;
+  --completion-ring-width: 1.5;
+}
+
+/* Шторка должна доходить до краёв карточки, в том числе на мобильных */
+.calculator-card.calculator-card--completed,
+.cta-card.cta-card--completed {
+  padding: 0;
+  transition: none;
+}
+
+.calculator-completion__curtain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--completion-bg);
+  overflow: hidden;
+}
+
+.calculator-completion__glow {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 1;
+  left: 15%;
+  top: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--completion-glow) 0%, transparent 65%);
+  filter: blur(30px);
+}
+
+.calculator-completion__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.calculator-completion__inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 2rem;
+  gap: 28px;
+  padding: 3.5rem 2rem;
+  text-align: center;
 }
 
-.calculator-checkmark-circle {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ba6f13, #e1930180);
+.calculator-completion__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.calculator-completion__eyebrow {
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  gap: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--completion-muted);
 }
 
-.dark-theme .calculator-checkmark-circle {
-  background: linear-gradient(135deg, #1653e1 0%, rgb(255 255 255 / 0%) 100%);
+.calculator-completion__eyebrow-line {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: var(--completion-accent);
+  transform-origin: left center;
 }
 
-.calculator-checkmark {
-  width: 60px;
-  height: 60px;
-  stroke: #ffffff;
+.calculator-completion__eyebrow-text {
+  display: inline-block;
+}
+
+.calculator-completion__mark {
+  position: relative;
+  width: 104px;
+  height: 104px;
+}
+
+.calculator-completion__svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.calculator-completion__track,
+.calculator-completion__ring,
+.calculator-completion__check {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.calculator-completion__track {
+  stroke: var(--completion-track);
+  stroke-width: 1;
+}
+
+.calculator-completion__ring {
+  stroke: var(--completion-accent);
+  stroke-width: var(--completion-ring-width);
+}
+
+.calculator-completion__check {
+  stroke: var(--completion-text);
+  stroke-width: 3;
+}
+
+.calculator-completion__echo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--completion-accent);
 }
 
 .calculator-completion-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #f5f5f5;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.28em;
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--completion-text);
+  text-shadow: var(--completion-text-shadow);
 }
 
-.dark-theme .calculator-completion-title {
-  color: #d1caca;
+.calculator-completion__word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.calculator-completion__char {
+  display: inline-block;
+  /* Запас снизу, чтобы маска не срезала выносные элементы букв */
+  padding-bottom: 0.08em;
+  transform-origin: left bottom;
+  will-change: transform;
 }
 
 .calculator-completion-message {
-  font-size: 1.125rem;
-  line-height: 1.7;
-  color: #fffefe;
-  max-width: 500px;
+  max-width: 420px;
   margin: 0;
-}
-
-.dark-theme .calculator-completion-message {
-  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--completion-muted);
+  text-shadow: var(--completion-text-shadow);
 }
 
 .cta-card {
@@ -400,6 +546,8 @@
   box-shadow: var(--box-shadow);
   padding: 24px;
   position: relative;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
 }
 
 /* Телефон: селект кода страны + сам номер в одну строку */
@@ -472,6 +620,16 @@
   text-decoration: underline;
 }
 
+/* На оранжевой карточке акцентный цвет сливается с фоном */
+.calculator-card .calculator-privacy__text {
+  color: var(--first-color);
+}
+
+.calculator-card .calculator-privacy__link {
+  color: var(--first-color);
+  text-decoration: underline;
+}
+
 .calculator-modal-form {
   display: flex;
   flex-direction: column;
@@ -483,25 +641,6 @@
   padding-right: 40px;
   font-size: 24px;
   color: var(--first-color);
-}
-
-.calculator-modal-phone {
-  margin: 6px 0 0;
-  color: var(--third-color);
-  font-size: 14px;
-}
-
-.calculator-modal-phone a {
-  color: var(--second-color);
-  font-weight: 600;
-}
-
-.calculator-modal-success {
-  text-align: center;
-  color: var(--first-color);
-  font-size: 20px;
-  font-weight: 600;
-  padding: 24px 0;
 }
 
 .spinner {
@@ -561,10 +700,6 @@
     font-size: 14px;
   }
 
-  .calculator-contact-methods {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .calculator-actions {
     flex-direction: column-reverse;
     gap: 12px;
@@ -583,26 +718,21 @@
   }
 
   .calculator-completion {
-    padding: 3rem 1.5rem;
-    min-height: auto;
+    min-height: 440px;
   }
 
-  .calculator-completion-title {
-    font-size: 2rem;
+  .calculator-completion__inner {
+    gap: 22px;
+    padding: 3rem 1.5rem;
   }
 
   .calculator-completion-message {
     font-size: 1rem;
   }
 
-  .calculator-checkmark-circle {
-    width: 100px;
-    height: 100px;
-  }
-
-  .calculator-checkmark {
-    width: 50px;
-    height: 50px;
+  .calculator-completion__mark {
+    width: 88px;
+    height: 88px;
   }
 }
 
@@ -620,8 +750,10 @@
     font-size: 24px;
   }
 
-  .calculator-contact-methods {
-    grid-template-columns: 1fr;
+  .calculator-form__method {
+    gap: 4px;
+    padding: 12px 4px;
+    font-size: 13px;
   }
 
   .calculator-content-wrapper {

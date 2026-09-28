@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
@@ -8,20 +8,19 @@ import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useLocale } from "../../context/LocaleContext";
 import { calculatorData, phoneCountryCodes } from "../../data/calculatorData";
+import { formatContact } from "../../utils/contactValidation";
 import { logo } from "../../assets/images";
 import SectionTitle from "../section-title/SectionTitle";
 import ModalCloseButton from "../modal-close-button/ModalCloseButton";
+import ContactFields, { useContactForm } from "./ContactFields";
+import CalculatorCompletion from "./CalculatorCompletion";
 import "./Calculator.css";
-
-const PRIVACY_LINK = "/privacy";
-const PHONE_METHOD = "whatsapp";
 
 const emptyCtaForm = {
   name: "",
-  contactMethod: "",
+  contactMethod: "telegram",
   countryCode: phoneCountryCodes[0].value,
   contact: "",
-  message: "",
   agreeToPrivacy: false,
 };
 
@@ -31,33 +30,41 @@ const contactMethodIcons = {
   email: MdOutlineEmail,
 };
 
+const emptyFormData = {
+  projectType: "",
+  goals: [],
+  designApproach: "",
+  features: [],
+  content: "",
+  name: "",
+  contactMethod: "telegram",
+  countryCode: phoneCountryCodes[0].value,
+  contact: "",
+  agreeToPrivacy: false,
+};
+
 const Calculator = () => {
   const { locale } = useLocale();
   const t = calculatorData[locale] || calculatorData.en;
-  const totalSteps = 9;
+  // Шаги с вопросами + финальная форма контактов.
+  const totalSteps = t.steps.length + 1;
   const [currentStep, setCurrentStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCtaModalOpen, setIsCtaModalOpen] = useState(false);
   const [isCtaSubmitting, setIsCtaSubmitting] = useState(false);
-  const [ctaSubmitDone, setCtaSubmitDone] = useState(false);
+  const [isCtaCompleted, setIsCtaCompleted] = useState(false);
+  // Точка, из которой раскрывается шторка в карточке, — центр кнопки «Заказать звонок».
+  const [ctaCurtainOrigin, setCtaCurtainOrigin] = useState(undefined);
+  const ctaCardRef = useRef(null);
+  const ctaButtonRef = useRef(null);
+  const [submitError, setSubmitError] = useState(false);
+  const [ctaSubmitError, setCtaSubmitError] = useState(false);
 
-  const [formData, setFormData] = useState({
-    projectType: "",
-    goals: [],
-    scope: "",
-    designApproach: "",
-    features: [],
-    content: "",
-    timeline: "",
-    support: "",
-    contactMethod: "",
-    name: "",
-    contact: "",
-    message: "",
-  });
-  const [ctaFormData, setCtaFormData] = useState(emptyCtaForm);
+  const calcForm = useContactForm(emptyFormData);
+  const { form: formData, setForm: setFormData } = calcForm;
+  const ctaForm = useContactForm(emptyCtaForm);
 
   const steps = t.steps;
   const contactMethods = t.contactMethods.map((method) => ({
@@ -67,13 +74,8 @@ const Calculator = () => {
 
   const currentStepData = steps[currentStep - 1];
 
-  const isCtaPhone = ctaFormData.contactMethod === PHONE_METHOD;
-  const canSubmitCta =
-    ctaFormData.name.trim() &&
-    ctaFormData.contactMethod &&
-    ctaFormData.contact.trim() &&
-    ctaFormData.agreeToPrivacy &&
-    !isCtaSubmitting;
+  const isContactStep = currentStep === totalSteps;
+  const canSubmitCta = ctaForm.isValid && !isCtaSubmitting;
 
   const closeCtaModal = () => {
     if (!isCtaSubmitting) setIsCtaModalOpen(false);
@@ -89,8 +91,8 @@ const Calculator = () => {
   });
 
   const handleOptionSelect = (value) => {
-    if (currentStep === totalSteps) return;
-    
+    if (isContactStep) return;
+
     const { field, multiSelect } = currentStepData;
 
     if (multiSelect) {
@@ -107,8 +109,8 @@ const Calculator = () => {
   };
 
   const isOptionSelected = (value) => {
-    if (currentStep === totalSteps) return false;
-    
+    if (isContactStep) return false;
+
     const { field, multiSelect } = currentStepData;
     if (multiSelect) {
       return formData[field]?.includes(value);
@@ -117,10 +119,10 @@ const Calculator = () => {
   };
 
   const canProceed = () => {
-    if (currentStep === totalSteps) {
-      return formData.contactMethod && formData.name.trim() && formData.contact.trim();
+    if (isContactStep) {
+      return calcForm.isValid;
     }
-    
+
     const { field, multiSelect } = currentStepData;
     if (multiSelect) {
       return formData[field]?.length > 0;
@@ -130,9 +132,9 @@ const Calculator = () => {
 
   const handleNext = async () => {
     if (!canProceed()) return;
-    
+
     setDirection(1);
-    
+
     if (currentStep < totalSteps) {
       setCurrentStep((prev) => prev + 1);
     } else {
@@ -147,7 +149,10 @@ const Calculator = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    
+    setSubmitError(false);
+
+    const { countryCode, ...payload } = formData;
+
     try {
       const apiBase = getApiBase();
       const response = await fetch(`${apiBase}/api/calculator`, {
@@ -155,16 +160,21 @@ const Calculator = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...payload,
+          name: formData.name.trim(),
+          contact: formatContact(formData),
+        }),
       });
-      
+
       const data = await response.json();
-      
-      if (data.success) {
-        setIsCompleted(true);
-      }
+      if (!data.success) throw new Error(data.message);
+
+      setIsCompleted(true);
+      calcForm.reset();
     } catch (error) {
       console.error('Error:', error);
+      setSubmitError(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -174,13 +184,10 @@ const Calculator = () => {
     event.preventDefault();
     if (!canSubmitCta) return;
 
-    const { countryCode, agreeToPrivacy, ...payload } = ctaFormData;
-    if (isCtaPhone) {
-      const dial = phoneCountryCodes.find((c) => c.value === countryCode)?.dial || "";
-      payload.contact = `${dial} ${ctaFormData.contact.trim()}`;
-    }
+    const { countryCode, ...payload } = ctaForm.form;
 
     setIsCtaSubmitting(true);
+    setCtaSubmitError(false);
     try {
       const apiBase = getApiBase();
       const response = await fetch(`${apiBase}/api/calculator`, {
@@ -190,21 +197,28 @@ const Calculator = () => {
         },
         body: JSON.stringify({
           ...payload,
-          agreeToPrivacy,
+          name: payload.name.trim(),
+          contact: formatContact(ctaForm.form),
           source: "cta-modal",
         }),
       });
       const data = await response.json();
-      if (data.success) {
-        setCtaSubmitDone(true);
-        setTimeout(() => {
-          setIsCtaModalOpen(false);
-          setCtaSubmitDone(false);
-          setCtaFormData(emptyCtaForm);
-        }, 1200);
+      if (!data.success) throw new Error(data.message);
+
+      const card = ctaCardRef.current?.getBoundingClientRect();
+      const button = ctaButtonRef.current?.getBoundingClientRect();
+      if (card && button) {
+        const x = ((button.left + button.width / 2 - card.left) / card.width) * 100;
+        const y = ((button.top + button.height / 2 - card.top) / card.height) * 100;
+        setCtaCurtainOrigin(`${x.toFixed(1)}% ${y.toFixed(1)}%`);
       }
+
+      setIsCtaModalOpen(false);
+      setIsCtaCompleted(true);
+      ctaForm.reset();
     } catch (error) {
       console.error("CTA submit error:", error);
+      setCtaSubmitError(true);
     } finally {
       setIsCtaSubmitting(false);
     }
@@ -233,57 +247,18 @@ const Calculator = () => {
         <SectionTitle title={t.innerTitle} subtitle={t.innerSubtitle} />
         <div className="calculator-wrapper">
           <motion.div 
-            className="calculator-card"
+            className={`calculator-card ${isCompleted ? "calculator-card--completed" : ""}`}
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
             {isCompleted ? (
-              <motion.div
-                className="calculator-completion"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
-                <motion.div
-                  className="calculator-checkmark-circle"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, duration: 0.4, ease: "easeOut" }}
-                >
-                  <motion.svg
-                    className="calculator-checkmark"
-                    viewBox="0 0 52 52"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
-                  >
-                    <motion.path
-                      fill="none"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      d="M14 27l7 7 16-16"
-                    />
-                  </motion.svg>
-                </motion.div>
-                <motion.h2
-                  className="calculator-completion-title"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.4 }}
-                >
-                  {t.completionTitle}
-                </motion.h2>
-                <motion.p
-                  className="calculator-completion-message"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8, duration: 0.4 }}
-                >
-                  {t.completionMessage}
-                </motion.p>
-              </motion.div>
+              <CalculatorCompletion
+                eyebrow={t.completionEyebrow}
+                title={t.completionTitle}
+                message={t.completionMessage}
+              />
             ) : (
               <>
                 <div className="calculator-progress-container">
@@ -313,7 +288,7 @@ const Calculator = () => {
                       transition={{ duration: 0.3, ease: "easeOut" }}
                       className="calculator-step-content"
                     >
-                      {currentStep <= 8 ? (
+                      {!isContactStep ? (
                         <div className="calculator-step">
                           <h3 className="calculator-question">
                             {currentStepData.question}
@@ -332,50 +307,21 @@ const Calculator = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="calculator-step">
+                        <div className="calculator-step calculator-form">
                           <h3 className="calculator-question">
                             {t.contactStepTitle}
                           </h3>
-                          <div className="calculator-contact-methods">
-                            {contactMethods.map((method) => {
-                              const Icon = method.icon;
-                              return (
-                                <button
-                                  type="button"
-                                  key={method.id}
-                                  className={`calculator-contact-method ${formData.contactMethod === method.id ? 'selected' : ''}`}
-                                  onClick={() => setFormData({ ...formData, contactMethod: method.id })}
-                                >
-                                  <Icon className="calculator-contact-icon" />
-                                  <span>{method.label}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                          {formData.contactMethod && (
-                            <>
-                              <motion.input
-                                type="text"
-                                className="calculator-contact-input"
-                                placeholder={t.namePlaceholder}
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3 }}
-                              />
-                              <motion.input
-                                type="text"
-                                className="calculator-contact-input"
-                                placeholder={contactMethods.find((m) => m.id === formData.contactMethod)?.placeholder}
-                                value={formData.contact}
-                                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: 0.1 }}
-                              />
-                            </>
-                          )}
+
+                          <ContactFields
+                            t={t}
+                            contactMethods={contactMethods}
+                            contactForm={calcForm}
+                            idPrefix="calculator"
+                            onEdit={() => setSubmitError(false)}
+                          />
+
+                          {submitError && <p className="calculator-form__error">{t.submitError}</p>}
+
                         </div>
                       )}
                     </motion.div>
@@ -401,9 +347,9 @@ const Calculator = () => {
                   >
                     {isSubmitting ? (
                       <>
-                        <FaSpinner className="spinner" /> {locale === "ru" ? "Отправка..." : "Sending..."}
+                        <FaSpinner className="spinner" /> {t.sendingLabel}
                       </>
-                    ) : currentStep === totalSteps ? (
+                    ) : isContactStep ? (
                       t.submitButton
                     ) : (
                       t.nextButton
@@ -415,28 +361,45 @@ const Calculator = () => {
           </motion.div>
 
           <motion.div 
-            className="cta-card"
+            ref={ctaCardRef}
+            className={`cta-card ${isCtaCompleted ? "cta-card--completed" : ""}`}
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="cta-content">
-              <h3 className="cta-title">{t.ctaTitle}</h3>
-              <p className="cta-text">
-                {t.ctaText}
-              </p>
-              <button type="button" className="cta-btn" onClick={() => setIsCtaModalOpen(true)}>
-                {t.ctaButton}
-              </button>
-            </div>
-            <Image
-              src={logo}
-              alt=""
-              aria-hidden
-              className="cta-decoration"
-              sizes="300px"
-            />
+            {isCtaCompleted ? (
+              <CalculatorCompletion
+                eyebrow={t.completionEyebrow}
+                title={t.completionTitle}
+                message={t.ctaCompletionMessage}
+                origin={ctaCurtainOrigin}
+              />
+            ) : (
+              <>
+                <div className="cta-content">
+                  <h3 className="cta-title">{t.ctaTitle}</h3>
+                  <p className="cta-text">
+                    {t.ctaText}
+                  </p>
+                  <button
+                    ref={ctaButtonRef}
+                    type="button"
+                    className="cta-btn"
+                    onClick={() => setIsCtaModalOpen(true)}
+                  >
+                    {t.ctaButton}
+                  </button>
+                </div>
+                <Image
+                  src={logo}
+                  alt=""
+                  aria-hidden
+                  className="cta-decoration"
+                  sizes="300px"
+                />
+              </>
+            )}
           </motion.div>
         </div>
       </div>
@@ -464,82 +427,16 @@ const Calculator = () => {
                 disabled={isCtaSubmitting}
                 label={t.ctaCloseLabel}
               />
-              {ctaSubmitDone ? (
-                <div className="calculator-modal-success">{t.ctaSuccess}</div>
-              ) : (
-                <form className="calculator-modal-form" onSubmit={handleCtaSubmit}>
+                <form className="calculator-modal-form calculator-form" onSubmit={handleCtaSubmit} autoComplete="off" noValidate>
                   <h4 className="calculator-modal-title">{t.ctaModalTitle}</h4>
-                  <input
-                    className="calculator-contact-input"
-                    type="text"
-                    placeholder={t.namePlaceholder}
-                    value={ctaFormData.name}
-                    onChange={(e) => setCtaFormData({ ...ctaFormData, name: e.target.value })}
+                  <ContactFields
+                    t={t}
+                    contactMethods={contactMethods}
+                    contactForm={ctaForm}
+                    idPrefix="calculator-cta"
+                    onEdit={() => setCtaSubmitError(false)}
                   />
-                  <select
-                    className="calculator-contact-input"
-                    value={ctaFormData.contactMethod}
-                    onChange={(e) => setCtaFormData({ ...ctaFormData, contactMethod: e.target.value, contact: "" })}
-                  >
-                    <option value="">{t.contactMethodSelectPlaceholder}</option>
-                    {contactMethods.map((method) => (
-                      <option key={method.id} value={method.id}>
-                        {method.label}
-                      </option>
-                    ))}
-                  </select>
-                  {ctaFormData.contactMethod && (isCtaPhone ? (
-                    <div className="calculator-phone-field">
-                      <select
-                        className="calculator-contact-input calculator-phone-code"
-                        value={ctaFormData.countryCode}
-                        onChange={(e) => setCtaFormData({ ...ctaFormData, countryCode: e.target.value })}
-                        aria-label={t.ctaCountryCodeLabel}
-                      >
-                        {phoneCountryCodes.map((country) => (
-                          <option key={country.value} value={country.value}>
-                            {country.flag} {country.dial}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        className="calculator-contact-input"
-                        type="tel"
-                        inputMode="tel"
-                        autoComplete="tel-national"
-                        placeholder={contactMethods.find((method) => method.id === PHONE_METHOD)?.placeholder}
-                        value={ctaFormData.contact}
-                        onChange={(e) =>
-                          setCtaFormData({ ...ctaFormData, contact: e.target.value.replace(/[^\d\s()-]/g, "") })
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <input
-                      className="calculator-contact-input"
-                      type="text"
-                      placeholder={
-                        contactMethods.find((method) => method.id === ctaFormData.contactMethod)?.placeholder ||
-                        (locale === "ru" ? "Ваш контакт" : "Your contact")
-                      }
-                      value={ctaFormData.contact}
-                      onChange={(e) => setCtaFormData({ ...ctaFormData, contact: e.target.value })}
-                    />
-                  ))}
-                  <label className="calculator-privacy">
-                    <input
-                      type="checkbox"
-                      className="calculator-privacy__input"
-                      checked={ctaFormData.agreeToPrivacy}
-                      onChange={(e) => setCtaFormData({ ...ctaFormData, agreeToPrivacy: e.target.checked })}
-                    />
-                    <span className="calculator-privacy__text">
-                      {t.ctaPrivacyPrefix}{" "}
-                      <a href={PRIVACY_LINK} className="calculator-privacy__link" target="_blank" rel="noopener noreferrer">
-                        {t.ctaPrivacyLink}
-                      </a>
-                    </span>
-                  </label>
+                  {ctaSubmitError && <p className="calculator-form__error">{t.submitError}</p>}
                   <button
                     type="submit"
                     className="calculator-btn calculator-btn--next"
@@ -547,17 +444,13 @@ const Calculator = () => {
                   >
                     {isCtaSubmitting ? (
                       <>
-                        <FaSpinner className="spinner" /> {locale === "ru" ? "Отправка..." : "Sending..."}
+                        <FaSpinner className="spinner" /> {t.sendingLabel}
                       </>
                     ) : (
                       t.submitButton
                     )}
                   </button>
-                  <p className="calculator-modal-phone">
-                    {t.ctaPhoneLinePrefix} <a href="tel:+995571040626">+995571040626</a>
-                  </p>
                 </form>
-              )}
             </motion.div>
           </motion.div>
         )}
