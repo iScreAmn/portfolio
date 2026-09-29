@@ -4,8 +4,6 @@
   --home-accent: var(--second-color);
   --home-line: color-mix(in srgb, var(--first-color) 10%, transparent);
   --home-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  /* При наведении кнопка заливается противоположным цветом, как в PromoCta. */
-  --home-cta-fill: #1653e1;
 
   position: relative;
   display: flex;
@@ -159,92 +157,6 @@
 
 .home__cta-wrap {
   margin-top: 40px;
-}
-
-.home__cta {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 10px 10px 30px;
-  overflow: hidden;
-  isolation: isolate;
-  border-radius: 999px;
-  color: #fff;
-  font-size: var(--normal-font-size);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  background: var(--home-accent);
-  box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--second-color) 70%, transparent);
-  transition: box-shadow 0.6s var(--home-ease);
-}
-
-.home__cta:hover {
-  box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--home-cta-fill) 70%, transparent);
-}
-
-.dark-theme .home {
-  --home-cta-fill: #ffa500;
-}
-
-.home__cta-fill {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--home-cta-fill);
-  transform: translateY(101%);
-  transition: transform 0.6s var(--home-ease);
-}
-
-.home__cta:hover .home__cta-fill {
-  transform: translateY(0);
-}
-
-/* Надпись прокручивается вверх, снизу подъезжает её копия. */
-.home__cta-label {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  line-height: 1.4;
-}
-
-.home__cta-label span,
-.home__cta-label::after {
-  display: block;
-  transition: transform 0.6s var(--home-ease);
-}
-
-.home__cta-label::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  transform: translateY(100%);
-}
-
-.home__cta:hover .home__cta-label span {
-  transform: translateY(-100%);
-}
-
-.home__cta:hover .home__cta-label::after {
-  transform: translateY(0);
-}
-
-.home__cta-icon {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  color: var(--home-accent);
-  background: #fff;
-  font-size: 16px;
-  transition: transform 0.6s var(--home-ease), color 0.6s var(--home-ease);
-}
-
-.home__cta:hover .home__cta-icon {
-  color: var(--home-cta-fill);
-  transform: rotate(45deg) scale(1.05);
 }
 
 /* ===== Фото ===== */
@@ -498,15 +410,5 @@
 @media (max-width: 480px) {
   .home__role-line {
     width: 32px;
-  }
-
-  .home__cta {
-    padding: 8px 8px 8px 22px;
-    font-size: 14px;
-  }
-
-  .home__cta-icon {
-    width: 38px;
-    height: 38px;
   }
 }

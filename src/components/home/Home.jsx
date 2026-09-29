@@ -13,6 +13,7 @@ import {
 import { Fragment, useMemo, useRef } from "react";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import MagneticButton from "../widgets/magneticButton/MagneticButton";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const SPRING = { stiffness: 120, damping: 20, mass: 0.5 };
@@ -64,7 +65,6 @@ const Home = () => {
   const { socialLinks } = useLocaleAboutData();
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef(null);
-  const ctaRef = useRef(null);
 
   const icons = useMemo(
     () =>
@@ -75,7 +75,6 @@ const Home = () => {
     [socialLinks]
   );
 
-  const ContactIcon = homeData.contactButton.icon;
   const ScrollIcon = homeData.scrollDown.icon;
   const titleWords = homeData.greeting.split(" ").length;
   const textDelay = 0.5 + titleWords * 0.12;
@@ -94,10 +93,6 @@ const Home = () => {
   const ringX = useTransform(sx, [0, 1], [-18, 18]);
   const ringY = useTransform(sy, [0, 1], [-14, 14]);
 
-  // Магнитная кнопка.
-  const mx = useSpring(0, { stiffness: 200, damping: 14, mass: 0.3 });
-  const my = useSpring(0, { stiffness: 200, damping: 14, mass: 0.3 });
-
   const handleMove = (event) => {
     if (reduceMotion) return;
     const rect = sectionRef.current.getBoundingClientRect();
@@ -108,18 +103,6 @@ const Home = () => {
   const handleLeave = () => {
     px.set(0.5);
     py.set(0.5);
-  };
-
-  const handleCtaMove = (event) => {
-    if (reduceMotion) return;
-    const rect = ctaRef.current.getBoundingClientRect();
-    mx.set((event.clientX - rect.left - rect.width / 2) * 0.35);
-    my.set((event.clientY - rect.top - rect.height / 2) * 0.45);
-  };
-
-  const handleCtaLeave = () => {
-    mx.set(0);
-    my.set(0);
   };
 
   return (
@@ -186,24 +169,12 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: textDelay + 0.7, duration: 0.8, ease: EASE_OUT }}
           >
-            <motion.a
-              ref={ctaRef}
+            <MagneticButton
               href={homeData.contactButton.href}
-              target="_blank"
-              rel="noreferrer"
-              className="home__cta"
-              style={{ x: mx, y: my }}
-              onMouseMove={handleCtaMove}
-              onMouseLeave={handleCtaLeave}
-            >
-              <span className="home__cta-fill" aria-hidden="true" />
-              <span className="home__cta-label" data-text={homeData.contactButton.text}>
-                <span>{homeData.contactButton.text}</span>
-              </span>
-              <span className="home__cta-icon">
-                <ContactIcon />
-              </span>
-            </motion.a>
+              text={homeData.contactButton.text}
+              icon={homeData.contactButton.icon}
+              external
+            />
           </motion.div>
         </div>
 
