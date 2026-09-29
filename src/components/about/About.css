@@ -7,7 +7,6 @@
   --about-stroke: var(--second-color);
 }
 
-/* Синий контур теряется на тёмном фоне — осветляем его. */
 .dark-theme .about {
   --about-stroke: color-mix(in srgb, var(--second-color) 55%, #fff);
 }
@@ -46,7 +45,6 @@
   position: relative;
 }
 
-/* Повёрнутая рамка за карточкой, углы выглядывают из-за неё. */
 .about__frame {
   position: absolute;
   inset: 0;
@@ -92,6 +90,7 @@
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.02em;
+  cursor: default;
 }
 
 /* Запас по краям, чтобы диакритика не обрезалась маской. */

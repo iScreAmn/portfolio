@@ -278,8 +278,6 @@ export const hobbyTeaserData = {
 export const footerData = {
   circularText: "DIMITRI•FRONTEND•DEVELOPER•",
   followTitle: "Соцсети",
-  madeWith: "Сделано с",
-  byMe: "мной",
 };
 
 export const sidePanelData = {
