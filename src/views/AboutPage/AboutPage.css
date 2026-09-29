@@ -1,403 +1,840 @@
 .about-page {
+  --ap-ink: var(--first-color);
+  --ap-muted: var(--third-color);
+  --ap-accent: var(--second-color);
+  /* Акцент для текста и контуров: на тёмном фоне синий осветляем. */
+  --ap-accent-text: var(--second-color);
+  --ap-line: color-mix(in srgb, var(--first-color) 14%, transparent);
+  --ap-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  overflow: hidden;
+  color: var(--ap-ink);
   background: var(--body-bg-color);
-  color: var(--first-color);
 }
+
+.dark-theme .about-page {
+  --ap-accent-text: color-mix(in srgb, var(--second-color) 55%, #fff);
+}
+
+/* Текст для скринридеров, слова анимируются отдельно. */
+.about-page__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Запас по вертикали, чтобы диакритика и хвосты букв не обрезались маской. */
+.about-page__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.12em 0.06em 0.16em 0;
+  margin: -0.12em -0.06em -0.16em 0;
+}
+
+.about-page__word {
+  display: inline-block;
+  transform-origin: 0 100%;
+}
+
+/* ===== Hero ===== */
 
 .about-page__hero {
-  padding: 120px 0 80px;
-  background: radial-gradient(circle at 12% 8%, rgba(255, 122, 78, 0.16), transparent 30%),
-    radial-gradient(circle at 80% 4%, rgba(22, 83, 225, 0.18), transparent 32%),
-    var(--body-bg-color);
+  position: relative;
+  padding: 140px 0 0;
+  isolation: isolate;
 }
 
-.dark-theme .about-page__hero {
-  background: radial-gradient(circle at 12% 8%, rgba(255, 122, 78, 0.16), transparent 30%),
-    radial-gradient(circle at 80% 4%, rgba(22, 83, 225, 0.2), transparent 32%),
-    var(--body-bg-color);
+.about-page__blob {
+  position: absolute;
+  top: 30%;
+  left: -10%;
+  z-index: -1;
+  width: min(60vw, 720px);
+  aspect-ratio: 1;
+  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  background: radial-gradient(circle at 30% 30%, var(--ap-accent), transparent 70%);
+  opacity: 0.28;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: about-page-morph 14s ease-in-out infinite alternate;
 }
 
-.about-page__container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 32px;
+.about-page__eyebrow-row {
+  display: flex;
   align-items: center;
-}
-
-.about-page__content {
-  display: grid;
-  gap: 16px;
+  gap: 20px;
+  margin-bottom: clamp(20px, 3vw, 40px);
 }
 
 .about-page__eyebrow {
   display: inline-flex;
   align-items: center;
-  padding: 8px 14px;
-  border-radius: 10px;
-  background: rgba(22, 83, 225, 0.1);
-  border: 1px solid rgba(22, 83, 225, 0.25);
-  color: var(--first-color);
-  letter-spacing: 0.08em;
+  gap: 10px;
+  flex-shrink: 0;
+  color: var(--ap-ink);
+  font-size: var(--small-font-size);
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  width: fit-content;
-  backdrop-filter: blur(8px);
 }
 
-.dark-theme .about-page__eyebrow {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
+.about-page__eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ap-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ap-accent) 20%, transparent);
+  animation: about-page-pulse 2.4s var(--ap-ease) infinite;
+}
+
+.about-page__eyebrow-line {
+  flex: 1;
+  height: 1px;
+  background: var(--ap-line);
+  transform-origin: left center;
 }
 
 .about-page__title {
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  font-size: clamp(2rem, 3vw, 2.9rem);
-  letter-spacing: 0.02em;
-  line-height: 1.2;
+  color: var(--ap-ink);
+  font-size: clamp(40px, 11vw, 176px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.about-page__title-line {
+  display: block;
+}
+
+.about-page__title-word {
+  display: inline-block;
+  transform-origin: 0 100%;
+}
+
+/* Фамилия — контурная, справа; при наведении заливается слева направо. */
+.about-page__title-line.is-accent {
+  align-self: flex-end;
+}
+
+.about-page__title-line.is-accent .about-page__title-word {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ap-accent-text);
+  background: linear-gradient(var(--ap-accent), var(--ap-accent)) no-repeat 0 0 / 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-size 0.9s var(--ap-ease);
+}
+
+.about-page__title:hover .is-accent .about-page__title-word {
+  background-size: 100% 100%;
+}
+
+.about-page__hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  gap: clamp(40px, 7vw, 120px);
+  margin-top: clamp(40px, 5vw, 80px);
+}
+
+/* ===== Постер ===== */
+
+.about-page__poster-wrap {
+  position: relative;
+  /* Постер чуть заезжает под фамилию. */
+  margin-top: clamp(-120px, -6vw, -40px);
+}
+
+/* Кольцо с орбитой выглядывает из-за нижнего левого угла постера. */
+.about-page__ring {
+  position: absolute;
+  bottom: -52px;
+  left: -52px;
+  z-index: 1;
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+}
+
+.about-page__ring svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.about-page__ring circle {
+  fill: none;
+  stroke: var(--ap-muted);
+  stroke-width: 1;
+  stroke-dasharray: 2 6;
+}
+
+.about-page__orbit {
+  position: absolute;
+  inset: 0;
+  animation: about-page-spin 8s linear infinite;
+}
+
+.about-page__orbit::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--ap-accent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--ap-accent) 20%, transparent),
+    0 0 20px var(--ap-accent);
+}
+
+.about-page__poster {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--card-bg-color);
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 45%);
+}
+
+.about-page__poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgb(255 255 255 / 12%);
+  background: linear-gradient(to top, color-mix(in srgb, var(--ap-accent) 35%, transparent), transparent 45%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Картинка выше рамки, чтобы параллаксу было куда ехать. */
+.about-page__poster-inner {
+  position: absolute;
+  inset: -12% 0;
+  will-change: transform;
+}
+
+.about-page__poster-inner img {
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+/* ===== Текст hero ===== */
+
+.about-page__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .about-page__lead {
   margin: 0;
-  font-size: 1.2rem;
+  color: var(--ap-ink);
+  font-size: clamp(26px, 3vw, 46px);
   font-weight: 600;
-  line-height: 1.4;
-  color: var(--first-color);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
-.about-page__subtitle {
+.about-page__divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: clamp(28px, 3vw, 44px) 0;
+  background: var(--ap-line);
+  transform-origin: left center;
+}
+
+.about-page__texts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 48px);
+}
+
+.about-page__text {
   margin: 0;
-  font-size: 1.05rem;
+  color: var(--ap-muted);
+  font-size: clamp(15px, 1.1vw, 17px);
   line-height: 1.7;
-  color: var(--third-color);
 }
 
-.about-page__subtitle--secondary {
-  color: var(--first-color);
+.about-page__text--ink {
+  color: var(--ap-ink);
 }
 
 .about-page__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-}
-
-.about-page__btn {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 14px 22px;
-  border-radius: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: none;
-  transition: all 0.25s ease;
-}
-
-.about-page__btn--primary {
-  background: linear-gradient(171.6deg, var(--second-color) 11.462%, var(--hover-color) 97.358%);
-  color: #fff;
-  box-shadow: var(--box-shadow);
-}
-
-.about-page__btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-}
-
-.about-page__btn--ghost {
-  background: transparent;
-  color: var(--first-color);
-  border: 1px solid var(--liner-color);
-}
-
-.about-page__btn--ghost:hover {
-  background: var(--bg-transparent-color);
-  transform: translateY(-1px);
-}
-
-.about-page__social {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.about-page__social-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 130px;
-  height: 52px;
-  border-radius: 10px;
-  background: var(--card-bg-color);
-  border: 1px solid var(--liner-color);
-  color: var(--first-color);
-  text-decoration: none;
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.about-page__social-btn svg {
-  font-size: 1.2em;
-}
-
-.about-page__social-btn:hover {
-  background: linear-gradient(171.6deg, var(--second-color) 11.462%, var(--hover-color) 97.358%);
-  border-color: var(--second-color);
-  color: var(--second-color);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.dark-theme .about-page__social-btn {
-  background: var(--modal-bg-color);
-}
-
-.dark-theme .about-page__social-btn:hover {
-  border-color: var(--hover-color);
-  color: var(--hover-color);
-}
-
-.about-page__poster {
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--box-shadow);
-  background: var(--card-bg-color);
-  border: 1px solid var(--liner-color);
-}
-
-.about-page__poster img {
-  width: 100%;
-  height: 457px;
-  object-fit: cover;
-  display: block;
-}
-
-.about-page__details {
-  background: var(--card-bg-color);
-  padding: 0 0 120px;
-}
-
-.dark-theme .about-page__details {
-  background: var(--body-bg-color);
-}
-
-.about-page__details-container {
-  display: grid;
   gap: 24px;
-  grid-template-columns: 1.2fr 1fr;
-  grid-template-areas:
-    "experience stack"
-    "experience education";
-  align-items: stretch;
+  margin-top: clamp(36px, 4vw, 56px);
 }
 
-.about-page__block {
-  background: linear-gradient(
-      135deg,
-      rgba(255, 122, 78, 0.08),
-      rgba(22, 83, 225, 0.08)
-    ),
-    var(--card-bg-color);
-  border: 1px solid var(--liner-color);
-  border-radius: 16px;
-  box-shadow: var(--box-shadow);
-  padding: 22px 22px 18px;
+/* ===== Кнопка ===== */
+
+.about-page__cta {
+  --mb-icon-rotate: 0deg;
+}
+
+.about-page__cta .magnetic-btn__icon {
+  overflow: hidden;
+}
+
+.about-page__cta-icon {
   display: grid;
-  gap: 16px;
-  height: 100%;
+  place-items: center;
 }
 
-.about-page__block--experience {
-  grid-area: experience;
+.about-page__cta-icon svg {
+  grid-area: 1 / 1;
+  transition: transform 0.6s var(--ap-ease);
 }
 
-.about-page__block--stack {
-  grid-area: stack;
-  align-self: start;
+.about-page__cta-icon svg:last-child {
+  transform: translateY(-260%);
 }
 
-.about-page__block--education {
-  grid-area: education;
+.about-page__cta:hover .about-page__cta-icon svg:first-child {
+  transform: translateY(260%);
 }
 
-.dark-theme .about-page__block {
-  background: linear-gradient(
-      135deg,
-      rgba(255, 122, 78, 0.12),
-      rgba(22, 83, 225, 0.12)
-    ),
-    var(--modal-bg-color);
+.about-page__cta:hover .about-page__cta-icon svg:last-child {
+  transform: translateY(0);
 }
 
-.about-page__block-header {
+/* ===== Соцсети ===== */
+
+.about-page__socials {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+}
+
+.about-page__socials a {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--ap-line);
+  border-radius: 50%;
+  color: var(--ap-ink);
+  font-size: 19px;
+  background: color-mix(in srgb, var(--card-bg-color) 50%, transparent);
+  backdrop-filter: blur(6px);
+  transition: color 0.4s var(--ap-ease), background 0.4s var(--ap-ease),
+    border-color 0.4s var(--ap-ease), transform 0.4s var(--ap-ease);
+}
+
+.about-page__socials a:hover {
+  color: #fff;
+  background: var(--ap-accent);
+  border-color: var(--ap-accent);
+  transform: rotate(-12deg) scale(1.08);
+}
+
+/* ===== Заголовки секций ===== */
+
+.about-page__head {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(16px, 2vw, 32px);
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+
+.about-page__index {
+  padding-top: 0.9em;
+  color: var(--ap-accent-text);
+  font-size: var(--small-font-size);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.about-page__heading {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  color: var(--ap-ink);
+  font-size: clamp(48px, 9vw, 140px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.about-page__count {
+  margin-left: 0.12em;
+  color: var(--ap-accent-text);
+  font-size: 0.24em;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* ===== Стек ===== */
+
+.about-page__stack {
+  padding: clamp(30px, 8vw, 120px) 0 clamp(20px, 3vw, 40px);
+}
+
+.about-page__marquees {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  border-block: 1px solid var(--ap-line);
+  padding: clamp(18px, 2vw, 28px) 0;
+  transform: rotate(-2deg);
+  margin: 0 -4vw;
 }
 
-.about-page__block-title {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-.about-page__tags {
+.about-page__marquee {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  white-space: nowrap;
 }
 
-.about-page__tag {
-  display: inline-flex;
+.about-page__marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  animation: about-page-marquee 50s linear infinite;
+}
+
+.about-page__marquee.is-reverse .about-page__marquee-track {
+  animation-direction: reverse;
+}
+
+.about-page__marquees:hover .about-page__marquee-track {
+  animation-play-state: paused;
+}
+
+.about-page__marquee-list {
+  display: flex;
+  flex-shrink: 0;
+  list-style: none;
+}
+
+.about-page__marquee-item {
+  display: flex;
   align-items: center;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: var(--bg-transparent-color);
-  border: 1px solid var(--liner-color);
-  color: var(--first-color);
+  gap: clamp(18px, 2vw, 32px);
+  padding-right: clamp(18px, 2vw, 32px);
+  color: var(--ap-ink);
+  font-size: clamp(36px, 6vw, 92px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  transition: color 0.4s var(--ap-ease);
 }
 
-.about-page__cards {
+.about-page__marquee-item:hover {
+  color: var(--ap-accent-text);
+}
+
+.about-page__marquee.is-outline .about-page__marquee-item {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ap-muted);
+}
+
+.about-page__marquee.is-outline .about-page__marquee-item:hover {
+  color: var(--ap-accent);
+  -webkit-text-stroke-color: var(--ap-accent);
+}
+
+.about-page__marquee-star {
+  color: var(--ap-accent);
+  font-size: 0.4em;
+  -webkit-text-stroke: 0;
+}
+
+.about-page__marquee.is-outline .about-page__marquee-star {
+  color: var(--ap-accent);
+}
+
+/* ===== Опыт ===== */
+
+.about-page__section {
+  padding: clamp(30px, 8vw, 120px) 0;
+}
+
+.about-page__section--edu {
+  padding-bottom: clamp(80px, 10vw, 140px);
+}
+
+.about-page__jobs {
+  border-bottom: 1px solid var(--ap-line);
+}
+
+.about-page__job {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 60px 160px minmax(0, 1fr) 220px;
+  align-items: start;
+  gap: clamp(16px, 2.5vw, 40px);
+  padding: clamp(28px, 3vw, 44px) clamp(8px, 1.5vw, 24px);
+  isolation: isolate;
+}
+
+.about-page__job-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--ap-line);
+  transform-origin: left center;
+}
+
+/* Подложка поднимается снизу при наведении. */
+.about-page__job::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--ap-accent) 9%, transparent);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.6s var(--ap-ease);
+}
+
+.about-page__job:hover::before {
+  transform: scaleY(1);
+}
+
+.about-page__job-index,
+.about-page__job-period {
+  padding-top: 0.5em;
+  color: var(--ap-muted);
+  font-size: var(--small-font-size);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  transition: color 0.5s var(--ap-ease);
+}
+
+.about-page__job:hover .about-page__job-index {
+  color: var(--ap-accent-text);
+}
+
+.about-page__job-main {
+  min-width: 0;
+}
+
+.about-page__job-title {
+  margin: 0;
+  color: var(--ap-ink);
+  font-size: clamp(26px, 3.4vw, 52px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  transition: color 0.5s var(--ap-ease), transform 0.6s var(--ap-ease);
+}
+
+.about-page__job:hover .about-page__job-title {
+  color: var(--ap-accent-text);
+  transform: translateX(12px);
+}
+
+.about-page__job-text {
+  max-width: 620px;
+  margin: 16px 0 0;
+  color: var(--ap-muted);
+  font-size: clamp(15px, 1.05vw, 16px);
+  line-height: 1.7;
+}
+
+.about-page__job-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  padding-top: 0.4em;
+  text-align: right;
+}
+
+.about-page__job-company {
+  color: var(--ap-ink);
+  font-weight: 600;
+}
+
+.about-page__job-type {
+  padding: 6px 14px;
+  border: 1px solid var(--ap-line);
+  border-radius: 999px;
+  color: var(--ap-muted);
+  font-size: 13px;
+  white-space: nowrap;
+  transition: border-color 0.5s var(--ap-ease), color 0.5s var(--ap-ease);
+}
+
+.about-page__job:hover .about-page__job-type {
+  border-color: var(--ap-accent-text);
+  color: var(--ap-accent-text);
+}
+
+/* ===== Образование ===== */
+
+.about-page__edu {
+  position: relative;
+}
+
+.about-page__edu-rail {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--ap-line);
+  transform-origin: left center;
+}
+
+.about-page__edu-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 2.5vw, 40px);
+  list-style: none;
+}
+
+.about-page__edu-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
+  padding-top: 44px;
 }
 
-.about-page__cards--grid {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.about-page__edu-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--ap-accent);
+  border-radius: 50%;
+  background: var(--body-bg-color);
+  transition: background 0.4s var(--ap-ease), transform 0.4s var(--ap-ease);
 }
 
-.about-page__block--experience .about-page__cards,
-.about-page__block--education .about-page__cards {
-  grid-template-columns: 1fr;
+.about-page__edu-item:hover .about-page__edu-dot {
+  background: var(--ap-accent);
+  transform: scale(1.4);
 }
 
-.about-page__block--stack {
-  align-self: start;
+.about-page__edu-year {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ap-accent-text);
+  background: linear-gradient(var(--ap-accent), var(--ap-accent)) no-repeat 0 0 / 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-size: clamp(28px, 2.8vw, 42px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  transition: background-size 0.8s var(--ap-ease);
 }
 
-.about-page__card {
-  background: linear-gradient(
-      135deg,
-      rgba(255, 122, 78, 0.08),
-      rgba(22, 83, 225, 0.08)
-    ),
-    var(--card-bg-color);
-  border: 1px solid var(--liner-color);
-  border-radius: 14px;
-  box-shadow: var(--box-shadow);
-  padding: 16px 18px;
-  display: grid;
-  gap: 10px;
+.about-page__edu-item:hover .about-page__edu-year {
+  background-size: 100% 100%;
 }
 
-.dark-theme .about-page__card {
-  background: linear-gradient(
-      135deg,
-      rgba(255, 122, 78, 0.12),
-      rgba(22, 83, 225, 0.12)
-    ),
-    var(--modal-bg-color);
+.about-page__edu-degree {
+  margin: 8px 0 0;
+  color: var(--ap-ink);
+  font-size: clamp(18px, 1.5vw, 22px);
+  font-weight: 600;
+  line-height: 1.25;
 }
 
-.about-page__card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+.about-page__edu-inst {
+  color: var(--ap-muted);
+  font-size: var(--small-font-size);
+  line-height: 1.5;
 }
 
-.about-page__pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: var(--bg-transparent-color);
-  border: 1px solid var(--liner-color);
-  font-size: 12px;
+/* ===== Анимации ===== */
+
+@keyframes about-page-marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-.about-page__meta {
-  color: var(--third-color);
-  font-size: 0.95rem;
+@keyframes about-page-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.about-page__meta--dim {
-  font-size: 0.9rem;
-  opacity: 0.7;
+@keyframes about-page-pulse {
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--ap-accent) 0%, transparent);
+  }
 }
 
-.about-page__card-title {
-  margin: 0;
-  font-size: 1.1rem;
-  color: var(--first-color);
+@keyframes about-page-morph {
+  0% {
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    border-radius: 63% 37% 38% 62% / 55% 61% 39% 45%;
+    transform: rotate(40deg) scale(1.1);
+  }
 }
 
-.about-page__card-text {
-  margin: 0;
-  color: var(--third-color);
-  line-height: 1.6;
-}
-
-@media (max-width: 1024px) {
-  .about-page__hero {
-    padding: 100px 0 60px;
+@media (prefers-reduced-motion: reduce) {
+  .about-page__blob,
+  .about-page__orbit,
+  .about-page__eyebrow-dot {
+    animation: none;
   }
 
-  .about-page__container {
+  /* Без бегущей строки навыки просто переносятся. */
+  .about-page__marquees {
+    transform: none;
+    margin: 0;
+  }
+
+  .about-page__marquee.is-outline,
+  .about-page__marquee-list[aria-hidden] {
+    display: none;
+  }
+
+  .about-page__marquee-track {
+    animation: none;
+    flex-shrink: 1;
+    padding: 0 15px;
+  }
+
+  .about-page__marquee-list {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+  }
+
+  .about-page__marquee {
+    white-space: normal;
+  }
+}
+
+/* ===== Адаптив ===== */
+
+@media (max-width: 1100px) {
+  .about-page__texts {
     grid-template-columns: 1fr;
   }
 
-  .about-page__poster {
-    order: -1;
+  .about-page__job {
+    grid-template-columns: 48px 130px minmax(0, 1fr);
   }
 
-  .about-page__details-container {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "experience"
-      "stack"
-      "education";
+  .about-page__job-meta {
+    grid-column: 3;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  .about-page__edu-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 48px;
+  }
+
+  .about-page__edu-rail {
+    display: none;
+  }
+
+  .about-page__edu-item {
+    border-top: 1px solid var(--ap-line);
+    padding-top: 36px;
+  }
+
+  .about-page__edu-dot {
+    top: -7px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 980px) {
   .about-page__hero {
-    padding: 90px 0 50px;
+    padding: 110px 0 20px;
+  }
+
+  .about-page__hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-page__poster-wrap {
+    width: min(100%, 420px);
+    margin: 0 auto;
+  }
+
+  .about-page__ring {
+    bottom: -32px;
+    left: -20px;
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 680px) {
+  .about-page__title-line.is-accent .about-page__title-word {
+    -webkit-text-stroke-width: 1.5px;
   }
 
   .about-page__actions {
     flex-direction: column;
-  }
-
-  .about-page__btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .about-page__poster img {
-    max-height: 360px;
-    object-fit: cover;
-  }
-}
-
-@media (max-width: 540px) {
-  .about-page__title {
-    font-size: clamp(1.8rem, 5vw, 2.2rem);
-  }
-
-  .about-page__social {
-    justify-content: center;
-  }
-
-  .about-page__social-btn {
-    width: 100%;
-  }
-
-  .about-page__card-top {
-    flex-direction: column;
     align-items: flex-start;
   }
-}
 
+  .about-page__job {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-inline: 0;
+  }
+
+  .about-page__job-index {
+    display: none;
+  }
+
+  .about-page__job-period {
+    padding-top: 0;
+    color: var(--ap-accent-text);
+  }
+
+  .about-page__job-meta {
+    grid-column: auto;
+  }
+
+  .about-page__job:hover .about-page__job-title {
+    transform: none;
+  }
+
+  .about-page__edu-list {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+  }
+
+  .about-page__head {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .about-page__index {
+    padding-top: 0;
+  }
+}
