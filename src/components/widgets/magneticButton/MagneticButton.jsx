@@ -10,7 +10,14 @@ const MAGNET_SPRING = { stiffness: 200, damping: 14, mass: 0.3 };
 
 // Кнопка-«магнит»: тянется за курсором, при наведении заливается
 // противоположным цветом, надпись прокручивается, иконка поворачивается.
-const MagneticButton = ({ href, text, icon: Icon, external = false, className = "" }) => {
+const MagneticButton = ({
+  href,
+  text,
+  icon: Icon,
+  external = false,
+  download = false,
+  className = "",
+}) => {
   const reduceMotion = useReducedMotion();
   const ref = useRef(null);
   const mx = useSpring(0, MAGNET_SPRING);
@@ -28,8 +35,10 @@ const MagneticButton = ({ href, text, icon: Icon, external = false, className = 
     my.set(0);
   };
 
-  const Component = external ? motion.a : MotionLink;
+  // Файлы для скачивания отдаём обычной ссылкой: Link их не скачивает.
+  const Component = external || download ? motion.a : MotionLink;
   const externalProps = external ? { target: "_blank", rel: "noreferrer" } : {};
+  const downloadProps = download ? { download: true } : {};
 
   return (
     <Component
@@ -40,6 +49,7 @@ const MagneticButton = ({ href, text, icon: Icon, external = false, className = 
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
       {...externalProps}
+      {...downloadProps}
     >
       <span className="magnetic-btn__fill" aria-hidden="true" />
       <span className="magnetic-btn__label" data-text={text}>
