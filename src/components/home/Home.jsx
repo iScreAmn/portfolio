@@ -2,7 +2,6 @@
 
 import "./Home.css";
 import Image from "next/image";
-import { FaLaptopCode } from "react-icons/fa";
 import { aboutCover } from "../../assets/images";
 import {
   motion,
@@ -220,29 +219,21 @@ const Home = () => {
           <motion.div
             className="home__photo"
             style={{ rotateX: photoRotateX, rotateY: photoRotateY }}
-            initial={{ clipPath: "inset(100% 0% 0% 0%)", scale: 1.15 }}
-            animate={{ clipPath: "inset(0% 0% 0% 0%)", scale: 1 }}
+            initial={{ clipPath: "inset(100% -20% -20% -20%)", scale: 1.15 }}
+            animate={{ clipPath: "inset(-20% -20% -20% -20%)", scale: 1 }}
             transition={{ delay: 0.3, duration: 1.4, ease: EASE_OUT }}
           >
-            <Image
-              src={aboutCover}
-              alt={homeData.imageAlt}
-              className="home__photo-img"
-              sizes="(max-width: 980px) 260px, 420px"
-              placeholder="blur"
-              priority
-            />
+            <div className="home__photo-shape">
+              <Image
+                src={aboutCover}
+                alt={homeData.imageAlt}
+                className="home__photo-img"
+                sizes="(max-width: 980px) 260px, 420px"
+                placeholder="blur"
+                priority
+              />
+            </div>
           </motion.div>
-
-          <motion.span
-            className="home__sticker"
-            aria-hidden="true"
-            initial={{ scale: 0, rotate: -90 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 1.4, type: "spring", stiffness: 180, damping: 12 }}
-          >
-            <FaLaptopCode />
-          </motion.span>
         </div>
       </div>
 
