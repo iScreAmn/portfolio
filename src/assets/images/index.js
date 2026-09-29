@@ -1,6 +1,6 @@
 export { default as logo } from "./dj-logo.webp";
-export { default as aboutImg } from "./about-img-2.webp";
-export { default as aboutImg2 } from "./dj-cover.webp";
+export { default as aboutImg } from "./about-img.webp";
+export { default as aboutCover } from "./dj-cover.webp";
 
 // Portfolio Images
 export { default as portfolio1 } from "./portfolio/askchef.webp";
