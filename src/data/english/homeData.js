@@ -78,7 +78,7 @@ export const navMenu = {
 export const homeData = {
   imageAlt: "Dimitri Jmukhadze",
   greeting: "Hey, I am D.J",
-  role: "Front-end Developer",
+  role: "Full-Stack Developer",
   description:
     "I create stunning websites for your business, Highly experienced in web design and development",
   contactButton: {
@@ -120,9 +120,7 @@ export const aboutSectionData = {
   sectionTitle: "About me",
   sectionSubtitle: "About me",
   heading: "I'm Dimitri Jmukhadze",
-  taglineRole: "Front-End Developer",
-  taglineBetween: " based in ",
-  taglineLocation: "Georgia",
+  taglineRole: "Full-Stack Developer",
   description:
     "I build custom solutions for clients, focusing on crafting sleek, modern websites, web applications, and e-commerce platforms. I'm driven by a passion for creating engaging digital experiences through thoughtful and impactful design. Take a look at my portfolio",
   moreAboutButton: {

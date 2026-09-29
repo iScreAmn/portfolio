@@ -79,7 +79,7 @@ export const navMenu = {
 export const homeData = {
   imageAlt: "Дмитрий Джмухадзе",
   greeting: "Дмитрий на связи!",
-  role: "Full-stack разработчик",
+  role: "Full-Stack разработчик",
   description:
     "Помогаю бизнесу расти с помощью продуманных и визуально сильных сайтов.",
   contactButton: {
@@ -121,9 +121,7 @@ export const aboutSectionData = {
   sectionTitle: "Обо мне",
   sectionSubtitle: "Обо мне",
   heading: "Я - Дмитрий Джмухадзе",
-  taglineRole: "Full-stack разработчик",
-  taglineBetween: " из ",
-  taglineLocation: "Грузии",
+  taglineRole: "Full-Stack разработчик",
   description:
     "Создаю современные и быстрые сайты и веб-приложения, которые помогают привлекать клиентов и развивать бизнес. Продуманный дизайн, удобный интерфейс и внимание к каждой детали",
   moreAboutButton: {

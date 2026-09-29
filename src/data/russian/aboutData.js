@@ -14,8 +14,6 @@ export const posterAlt = "Портрет Димитри Джмухадзе";
 
 export const cvData = {
   downloadText: "Скачать CV",
-  // PDF лежит в public/: сборщик Next статические импорты .pdf не понимает,
-  // а файл всё равно нужен как обычная ссылка на скачивание.
   filePath: "/docs/Dimitri_Jmukhadze_CV.pdf",
 };
 

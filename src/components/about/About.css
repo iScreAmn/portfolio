@@ -1,221 +1,302 @@
+.about {
+  --about-ink: var(--first-color);
+  --about-muted: var(--third-color);
+  --about-accent: var(--second-color);
+  --about-line: color-mix(in srgb, var(--first-color) 12%, transparent);
+  --about-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --about-stroke: var(--second-color);
+}
+
+/* Синий контур теряется на тёмном фоне — осветляем его. */
+.dark-theme .about {
+  --about-stroke: color-mix(in srgb, var(--second-color) 55%, #fff);
+}
+
+/* ===== Раскладка ===== */
+
 .about__wrapper {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: center;
-  gap: 40px;
+  gap: clamp(40px, 6vw, 96px);
+  width: 100%;
 }
 
-.about-img {
-  max-width: 500px;
-  width: 100%;
+/* ===== Карточка ===== */
+
+.about__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+}
+
+.about__glow {
+  position: absolute;
+  inset: 15% 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--about-accent), transparent 70%);
+  opacity: 0.45;
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.about__stage {
+  position: relative;
+}
+
+/* Повёрнутая рамка за карточкой, углы выглядывают из-за неё. */
+.about__frame {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--about-accent);
+  border-radius: 30px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Сетка точек в углу. */
+.about__dots {
+  position: absolute;
+  right: 0;
+  bottom: 6%;
+  width: 120px;
+  height: 120px;
+  background-image: radial-gradient(var(--about-muted) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+  opacity: 0.45;
+  mask-image: radial-gradient(circle at 100% 100%, #000 30%, transparent 75%);
+  pointer-events: none;
+}
+
+.about__card {
+  position: relative;
+  will-change: clip-path, transform;
+}
+
+/* ===== Текст ===== */
+
+.about__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.about__heading {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.25em;
+  color: var(--about-ink);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+/* Запас по краям, чтобы диакритика не обрезалась маской. */
+.about__mask {
+  display: inline-block;
   overflow: hidden;
-  border-radius: 10px;
+  padding: 0.14em 0.16em 0.16em 0.04em;
+  margin: -0.14em -0.16em -0.16em -0.04em;
 }
 
-.about-img img {
-  border-radius: 10px;
-  transition: transform 0.5s ease;
-  width: 100%;
-  height: auto;
+.about__word {
+  display: inline-block;
+  transform-origin: 0 100%;
 }
 
-.about-img:hover img {
-  transform: scale(1.1);
+/* Фамилия — контурная, при наведении заливается акцентом слева направо. */
+.about__word.is-accent {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--about-stroke);
+  background: linear-gradient(var(--about-accent), var(--about-accent)) no-repeat 0 0 / 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-size 0.8s var(--about-ease);
 }
 
-.about-info {
-  max-width: 600px;
-  width: 100%;
+.about__heading:hover .about__word.is-accent {
+  background-size: 100% 100%;
 }
 
-.description h3 {
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.description h4 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.description h4 span {
-  color: var(--second-color);
-}
-
-.description p {
-  color: var(--third-color);
-  font-size: var(--normal-font-size);
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid var(--liner-color);
-}
-
-.professional-list {
+.about__role {
   display: flex;
-  column-gap: 30px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
 }
 
-.professional-list .list-item {
+.about__role-line {
+  flex-shrink: 0;
+  display: block;
+  width: 64px;
+  height: 2px;
+  background: var(--about-accent);
+  transform-origin: left center;
+}
+
+.about__role-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.about__role h4 {
+  color: var(--about-ink);
+  font-size: clamp(16px, 1.6vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.about__role h4 span {
+  color: var(--about-accent);
+}
+
+.about__text {
+  max-width: 560px;
+  margin-top: 20px;
+  color: var(--about-muted);
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.65;
+}
+
+.about__text span {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ===== Цифры ===== */
+
+.about__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 36px;
+  border-top: 1px solid var(--about-line);
+  border-bottom: 1px solid var(--about-line);
+  list-style: none;
+}
+
+.about__stat {
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  column-gap: 15px;
-  margin-bottom: 20px;
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 20px;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: default;
 }
 
-.list-item .number {
-  /* Стили теперь в AnimatedNumber.css */
+.about__stat + .about__stat {
+  border-left: 1px solid var(--about-line);
 }
 
-.list-item .text {
-  color: var(--third-color);
-  font-size: var(--small-font-size);
+/* Акцентная заливка поднимается снизу при наведении. */
+.about__stat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--about-accent);
+  transform: translateY(101%);
+  transition: transform 0.6s var(--about-ease);
 }
 
-.none {
-  display: none;
-}
-
-/* Стили для кнопки CV */
-.cv-btn {
-  background: var(--second-color);
-  color: #fff;
-  font-size: var(--normal-font-size);
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 20px 30px;
-  letter-spacing: 1px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.cv-btn:hover {
-  background: var(--hover-color);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.cv-btn:active {
+.about__stat:hover::before {
   transform: translateY(0);
 }
 
-.cv-btn .download-icon {
-  font-size: 18px;
-  animation: heartbeat 2s ease-in-out infinite;
+.about__stat-number .animated-number {
+  font-size: clamp(34px, 3.6vw, 52px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: left;
+  transition: color 0.6s var(--about-ease), transform 0.6s var(--about-ease);
 }
 
-@keyframes heartbeat {
-  0% {
-    transform: scale(1);
-  }
-  14% {
-    transform: scale(1.1);
-  }
-  28% {
-    transform: scale(1);
-  }
-  42% {
-    transform: scale(1.1);
-  }
-  70% {
-    transform: scale(1);
-  }
+.about__stat-text {
+  color: var(--about-muted);
+  font-size: var(--small-font-size);
+  line-height: 1.3;
+  transition: color 0.6s var(--about-ease);
 }
 
-@media (max-width: 768px) {
+.about__stat:hover .animated-number,
+.about__stat:hover .about__stat-text {
+  color: #fff;
+}
+
+.about__stat:hover .animated-number {
+  transform: translateX(6px);
+}
+
+/* ===== Кнопка ===== */
+
+.about__cta {
+  margin-top: 36px;
+}
+
+/* Стрелка при наведении смотрит вверх-вправо. */
+.about__cta .magnetic-btn {
+  --mb-icon-rotate: -45deg;
+}
+
+/* ===== Адаптив ===== */
+
+@media (max-width: 980px) {
   .about__wrapper {
-    flex-direction: column;
-    gap: 30px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 24px;
+  }
+
+  .about__info {
+    align-items: center;
+    max-width: 640px;
     text-align: center;
   }
 
-  .about-img {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .about-info {
-    max-width: 100%;
-  }
-
-  .description h3 {
-    font-size: 28px;
-  }
-
-  .description h4 {
-    font-size: 18px;
-  }
-
-  .description p {
-    font-size: 15px;
-    text-align: left;
-  }
-
-  .professional-list {
+  .about__heading,
+  .about__role {
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
   }
 
-  .professional-list .list-item {
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
-  }
-
-  .cv-btn {
-    margin: 25px auto 0;
-    display: inline-flex;
-  }
-}
-
-@media (max-width: 393px) {
-
-  .about__wrapper {
-    display: flex;
-    flex-direction: column;
+  .about__stats {
     width: 100%;
   }
 
-  .description h3 {
-    font-size: 22px;
+  .about__stat {
+    align-items: center;
   }
 
-  .description h4 {
-    font-size: 15px;
+  .about__stat-number .animated-number {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__visual {
+    padding: 24px 0;
   }
 
-  .description p {
-    font-size: 14px;
-    margin-right: 10px;
+  .about__dots {
+    display: none;
   }
 
-  /* .professional-list {
-    max-width: 200px;
-    flex-direction: column;
-  } */
-
-  .professional-list .list-item {
-    justify-content: unset;
+  .about__role-line {
+    width: 32px;
   }
 
-  .cv-btn {
-    font-size: 14px;
-    padding: 15px 20px;
-    gap: 8px;
+  .about__text {
+    text-align: left;
   }
 
-  .cv-btn .download-icon {
-    font-size: 16px;
+  .about__stat {
+    padding: 18px 8px;
+  }
+
+  .about__stat-text {
+    font-size: 12px;
   }
 }
