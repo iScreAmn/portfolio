@@ -7,6 +7,7 @@ import { FaArrowDown } from "react-icons/fa";
 import { aboutImg } from "../../assets/images";
 import { useLocale } from "../../context/LocaleContext";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
+import { useScrollFill } from "../../hooks/useScrollFill";
 import MagneticButton from "../../components/widgets/magneticButton/MagneticButton";
 import "./AboutPage.css";
 
@@ -17,13 +18,11 @@ const stagger = (step = 0.1, delay = 0) => ({
   visible: { transition: { staggerChildren: step, delayChildren: delay } },
 });
 
-// Слово выезжает из-под маски с лёгким поворотом.
 const riseVariants = {
   hidden: { y: "115%", rotate: 6 },
   visible: { y: "0%", rotate: 0, transition: { duration: 1.1, ease: EASE } },
 };
 
-// Слово проявляется из размытия.
 const blurVariants = {
   hidden: { opacity: 0, y: 12, filter: "blur(8px)" },
   visible: {
@@ -50,8 +49,6 @@ const inView = (amount = 0.3) => ({
   viewport: { once: true, amount },
 });
 
-// Текст по словам: «rise» — из-под маски, «blur» — из размытия.
-// Слова скрыты от скринридеров, полный текст лежит рядом в sr-only.
 const RevealText = ({
   as = "p",
   text,
@@ -91,7 +88,6 @@ const RevealText = ({
   );
 };
 
-// Заголовок секции с номером и счётчиком элементов.
 const SectionHead = ({ index, label, count }) => (
   <div className="about-page__head">
     <motion.span className="about-page__index" variants={fadeUpVariants} {...inView()}>
@@ -110,7 +106,6 @@ const SectionHead = ({ index, label, count }) => (
   </div>
 );
 
-// Две стрелки: при наведении одна уезжает вниз, вторая приходит сверху.
 const DownloadIcon = () => (
   <span className="about-page__cta-icon" aria-hidden="true">
     <FaArrowDown />
@@ -118,11 +113,12 @@ const DownloadIcon = () => (
   </span>
 );
 
-// Имя: слова выезжают из-под маски, последнее — контурное справа.
 const HeroTitle = ({ text }) => {
   const words = text.split(" ");
+  const titleRef = useRef(null);
+  const fill = useScrollFill(titleRef, ["start 15%", "start -5%"]);
   return (
-    <h1 className="about-page__title">
+    <h1 className="about-page__title" ref={titleRef}>
       <span className="about-page__sr">{text}</span>
       {words.map((word, i) => (
         <span
@@ -135,6 +131,7 @@ const HeroTitle = ({ text }) => {
           <span className="about-page__mask">
             <motion.span
               className="about-page__title-word"
+              style={i === words.length - 1 ? { backgroundSize: fill } : undefined}
               initial={{ y: "115%", rotate: 8 }}
               animate={{ y: "0%", rotate: 0 }}
               transition={{ delay: 0.15 + i * 0.14, duration: 1.2, ease: EASE }}
@@ -148,7 +145,6 @@ const HeroTitle = ({ text }) => {
   );
 };
 
-// Строка навыков, бегущая по кругу; при скролле дополнительно сдвигается.
 const Marquee = ({ items, x, reverse = false, outline = false }) => (
   <motion.div
     className={`about-page__marquee${reverse ? " is-reverse" : ""}${
@@ -196,9 +192,9 @@ const AboutPage = () => {
 
   const { scrollYProgress: posterProgress } = useScroll({
     target: posterRef,
-    offset: ["start end", "end start"],
+    offset: ["start start", "end start"],
   });
-  const posterImgY = useTransform(posterProgress, [0, 1], ["-10%", "10%"]);
+  const posterImgY = useTransform(posterProgress, [0, 1], ["0%", "-12%"]);
   const posterRingRotate = useTransform(posterProgress, [0, 1], [-40, 80]);
 
   const { scrollYProgress: stackProgress } = useScroll({
@@ -212,11 +208,7 @@ const AboutPage = () => {
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* Ключ по локали перемонтирует страницу при смене языка: иначе слова и
-          карточки, которых нет в другой локали, появляются уже после
-          срабатывания whileInView и остаются скрытыми. */}
       <div className="about-page" key={locale}>
-        {/* ===== Hero ===== */}
         <section className="about-page__hero">
           <div className="about-page__blob" aria-hidden="true" />
 
@@ -353,7 +345,6 @@ const AboutPage = () => {
           </div>
         </section>
 
-        {/* ===== Стек ===== */}
         <section className="about-page__stack" ref={stackRef}>
           <div className="container">
             <SectionHead index={1} label={sectionLabels.stack} count={skills.length} />
@@ -365,7 +356,6 @@ const AboutPage = () => {
           </div>
         </section>
 
-        {/* ===== Опыт ===== */}
         <section className="about-page__section">
           <div className="container">
             <SectionHead
@@ -418,7 +408,6 @@ const AboutPage = () => {
           </div>
         </section>
 
-        {/* ===== Образование ===== */}
         <section className="about-page__section about-page__section--edu">
           <div className="container">
             <SectionHead
