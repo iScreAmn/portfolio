@@ -3,6 +3,7 @@
 import "./Footer.css";
 import { followLinks } from "../../data/footerData";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import { footerData as footerDataEn } from "../../data/english/homeData";
 import FooterLinkGroup from "./FooterLinkGroup";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useState } from "react";
@@ -35,15 +36,16 @@ const Footer = () => {
         />
         <FooterLinkGroup title={t.followTitle} links={followLinks} isSocial={true} />
       </div>
-      <p className="footer-copyright">
-        © <span className="year">{currentYear}</span> {t.madeWith}{" "}
+      {/* Копирайт всегда на английском, независимо от локали. */}
+      <p className="footer-copyright" lang="en">
+        © <span className="year">{currentYear}</span> {footerDataEn.madeWith}{" "}
         <span className="heart-icon" onClick={() => {
           toggleHeart();
           toggleSplashCursor();
         }}>
           {isHeartFilled ? <FaHeart /> : <FaRegHeart />}
         </span>{" "}
-        {t.byMe}
+        {footerDataEn.byMe}
       </p>
     </footer>
   );
