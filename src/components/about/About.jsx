@@ -10,16 +10,19 @@ import ProfileCard from "../widgets/profileCard/ProfileCard";
 import MagneticButton from "../widgets/magneticButton/MagneticButton";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { useScrollFill } from "../../hooks/useScrollFill";
 import "./About.css";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const IN_VIEW = { once: true, amount: 0.4 };
 
-// Слова заголовка выезжают из-под маски, последнее — акцентное с контуром.
 const Heading = ({ text }) => {
   const words = text.split(" ");
+  const headingRef = useRef(null);
+  const fill = useScrollFill(headingRef, ["start 85%", "start 40%"]);
   return (
     <motion.h3
+      ref={headingRef}
       className="about__heading"
       aria-label={text}
       initial="hidden"
@@ -32,6 +35,7 @@ const Heading = ({ text }) => {
           <span className="about__mask" aria-hidden="true">
             <motion.span
               className={`about__word${i === words.length - 1 ? " is-accent" : ""}`}
+              style={i === words.length - 1 ? { backgroundSize: fill } : undefined}
               variants={{
                 hidden: { y: "115%", rotate: 6 },
                 visible: { y: "0%", rotate: 0, transition: { duration: 1, ease: EASE_OUT } },
@@ -46,7 +50,6 @@ const Heading = ({ text }) => {
   );
 };
 
-// Описание проявляется по словам из размытия.
 const Description = ({ text }) => (
   <motion.p
     className="about__text"
@@ -82,7 +85,6 @@ const About = () => {
   const reduceMotion = useReducedMotion();
   const wrapperRef = useRef(null);
 
-  // Лёгкий параллакс: карточка и декор движутся с разной скоростью.
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     offset: ["start end", "end start"],
@@ -107,8 +109,7 @@ const About = () => {
               style={{ y: frameY }}
               aria-hidden="true"
             />
-            {/* clip-path скрывает карточку от IntersectionObserver,
-                поэтому появление запускает родитель. */}
+           
             <motion.div
               className="about__stage"
               style={{ y: cardY }}

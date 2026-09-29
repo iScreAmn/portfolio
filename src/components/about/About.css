@@ -106,18 +106,14 @@
   transform-origin: 0 100%;
 }
 
-/* Фамилия — контурная, при наведении заливается акцентом слева направо. */
+/* Фамилия — контурная, при скролле заливается акцентом слева направо
+   (background-size задаёт About.jsx). */
 .about__word.is-accent {
   color: transparent;
   -webkit-text-stroke: 1.5px var(--about-stroke);
   background: linear-gradient(var(--about-accent), var(--about-accent)) no-repeat 0 0 / 0% 100%;
   -webkit-background-clip: text;
   background-clip: text;
-  transition: background-size 0.8s var(--about-ease);
-}
-
-.about__heading:hover .about__word.is-accent {
-  background-size: 100% 100%;
 }
 
 .about__role {

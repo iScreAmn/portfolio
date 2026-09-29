@@ -17,9 +17,6 @@ import MagneticButton from "../widgets/magneticButton/MagneticButton";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const SPRING = { stiffness: 120, damping: 20, mass: 0.5 };
-
-// Слова заголовка выезжают из-под маски, последнее слово — акцентное.
-// После обращения с запятой («Hey,») строка переносится.
 const Headline = ({ text }) => {
   const words = text.split(" ");
   return (
@@ -43,7 +40,6 @@ const Headline = ({ text }) => {
   );
 };
 
-// Описание проявляется по словам из размытия.
 const Description = ({ text, delay }) => (
   <p className="home__text" aria-label={text}>
     {text.split(" ").map((word, i) => (
@@ -79,7 +75,6 @@ const Home = () => {
   const titleWords = homeData.greeting.split(" ").length;
   const textDelay = 0.5 + titleWords * 0.12;
 
-  // Курсор в секции: 0…1 по обеим осям, по умолчанию — центр.
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
   const sx = useSpring(px, SPRING);
@@ -190,8 +185,8 @@ const Home = () => {
           <motion.div
             className="home__photo"
             style={{ rotateX: photoRotateX, rotateY: photoRotateY }}
-            initial={{ clipPath: "inset(100% -20% -20% -20%)", scale: 1.15 }}
-            animate={{ clipPath: "inset(-20% -20% -20% -20%)", scale: 1 }}
+            initial={{ clipPath: "inset(150% -50% -50% -50%)", scale: 1.15 }}
+            animate={{ clipPath: "inset(-50% -50% -50% -50%)", scale: 1 }}
             transition={{ delay: 0.3, duration: 1.4, ease: EASE_OUT }}
           >
             <div className="home__photo-shape">
