@@ -6,7 +6,8 @@ import { FaTelegramPlane, FaWhatsapp, FaSpinner } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useLocale } from "../../context/LocaleContext";
-import { calculatorData, phoneCountryCodes } from "../../data/calculatorData";
+import { phoneCountryCodes } from "../../data/phoneCountryCodes";
+import { useLocaleCalculatorData } from "../../hooks/useLocaleCalculatorData";
 import { formatContact } from "../../utils/contactValidation";
 import SectionTitle from "../section-title/SectionTitle";
 import ModalCloseButton from "../modal-close-button/ModalCloseButton";
@@ -52,7 +53,7 @@ const emptyFormData = {
 
 const Calculator = () => {
   const { locale } = useLocale();
-  const t = calculatorData[locale] || calculatorData.en;
+  const { calculatorData: t } = useLocaleCalculatorData();
   // Шаги с вопросами + финальная форма контактов.
   const totalSteps = t.steps.length + 1;
   const [currentStep, setCurrentStep] = useState(1);

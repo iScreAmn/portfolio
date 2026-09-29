@@ -15,7 +15,6 @@ import ReviewFormModal from "../review-form/ReviewFormModal";
 import PromoCta from "../promo-cta/PromoCta";
 import { VscCodeReview } from "react-icons/vsc";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLocale } from "../../context/LocaleContext";
 import { getPublishedReviews } from "../../lib/reviews";
 import { initials } from "../../utils/initials";
 
@@ -48,7 +47,6 @@ const Clients = () => {
   const successTimer = useRef(null);
   const [published, setPublished] = useState([]);
   const [submittedReview, setSubmittedReview] = useState(null);
-  const { locale } = useLocale();
 
   useEffect(() => {
     let cancelled = false;
@@ -229,7 +227,6 @@ const Clients = () => {
                   exit={{ opacity: 0, transition: { duration: 0.25 } }}
                 >
                   <ReviewForm
-                    locale={locale}
                     onCancel={handleCancel}
                     onSubmitted={(review) => showSuccess(review, SUCCESS_ORIGIN.inline)}
                   />
@@ -252,7 +249,6 @@ const Clients = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmitted={handleModalSubmitted}
-        locale={locale}
       />
     </section>
   );

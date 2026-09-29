@@ -7,7 +7,7 @@ import { getApiBase } from "../../utils/apiBase";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { useLocale } from "../../context/LocaleContext";
 import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
-import { phoneCountryCodes } from "../../data/calculatorData";
+import { phoneCountryCodes } from "../../data/phoneCountryCodes";
 import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contactValidation";
 import ContactSuccess from "./ContactSuccess";
 import "./ContactsForm.css";

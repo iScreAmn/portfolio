@@ -4,21 +4,20 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { setPendingScroll } from "../../utils/pendingScroll";
 import "./Portfolio.css";
-import portfolioData from "../../data/portfolioData";
 import PortfolioItem from "./PortfolioItem";
 import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
 
 const Portfolio = () => {
   const router = useRouter();
-  const { portfolioHeroData } = useLocalePortfolioData();
+  const { projects, portfolioHeroData, projectCardLabels } = useLocalePortfolioData();
 
   const chips = useMemo(() => {
     const unique = new Set();
-    portfolioData.forEach((item) => {
-      unique.add(item.category || "Digital");
+    projects.forEach((item) => {
+      unique.add(item.category || projectCardLabels.categoryFallback);
     });
     return Array.from(unique).slice(0, 6);
-  }, []);
+  }, [projects, projectCardLabels]);
 
   const handleScrollToGrid = () => {
     const grid = document.getElementById("portfolio-grid");
@@ -68,8 +67,13 @@ const Portfolio = () => {
       <section className="portfolio-grid" id="portfolio-grid">
         <div className="portfolio-grid__container">
           <div className="portfolio-grid__list">
-            {portfolioData.map((item, index) => (
-              <PortfolioItem key={item.id} item={item} index={index} />
+            {projects.map((item, index) => (
+              <PortfolioItem
+                key={item.id}
+                item={item}
+                index={index}
+                labels={projectCardLabels}
+              />
             ))}
           </div>
         </div>

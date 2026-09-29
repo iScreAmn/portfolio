@@ -100,7 +100,7 @@ const Home = () => {
         <div className="circle">
           <Image
             src={aboutImg2}
-            alt="Profile"
+            alt={homeData.imageAlt}
             className="circle__img"
             sizes="350px"
             placeholder="blur"

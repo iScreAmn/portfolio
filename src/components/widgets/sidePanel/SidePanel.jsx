@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
+import { useLocaleHomeData } from "../../../hooks/useLocaleHomeData";
 import "./SidePanel.css";
 
 const SidePanel = () => {
+  const { sidePanelData } = useLocaleHomeData();
   const [isVisible, setIsVisible] = useState(false);
   const [footerLift, setFooterLift] = useState(0);
 
@@ -55,7 +57,7 @@ const SidePanel = () => {
       className={`side-panel-btn scroll-btn ${isVisible ? "visible" : ""}`}
       style={{ "--footer-lift": `${footerLift}px` }}
       onClick={scrollToTop}
-      aria-label="Прокрутить к началу страницы"
+      aria-label={sidePanelData.scrollTopLabel}
     >
       <FaArrowUp />
     </button>

@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
-import portfolioData from "../../data/portfolioData";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
-import { useLocale } from "../../context/LocaleContext";
+import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
 import { setPendingScroll } from "../../utils/pendingScroll";
 import "./ProjectPage.css";
 
@@ -17,10 +16,10 @@ const NAV_SPRING = { type: "spring", stiffness: 300, damping: 18 };
 
 const ProjectPage = ({ slug }) => {
   const router = useRouter();
-  const { locale } = useLocale();
+  const { projects, projectCardLabels, projectPageData: t } = useLocalePortfolioData();
   const { track } = useAnalytics();
 
-  const project = portfolioData.find((item) => item.slug === slug);
+  const project = projects.find((item) => item.slug === slug);
   const gallery = project?.gallery?.length ? project.gallery : project ? [project.imgSrc] : [];
   const totalImages = Math.max(gallery.length, 1);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -83,18 +82,15 @@ const ProjectPage = ({ slug }) => {
       <div className="project-page project-page--not-found">
         <div className="project-hero__container">
           <div className="project-hero__content">
-            <div className="project-hero__eyebrow">Project not found</div>
-            <h1 className="project-hero__title">Oops, this page is missing</h1>
-            <p className="project-hero__subtitle">
-              Looks like this case has not landed in the portfolio yet. Go back
-              to the grid and pick another project.
-            </p>
+            <div className="project-hero__eyebrow">{t.notFound.eyebrow}</div>
+            <h1 className="project-hero__title">{t.notFound.title}</h1>
+            <p className="project-hero__subtitle">{t.notFound.subtitle}</p>
             <div className="project-hero__actions">
               <button
                 className="project-hero__btn project-hero__btn--primary"
                 onClick={() => router.push("/portfolio")}
               >
-                All projects
+                {t.notFound.allProjectsButton}
               </button>
               <button
                 className="project-hero__btn project-hero__btn--ghost"
@@ -103,7 +99,7 @@ const ProjectPage = ({ slug }) => {
                   router.push("/");
                 }}
               >
-                Contact me
+                {t.notFound.contactButton}
               </button>
             </div>
           </div>
@@ -114,17 +110,9 @@ const ProjectPage = ({ slug }) => {
 
   const metaChips = [
     project.category,
-    project.year && `Year: ${project.year}`,
+    project.year && `${t.yearLabel}: ${project.year}`,
     ...(project.tags || []),
   ].filter(Boolean);
-
-  const projectEyebrow =
-    locale === "ru" ? project.categoryRu || project.category : project.category;
-  const projectDescription =
-    locale === "ru" ? project.descriptionRu || project.description : project.description;
-  const galleryButtonLabel = locale === "ru" ? "Открыть галерею" : "View gallery";
-  const projectLinkButtonLabel = locale === "ru" ? "Открыть сайт" : "View Page";
-  const inDevelopmentLabel = locale === "ru" ? "В разработке" : "In development";
 
   return (
     <div className="project-page">
@@ -132,10 +120,10 @@ const ProjectPage = ({ slug }) => {
         <div className="project-hero__container">
           <div className="project-hero__content">
             <div className="project-hero__eyebrow">
-              {projectEyebrow || "Project"}
+              {project.category || projectCardLabels.categoryFallback}
             </div>
             <h1 className="project-hero__title">{project.title}</h1>
-            <p className="project-hero__subtitle">{projectDescription}</p>
+            <p className="project-hero__subtitle">{project.description}</p>
 
             <div className="project-hero__meta">
               {metaChips.map((chip) => (
@@ -150,7 +138,7 @@ const ProjectPage = ({ slug }) => {
                 className="project-hero__btn project-hero__btn--primary"
                 onClick={() => openModalAt(0)}
               >
-                {galleryButtonLabel}
+                {t.galleryButton}
               </button>
               {project.inDevelopment ? (
                 <span className="project-hero__btn-wrap project-hero__btn-wrap--disabled">
@@ -160,7 +148,7 @@ const ProjectPage = ({ slug }) => {
                     disabled
                     aria-disabled="true"
                   >
-                    {inDevelopmentLabel}
+                    {t.inDevelopment}
                   </button>
                 </span>
               ) : project.href ? (
@@ -171,7 +159,7 @@ const ProjectPage = ({ slug }) => {
                   rel="noreferrer"
                   onClick={() => track("project", "live_link", project.slug)}
                 >
-                  {projectLinkButtonLabel}
+                  {t.liveLinkButton}
                 </a>
               ) : null}
             </div>
@@ -185,7 +173,7 @@ const ProjectPage = ({ slug }) => {
             <div className="project-gallery__main-img">
               <Image
                 src={project.imgSrc}
-                alt={`${project.title} main screenshot`}
+                alt={`${project.title} ${t.mainImageAlt}`}
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 placeholder="blur"
               />
@@ -206,11 +194,11 @@ const ProjectPage = ({ slug }) => {
                             : ""
                         }`}
                         onClick={() => openModalAt(thumb.targetIndex)}
-                        aria-label={`Open image ${thumb.targetIndex + 1}`}
+                        aria-label={`${t.openImage} ${thumb.targetIndex + 1}`}
                       >
                         <Image
                           src={thumb.src}
-                          alt={`${project.title} thumbnail ${thumb.targetIndex + 1}`}
+                          alt={`${project.title} ${t.thumbnailAlt} ${thumb.targetIndex + 1}`}
                           sizes="(max-width: 1024px) 50vw, 17vw"
                         />
                       </button>
@@ -227,11 +215,11 @@ const ProjectPage = ({ slug }) => {
           <div className="gallery-modal__overlay" onClick={closeModal}></div>
           <div className="gallery-modal__content">
             <div className="gallery-modal__slide">
-              <ModalCloseButton onClick={closeModal} label="Close gallery" />
+              <ModalCloseButton onClick={closeModal} label={t.closeGallery} />
 
               <Image
                 src={gallery[currentIndex]}
-                alt={`${project.title} full ${currentIndex + 1}`}
+                alt={`${project.title} ${t.fullImageAlt} ${currentIndex + 1}`}
                 sizes="100vw"
                 priority
               />
@@ -240,7 +228,7 @@ const ProjectPage = ({ slug }) => {
                 type="button"
                 className="gallery-modal__nav gallery-modal__nav--prev"
                 onClick={showPrev}
-                aria-label="Previous image"
+                aria-label={t.prevImage}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.9 }}
                 transition={NAV_SPRING}
@@ -252,7 +240,7 @@ const ProjectPage = ({ slug }) => {
                 type="button"
                 className="gallery-modal__nav gallery-modal__nav--next"
                 onClick={showNext}
-                aria-label="Next image"
+                aria-label={t.nextImage}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.9 }}
                 transition={NAV_SPRING}
@@ -270,11 +258,11 @@ const ProjectPage = ({ slug }) => {
                     currentIndex === idx ? "project-gallery__thumb--active" : ""
                   }`}
                   onClick={() => setCurrentIndex(idx)}
-                  aria-label={`Open image ${idx + 1}`}
+                  aria-label={`${t.openImage} ${idx + 1}`}
                 >
                   <Image
                     src={image}
-                    alt={`${project.title} thumbnail ${idx + 1}`}
+                    alt={`${project.title} ${t.thumbnailAlt} ${idx + 1}`}
                     sizes="120px"
                   />
                 </button>

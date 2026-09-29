@@ -1,0 +1,15 @@
+export const phoneCountryCodes = [
+  { value: "GE", flag: "🇬🇪", dial: "+995" },
+  { value: "RU", flag: "🇷🇺", dial: "+7" },
+  { value: "KZ", flag: "🇰🇿", dial: "+7" },
+  { value: "UA", flag: "🇺🇦", dial: "+380" },
+  { value: "BY", flag: "🇧🇾", dial: "+375" },
+  { value: "AM", flag: "🇦🇲", dial: "+374" },
+  { value: "AZ", flag: "🇦🇿", dial: "+994" },
+  { value: "UZ", flag: "🇺🇿", dial: "+998" },
+  { value: "TR", flag: "🇹🇷", dial: "+90" },
+  { value: "IL", flag: "🇮🇱", dial: "+972" },
+  { value: "DE", flag: "🇩🇪", dial: "+49" },
+  { value: "GB", flag: "🇬🇧", dial: "+44" },
+  { value: "US", flag: "🇺🇸", dial: "+1" },
+];

@@ -77,6 +77,7 @@ export const navMenu = {
 };
 
 export const homeData = {
+  imageAlt: "Дмитрий Джмухадзе",
   greeting: "Дмитрий на связи!",
   role: "Full-stack разработчик",
   description:
@@ -112,6 +113,11 @@ export const profList = [
 ];
 
 export const aboutSectionData = {
+  imageAlt: "Дмитрий Джмухадзе за работой",
+  profileCard: {
+    status: "В сети",
+    contactText: "Написать",
+  },
   sectionTitle: "Обо мне",
   sectionSubtitle: "Обо мне",
   heading: "Я - Дмитрий Джмухадзе",
@@ -231,3 +237,53 @@ export const clientsData = [
     companyLogo: brand9,
   },
 ];
+
+export const getInTouchData = {
+  eyebrow: "Давайте обсудим",
+  status: "Открыт для новых проектов",
+  lines: ["Ваш следующий", "проект"],
+  accent: "проект",
+  marquee: "Давайте работать вместе",
+  badge: "Связаться со мной • Связаться со мной • ",
+  label: "Давайте обсудим ваш следующий проект",
+};
+
+export const reviewFormData = {
+  title: "Оставить отзыв",
+  name: "Ваше имя",
+  company: "Компания",
+  optional: "Необязательно",
+  photo: "Ваше фото",
+  logo: "Логотип компании",
+  upload: "Загрузить",
+  replace: "Заменить",
+  remove: "Убрать",
+  review: "Ваш отзыв",
+  submit: "Отправить",
+  submitting: "Отправляем…",
+  cancel: "Отмена",
+  close: "Закрыть",
+  failed: "Не удалось отправить отзыв. Попробуйте позже.",
+  imageFailed: "Не получилось прочитать файл как картинку.",
+  imageTooLarge: "Картинка слишком большая, выберите поменьше.",
+  reviewTooShort: "Отзыв должен быть не короче 10 символов.",
+};
+
+export const hobbyTeaserData = {
+  eyebrow: "Хобби",
+  title: "Съёмка с дрона и видео",
+  text: "Снимаю истории с высоты: плавные кинематографичные пролёты и чистый монтаж. Загляните, как я работаю с дроном.",
+  button: "Смотреть хобби",
+  imageAlt: "Превью хобби: съёмка с дрона",
+};
+
+export const footerData = {
+  circularText: "DIMITRI•FRONTEND•DEVELOPER•",
+  followTitle: "Соцсети",
+  madeWith: "Сделано с",
+  byMe: "мной",
+};
+
+export const sidePanelData = {
+  scrollTopLabel: "Прокрутить к началу страницы",
+};

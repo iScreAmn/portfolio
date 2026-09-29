@@ -8,6 +8,7 @@ import { HiOutlineCamera, HiOutlinePhotograph } from "react-icons/hi";
 import { submitReview } from "../../lib/reviews";
 import { resizeImage, ImageTooLargeError } from "../../utils/resizeImage";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
+import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 
 const EMPTY_FORM = {
   name: "",
@@ -15,45 +16,6 @@ const EMPTY_FORM = {
   review: "",
   photo: null,
   logo: null,
-};
-
-const texts = {
-  en: {
-    title: "Leave a Review",
-    name: "Your Name",
-    company: "Company",
-    photo: "Your photo",
-    logo: "Company logo",
-    upload: "Upload",
-    replace: "Replace",
-    remove: "Remove",
-    review: "Your Review",
-    submit: "Submit",
-    submitting: "Sending…",
-    cancel: "Cancel",
-    failed: "Could not send the review. Please try again later.",
-    imageFailed: "This file could not be read as an image.",
-    imageTooLarge: "The image is too large. Please pick a smaller one.",
-    reviewTooShort: "The review should be at least 10 characters long.",
-  },
-  ru: {
-    title: "Оставить отзыв",
-    name: "Ваше имя",
-    company: "Компания",
-    photo: "Ваше фото",
-    logo: "Логотип компании",
-    upload: "Загрузить",
-    replace: "Заменить",
-    remove: "Убрать",
-    review: "Ваш отзыв",
-    submit: "Отправить",
-    submitting: "Отправляем…",
-    cancel: "Отмена",
-    failed: "Не удалось отправить отзыв. Попробуйте позже.",
-    imageFailed: "Не получилось прочитать файл как картинку.",
-    imageTooLarge: "Картинка слишком большая, выберите поменьше.",
-    reviewTooShort: "Отзыв должен быть не короче 10 символов.",
-  },
 };
 
 const ImageField = ({ id, label, icon: Icon, value, round, onPick, onRemove, t, disabled }) => (
@@ -109,14 +71,14 @@ const rowVariants = {
   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: EASE_OUT } },
 };
 
-const ReviewForm = ({ onCancel, onSubmitted, locale, autoFocus = true, showCancel = true }) => {
+const ReviewForm = ({ onCancel, onSubmitted, autoFocus = true, showCancel = true }) => {
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const nameRef = useRef(null);
   const { track } = useAnalytics();
 
-  const t = texts[locale] || texts.en;
+  const { reviewFormData: t } = useLocaleHomeData();
 
   // Форма появляется по клику, поэтому сразу переводим фокус в первое поле.
   useEffect(() => {

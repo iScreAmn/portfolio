@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 
-const PortfolioItem = ({ item, index }) => {
+const PortfolioItem = ({ item, index, labels }) => {
   const { track } = useAnalytics();
 
   return (
@@ -12,7 +12,7 @@ const PortfolioItem = ({ item, index }) => {
       <Link
         href={`/portfolio/${item.slug}`}
         className="portfolio-card__link"
-        aria-label={`Открыть проект ${item.title}`}
+        aria-label={`${labels.openProject} ${item.title}`}
         onClick={() => track("project", "open", item.slug, { block: "portfolio-grid" })}
       >
         <div className="img-card">
@@ -20,7 +20,7 @@ const PortfolioItem = ({ item, index }) => {
           <div className="inf">
             <h3 className="portfolio-card__title">{item.title}</h3>
             <span className="portfolio-card__category">
-              {item.category || "Project"}
+              {item.category || labels.categoryFallback}
             </span>
           </div>
           <Image

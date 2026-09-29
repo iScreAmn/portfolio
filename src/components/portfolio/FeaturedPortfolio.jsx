@@ -3,22 +3,18 @@
 import { useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import portfolioData from "../../data/portfolioData";
-import { useLocale } from "../../context/LocaleContext";
 import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
 import "./FeaturedPortfolio.css";
 
 const FeaturedPortfolio = () => {
   const router = useRouter();
-  const { locale } = useLocale();
   const { featuredPortfolioSectionData } = useLocaleHomeData();
-  const { projectCardLabels } = useLocalePortfolioData();
-  const isRu = locale === "ru";
+  const { projects, projectCardLabels } = useLocalePortfolioData();
   const featured = useMemo(
     () =>
-      portfolioData.slice(0, featuredPortfolioSectionData.featuredCount),
-    [featuredPortfolioSectionData.featuredCount]
+      projects.slice(0, featuredPortfolioSectionData.featuredCount),
+    [projects, featuredPortfolioSectionData.featuredCount]
   );
 
   return (
@@ -57,15 +53,13 @@ const FeaturedPortfolio = () => {
                   placeholder="blur"
                 />
                 <span className="featured-portfolio__category">
-                  {(isRu && item.categoryRu) ||
-                    item.category ||
-                    projectCardLabels.categoryFallback}
+                  {item.category || projectCardLabels.categoryFallback}
                 </span>
               </div>
               <div className="featured-portfolio__body">
                 <h3 className="featured-portfolio__name">{item.title}</h3>
                 <p className="featured-portfolio__description">
-                  {(isRu && item.descriptionRu) || item.description}
+                  {item.description}
                 </p>
               </div>
             </article>

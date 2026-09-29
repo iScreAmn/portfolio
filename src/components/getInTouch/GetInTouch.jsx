@@ -14,31 +14,10 @@ import Image from "next/image";
 import { GiForwardField } from "react-icons/gi";
 import "./GetInTouch.css";
 import { project } from "../../assets/images";
-import { useLocale } from "../../context/LocaleContext";
+import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const SPRING = { stiffness: 150, damping: 18, mass: 0.4 };
-
-const COPY = {
-  en: {
-    eyebrow: "Let's talk",
-    status: "Open for new projects",
-    lines: ["About your", "next project"],
-    accent: "next",
-    marquee: "Let's work together",
-    badge: "Get in touch • Let's talk • Get in touch • ",
-    label: "Let's talk about your next project",
-  },
-  ru: {
-    eyebrow: "Давайте обсудим",
-    status: "Открыт для новых проектов",
-    lines: ["Ваш следующий", "проект"],
-    accent: "проект",
-    marquee: "Давайте работать вместе",
-    badge: "Связаться со мной • Связаться со мной • ",
-    label: "Давайте обсудим ваш следующий проект",
-  },
-};
 
 // Слова заголовка выезжают из-под маски по одному, сквозная нумерация даёт задержку.
 const Headline = ({ lines, accent }) => {
@@ -74,8 +53,7 @@ const Headline = ({ lines, accent }) => {
 };
 
 const GetInTouch = () => {
-  const { locale } = useLocale();
-  const copy = COPY[locale] ?? COPY.en;
+  const { getInTouchData: copy } = useLocaleHomeData();
   const reduceMotion = useReducedMotion();
   const cardRef = useRef(null);
 

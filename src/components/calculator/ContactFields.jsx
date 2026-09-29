@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { phoneCountryCodes } from "../../data/calculatorData";
+import { phoneCountryCodes } from "../../data/phoneCountryCodes";
 import { PHONE_METHOD, isContactValid } from "../../utils/contactValidation";
 
 const PRIVACY_LINK = "/privacy";

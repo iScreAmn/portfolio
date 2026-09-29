@@ -1,4 +1,4 @@
-import { phoneCountryCodes } from "../data/calculatorData";
+import { phoneCountryCodes } from "../data/phoneCountryCodes";
 
 export const PHONE_METHOD = "whatsapp";
 

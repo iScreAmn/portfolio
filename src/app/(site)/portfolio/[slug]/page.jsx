@@ -1,4 +1,5 @@
 import portfolioData from "../../../../data/portfolioData";
+import { projectTexts } from "../../../../data/english/portfolioData";
 import ProjectPage from "../../../../views/ProjectPage/ProjectPage";
 
 /**
@@ -33,7 +34,8 @@ export async function generateMetadata({ params }) {
 
   return {
     title: project.title,
-    description: project.description,
+    // Метаданные собираются на сервере, где выбранная локаль неизвестна.
+    description: projectTexts[project.slug]?.description,
   };
 }
 

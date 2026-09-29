@@ -56,7 +56,7 @@ const About = () => {
           >
             <Image
               src={aboutImg}
-              alt="about"
+              alt={aboutSectionData.imageAlt}
               sizes="(max-width: 768px) 400px, 500px"
               placeholder="blur"
             />
@@ -78,8 +78,8 @@ const About = () => {
               name=""
               title=""
               handle="dimitri.j"
-              status="Online"
-              contactText="Contact Me"
+              status={aboutSectionData.profileCard.status}
+              contactText={aboutSectionData.profileCard.contactText}
               innerGradient={true}
               avatarUrl={aboutImg.src}
               showUserInfo={true}

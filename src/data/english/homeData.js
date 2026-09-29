@@ -76,6 +76,7 @@ export const navMenu = {
 };
 
 export const homeData = {
+  imageAlt: "Dimitri Jmukhadze",
   greeting: "Hey, I am D.J",
   role: "Front-end Developer",
   description:
@@ -111,6 +112,11 @@ export const profList = [
 ];
 
 export const aboutSectionData = {
+  imageAlt: "Dimitri Jmukhadze at work",
+  profileCard: {
+    status: "Online",
+    contactText: "Contact Me",
+  },
   sectionTitle: "About me",
   sectionSubtitle: "About me",
   heading: "I'm Dimitri Jmukhadze",
@@ -230,3 +236,53 @@ export const clientsData = [
     company: "Old Tbilisi Narikala",
   },
 ];
+
+export const getInTouchData = {
+  eyebrow: "Let's talk",
+  status: "Open for new projects",
+  lines: ["About your", "next project"],
+  accent: "next",
+  marquee: "Let's work together",
+  badge: "Get in touch • Let's talk • Get in touch • ",
+  label: "Let's talk about your next project",
+};
+
+export const reviewFormData = {
+  title: "Leave a Review",
+  name: "Your Name",
+  company: "Company",
+  optional: "Optional",
+  photo: "Your photo",
+  logo: "Company logo",
+  upload: "Upload",
+  replace: "Replace",
+  remove: "Remove",
+  review: "Your Review",
+  submit: "Submit",
+  submitting: "Sending…",
+  cancel: "Cancel",
+  close: "Close",
+  failed: "Could not send the review. Please try again later.",
+  imageFailed: "This file could not be read as an image.",
+  imageTooLarge: "The image is too large. Please pick a smaller one.",
+  reviewTooShort: "The review should be at least 10 characters long.",
+};
+
+export const hobbyTeaserData = {
+  eyebrow: "Hobby",
+  title: "Drone filming & video",
+  text: "I capture aerial stories with smooth, cinematic moves and clean edits. See more of my drone filming workflow.",
+  button: "View hobby",
+  imageAlt: "Drone hobby preview",
+};
+
+export const footerData = {
+  circularText: "DIMITRI•FRONTEND•DEVELOPER•",
+  followTitle: "Follow",
+  madeWith: "Made with",
+  byMe: "by me",
+};
+
+export const sidePanelData = {
+  scrollTopLabel: "Scroll to the top of the page",
+};
