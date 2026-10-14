@@ -17,6 +17,14 @@ import MagneticButton from "../widgets/magneticButton/MagneticButton";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const SPRING = { stiffness: 120, damping: 20, mass: 0.5 };
+const STARS = [
+  [28, 14, 1.4],
+  [192, 52, 1],
+  [178, 176, 1.6],
+  [6, 128, 1.1],
+  [118, 206, 0.9],
+  [150, 2, 0.8],
+];
 const Headline = ({ text }) => {
   const words = text.split(" ");
   return (
@@ -177,9 +185,28 @@ const Home = () => {
           <motion.div className="home__blob" style={{ x: blobX, y: blobY }} aria-hidden="true" />
           <motion.div className="home__ring" style={{ x: ringX, y: ringY }} aria-hidden="true">
             <svg viewBox="0 0 200 200">
-              <circle cx="100" cy="100" r="96" />
+              <circle className="home__ring-track" cx="100" cy="100" r="100" />
+              <circle className="home__ring-dash" cx="100" cy="100" r="100" />
+              <circle className="home__ring-inner" cx="100" cy="100" r="90" />
+              {STARS.map(([cx, cy, r], i) => (
+                <circle
+                  key={i}
+                  className="home__ring-star"
+                  cx={cx}
+                  cy={cy}
+                  r={r}
+                  style={{ animationDelay: `${i * 0.7}s` }}
+                />
+              ))}
             </svg>
-            <span className="home__orbit" />
+            <span className="home__orbit">
+              <span className="home__orbit-trail" />
+              <span className="home__planet">
+                <span className="home__planet-ring home__planet-ring--back" />
+                <span className="home__planet-body" />
+                <span className="home__planet-ring home__planet-ring--front" />
+              </span>
+            </span>
           </motion.div>
 
           <motion.div
