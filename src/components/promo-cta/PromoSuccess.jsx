@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { MdOutlineCloudDone } from "react-icons/md";
 import "./PromoSuccess.css";
 
 export const EASE_OUT = [0.22, 1, 0.36, 1];
@@ -155,7 +156,7 @@ const PromoSuccess = ({ title, message, tapeWords, tapeIcon = "✦", origin = DE
                   },
                 }}
               >
-                ✓
+                <MdOutlineCloudDone />
               </motion.span>
             </motion.figure>
           </motion.div>
