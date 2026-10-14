@@ -335,14 +335,6 @@
   margin-bottom: clamp(40px, 5vw, 72px);
 }
 
-.about-page__index {
-  padding-top: 0.9em;
-  color: var(--ap-accent-text);
-  font-size: var(--small-font-size);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-}
-
 .about-page__heading {
   display: flex;
   align-items: flex-start;
@@ -353,15 +345,6 @@
   line-height: 0.95;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-}
-
-.about-page__count {
-  margin-left: 0.12em;
-  color: var(--ap-accent-text);
-  font-size: 0.24em;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0;
 }
 
 /* ===== Стек ===== */
@@ -433,14 +416,13 @@
   -webkit-text-stroke-color: var(--ap-accent);
 }
 
-.about-page__marquee-star {
-  color: var(--ap-accent);
-  font-size: 0.4em;
-  -webkit-text-stroke: 0;
-}
-
-.about-page__marquee.is-outline .about-page__marquee-star {
-  color: var(--ap-accent);
+/* Логотип окрашивается маской, поэтому берёт акцентный цвет в обеих темах. */
+.about-page__marquee-logo {
+  flex-shrink: 0;
+  width: 0.8em;
+  height: 0.4em;
+  background: var(--ap-accent);
+  mask: var(--logo) center / contain no-repeat;
 }
 
 /* ===== Опыт ===== */
@@ -460,7 +442,7 @@
 .about-page__job {
   position: relative;
   display: grid;
-  grid-template-columns: 60px 160px minmax(0, 1fr) 220px;
+  grid-template-columns: 160px minmax(0, 1fr) 220px;
   align-items: start;
   gap: clamp(16px, 2.5vw, 40px);
   padding: clamp(28px, 3vw, 44px) clamp(8px, 1.5vw, 24px);
@@ -493,7 +475,6 @@
   transform: scaleY(1);
 }
 
-.about-page__job-index,
 .about-page__job-period {
   padding-top: 0.5em;
   color: var(--ap-muted);
@@ -501,10 +482,6 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   transition: color 0.5s var(--ap-ease);
-}
-
-.about-page__job:hover .about-page__job-index {
-  color: var(--ap-accent-text);
 }
 
 .about-page__job-main {
@@ -715,11 +692,11 @@
   }
 
   .about-page__job {
-    grid-template-columns: 48px 130px minmax(0, 1fr);
+    grid-template-columns: 130px minmax(0, 1fr);
   }
 
   .about-page__job-meta {
-    grid-column: 3;
+    grid-column: 2;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
@@ -785,10 +762,6 @@
     padding-inline: 0;
   }
 
-  .about-page__job-index {
-    display: none;
-  }
-
   .about-page__job-period {
     padding-top: 0;
     color: var(--ap-accent-text);
@@ -805,14 +778,5 @@
   .about-page__edu-list {
     grid-template-columns: 1fr;
     row-gap: 40px;
-  }
-
-  .about-page__head {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .about-page__index {
-    padding-top: 0;
   }
 }

@@ -4,7 +4,7 @@ import { Fragment, useRef } from "react";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa";
-import { aboutImg } from "../../assets/images";
+import { aboutImg, logo } from "../../assets/images";
 import { useLocale } from "../../context/LocaleContext";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
 import { useScrollFill } from "../../hooks/useScrollFill";
@@ -88,20 +88,10 @@ const RevealText = ({
   );
 };
 
-const SectionHead = ({ index, label, count }) => (
+const SectionHead = ({ label }) => (
   <div className="about-page__head">
-    <motion.span className="about-page__index" variants={fadeUpVariants} {...inView()}>
-      ({String(index).padStart(2, "0")})
-    </motion.span>
     <h2 className="about-page__heading">
       <RevealText as="span" text={label} step={0.08} />
-      <motion.sup
-        className="about-page__count"
-        variants={fadeUpVariants}
-        {...inView()}
-      >
-        {count}
-      </motion.sup>
     </h2>
   </div>
 );
@@ -163,9 +153,11 @@ const Marquee = ({ items, x, reverse = false, outline = false }) => (
           {items.map((item) => (
             <li key={item.skill} className="about-page__marquee-item">
               <span>{item.skill}</span>
-              <span className="about-page__marquee-star" aria-hidden="true">
-                ✦
-              </span>
+              <span
+                className="about-page__marquee-logo"
+                style={{ "--logo": `url(${logo.src})` }}
+                aria-hidden="true"
+              />
             </li>
           ))}
         </ul>
@@ -194,7 +186,8 @@ const AboutPage = () => {
     target: posterRef,
     offset: ["start start", "end start"],
   });
-  const posterImgY = useTransform(posterProgress, [0, 1], ["0%", "-12%"]);
+  const { scrollY } = useScroll();
+  const posterImgY = useTransform(scrollY, [0, 1200], ["0%", "-12%"]);
   const posterRingRotate = useTransform(posterProgress, [0, 1], [-40, 80]);
 
   const { scrollYProgress: stackProgress } = useScroll({
@@ -347,7 +340,7 @@ const AboutPage = () => {
 
         <section className="about-page__stack" ref={stackRef}>
           <div className="container">
-            <SectionHead index={1} label={sectionLabels.stack} count={skills.length} />
+            <SectionHead label={sectionLabels.stack} />
           </div>
 
           <div className="about-page__marquees">
@@ -358,14 +351,10 @@ const AboutPage = () => {
 
         <section className="about-page__section">
           <div className="container">
-            <SectionHead
-              index={2}
-              label={sectionLabels.experience}
-              count={workExperience.length}
-            />
+            <SectionHead label={sectionLabels.experience} />
 
             <div className="about-page__jobs">
-              {workExperience.map((item, i) => (
+              {workExperience.map((item) => (
                 <motion.article
                   className="about-page__job"
                   key={`${item.title}-${item.period}`}
@@ -377,9 +366,6 @@ const AboutPage = () => {
                     variants={lineVariants}
                     aria-hidden="true"
                   />
-                  <motion.span className="about-page__job-index" variants={fadeUpVariants}>
-                    {String(i + 1).padStart(2, "0")}
-                  </motion.span>
                   <motion.span className="about-page__job-period" variants={fadeUpVariants}>
                     {item.period}
                   </motion.span>
@@ -410,11 +396,7 @@ const AboutPage = () => {
 
         <section className="about-page__section about-page__section--edu">
           <div className="container">
-            <SectionHead
-              index={3}
-              label={sectionLabels.education}
-              count={education.length}
-            />
+            <SectionHead label={sectionLabels.education} />
 
             <motion.div
               className="about-page__edu"
