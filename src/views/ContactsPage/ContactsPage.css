@@ -115,13 +115,12 @@
   color: transparent;
 }
 
-/* Рукописное подчёркивание «дорисовывается» после появления заголовка. */
 .contacts-hero__title-scribble {
   position: absolute;
   left: 0;
-  bottom: -0.08em;
+  bottom: -8px;
   width: 100%;
-  height: 0.28em;
+  height: 10px;
   overflow: visible;
   fill: none;
   stroke: var(--second-color);
@@ -144,7 +143,6 @@
   justify-content: space-between;
   gap: 24px;
   padding-top: 22px;
-  border-top: 1px solid var(--ch-line);
 }
 
 .contacts-hero__subtitle {
@@ -405,7 +403,7 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: 18px 12px;
@@ -425,13 +423,6 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.contacts-panel__row-index {
-  font-family: "Arturito Slab", "Poppins", sans-serif;
-  font-size: 0.8rem;
-  color: var(--cp-muted);
-  transition: color 0.35s ease;
 }
 
 .contacts-panel__row-icon {
@@ -482,9 +473,7 @@
   transform: scaleX(1);
 }
 
-.contacts-panel__row:hover .contacts-panel__row-index,
 .contacts-panel__row:hover .contacts-panel__row-title,
-.contacts-panel__row:focus-visible .contacts-panel__row-index,
 .contacts-panel__row:focus-visible .contacts-panel__row-title {
   color: rgba(255, 255, 255, 0.8);
 }
@@ -734,13 +723,8 @@
   }
 
   .contacts-panel__row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 12px;
     padding-inline: 4px;
-  }
-
-  .contacts-panel__row-index {
-    display: none;
   }
 }
 

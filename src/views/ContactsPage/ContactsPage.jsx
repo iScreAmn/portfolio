@@ -80,12 +80,9 @@ const ContactsPage = () => {
             <p className="contacts-panel__lead">{hero.panelLead}</p>
 
             <ul className="contacts-panel__list">
-              {contactsItems.map((item, index) => (
+              {contactsItems.map((item) => (
                 <li key={item.id}>
                   <a className="contacts-panel__row" href={item.link}>
-                    <span className="contacts-panel__row-index">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
                     <span className="contacts-panel__row-icon">
                       <item.icon />
                     </span>
