@@ -452,7 +452,7 @@
 }
 
 .contacts-panel__row-value {
-  font-size: 1.05rem;
+  font-size: 15px;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
