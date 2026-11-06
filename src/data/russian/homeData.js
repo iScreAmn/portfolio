@@ -190,6 +190,11 @@ export const clientsSectionData = {
   successMessage: "Скоро отзыв появится на сайте.",
 };
 
+export const reviewHeroData = {
+  eyebrow: "Отзыв",
+  title: "Поделитесь впечатлениями",
+};
+
 export const clientsData = [
   {
     id: 1,

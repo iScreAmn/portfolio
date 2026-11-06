@@ -1,0 +1,77 @@
+/* Фон как на /contacts, чтобы страницы выглядели одной серией. */
+.review-page {
+  background: radial-gradient(circle at 20% 20%, rgba(255, 122, 78, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 10%, rgba(22, 83, 225, 0.15), transparent 25%),
+    var(--card-bg-color);
+  color: var(--first-color);
+}
+
+.dark-theme .review-page {
+  background: radial-gradient(circle at 20% 20%, rgba(255, 122, 78, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 10%, rgba(22, 83, 225, 0.2), transparent 25%),
+    var(--body-bg-color);
+}
+
+.review-page__clients.section {
+  padding: 40px 0 110px;
+}
+
+@media (max-width: 768px) {
+  .review-page__clients.section {
+    padding: 28px 0 80px;
+  }
+}
+
+/* ── Десктоп и ноутбуки: шапка и обе карточки помещаются в один экран ── */
+@media (min-width: 1025px) {
+  .review-page {
+    /* Высота шапки сайта + отступы над и под блоком отзывов. */
+    --review-chrome: 290px;
+  }
+
+  .review-page .page-hero {
+    padding-top: clamp(84px, 13vh, 120px);
+  }
+
+  .review-page .page-hero__content {
+    gap: clamp(12px, 2.2vh, 22px);
+  }
+
+  /* Заголовок в одну строку, размер зависит и от ширины, и от высоты окна. */
+  .review-page .page-hero__title {
+    max-width: none;
+    font-size: clamp(2.4rem, min(5vw, 8.5vh), 5.6rem);
+  }
+
+  .review-page__clients.section {
+    padding: clamp(24px, 4vh, 40px) 0 clamp(24px, 4vh, 40px);
+  }
+
+  /* Карточки забирают оставшуюся высоту экрана, но не меньше, чем нужно контенту.
+     Форма отзыва растягивает карточку сама, ей min-height не мешает. */
+  .review-page .reviews-card,
+  .review-page .promo-cta {
+    min-height: clamp(380px, calc(100svh - var(--review-chrome)), 520px);
+  }
+
+  .review-page .reviews-card,
+  .review-page .promo-cta,
+  .review-page .reviews-cta-view--form {
+    padding: clamp(28px, 4.5vh, 40px);
+  }
+}
+
+@media (min-width: 1025px) and (max-height: 760px) {
+  .review-page .review-text {
+    font-size: 19px;
+    line-height: 1.55;
+  }
+
+  .review-page .review-slide {
+    gap: 22px;
+  }
+
+  .review-page .review-author {
+    padding-top: 18px;
+  }
+}

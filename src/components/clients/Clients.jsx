@@ -36,7 +36,9 @@ const fromApi = (review) => ({
   companyLogo: review.logo,
 });
 
-const Clients = () => {
+// hideTitle/className — чтобы тот же блок жил и на главной, и на /review,
+// где вместо заголовка секции стоит PageHero.
+const Clients = ({ hideTitle = false, className = "" }) => {
   const { clientsData, clientsSectionData } = useLocaleHomeData();
   // Карточка рядом со слайдером: призыв → форма отзыва → благодарность.
   const [view, setView] = useState("cta");
@@ -106,12 +108,14 @@ const Clients = () => {
   );
 
   return (
-    <section className="section our-client" id="clients">
+    <section className={`section our-client ${className}`.trim()} id="clients">
       <div className="container flex-center">
-        <SectionTitle
-          title={clientsSectionData.sectionTitle}
-          subtitle={clientsSectionData.sectionSubtitle}
-        />
+        {!hideTitle && (
+          <SectionTitle
+            title={clientsSectionData.sectionTitle}
+            subtitle={clientsSectionData.sectionSubtitle}
+          />
+        )}
         <div className="our-client-wrapper">
           <motion.div
             className="reviews-card"
