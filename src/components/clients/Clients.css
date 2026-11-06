@@ -240,6 +240,11 @@
 }
 
 @media (max-width: 768px) {
+  /* На телефонах сначала призыв оставить отзыв, под ним — слайдер отзывов. */
+  .reviews-cta-card {
+    order: -1;
+  }
+
   .reviews-card,
   .reviews-cta-view--form {
     padding: 30px;
