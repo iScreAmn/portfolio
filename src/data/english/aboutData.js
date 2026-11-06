@@ -19,16 +19,19 @@ export const cvData = {
 
 export const socialLinks = [
   {
+    key: "linkedin",
     icon: FaLinkedinIn,
     href: "https://www.linkedin.com/in/dimitri-jmukhadze-2048b733a/",
     ariaLabel: "LinkedIn",
   },
   {
+    key: "github",
     icon: FaGithub,
     href: "https://github.com/iScreAmn/",
     ariaLabel: "GitHub",
   },
   {
+    key: "instagram",
     icon: FaInstagram,
     href: "https://www.instagram.com/d.jmukhadze/",
     ariaLabel: "Instagram",

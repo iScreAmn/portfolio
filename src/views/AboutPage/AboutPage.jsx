@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useRef } from "react";
+import { Fragment, useMemo, useRef } from "react";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa";
@@ -8,6 +8,7 @@ import { aboutImg, logo } from "../../assets/images";
 import { useLocale } from "../../context/LocaleContext";
 import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
 import { useScrollFill } from "../../hooks/useScrollFill";
+import { applyAboutHero } from "../../utils/aboutHeroContent";
 import MagneticButton from "../../components/widgets/magneticButton/MagneticButton";
 import "./AboutPage.css";
 
@@ -166,8 +167,13 @@ const Marquee = ({ items, x, reverse = false, outline = false }) => (
   </motion.div>
 );
 
-const AboutPage = () => {
+/**
+ * heroContent — блок первого экрана из админки (/admin/content), его
+ * загружает серверная page.jsx. null — показываем тексты из src/data.
+ */
+const AboutPage = ({ heroContent = null }) => {
   const { locale } = useLocale();
+  const localeData = useLocaleAboutData();
   const {
     heroData,
     cvData,
@@ -177,7 +183,11 @@ const AboutPage = () => {
     skills,
     education,
     posterAlt,
-  } = useLocaleAboutData();
+    posterSrc,
+  } = useMemo(
+    () => applyAboutHero(localeData, heroContent, locale),
+    [localeData, heroContent, locale]
+  );
 
   const posterRef = useRef(null);
   const stackRef = useRef(null);
@@ -212,10 +222,12 @@ const AboutPage = () => {
               animate="visible"
               variants={stagger(0.1)}
             >
-              <motion.span className="about-page__eyebrow" variants={fadeUpVariants}>
-                <span className="about-page__eyebrow-dot" aria-hidden="true" />
-                {heroData.eyebrow}
-              </motion.span>
+              {heroData.eyebrow && (
+                <motion.span className="about-page__eyebrow" variants={fadeUpVariants}>
+                  <span className="about-page__eyebrow-dot" aria-hidden="true" />
+                  {heroData.eyebrow}
+                </motion.span>
+              )}
               <motion.span
                 className="about-page__eyebrow-line"
                 variants={lineVariants}
@@ -251,14 +263,20 @@ const AboutPage = () => {
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.35, duration: 1.8, ease: EASE }}
                   >
-                    <Image
-                      src={aboutImg}
-                      alt={posterAlt}
-                      fill
-                      sizes="(max-width: 980px) 90vw, 460px"
-                      placeholder="blur"
-                      priority
-                    />
+                    {/* Загруженная из админки картинка отдаётся API уже
+                        ужатой, оптимизатор Next ей не нужен. */}
+                    {posterSrc ? (
+                      <Image src={posterSrc} alt={posterAlt} fill unoptimized priority />
+                    ) : (
+                      <Image
+                        src={aboutImg}
+                        alt={posterAlt}
+                        fill
+                        sizes="(max-width: 980px) 90vw, 460px"
+                        placeholder="blur"
+                        priority
+                      />
+                    )}
                   </motion.div>
                 </motion.figure>
               </div>
@@ -281,22 +299,26 @@ const AboutPage = () => {
                 />
 
                 <div className="about-page__texts">
-                  <RevealText
-                    text={heroData.subtitle}
-                    className="about-page__text"
-                    variant="blur"
-                    step={0.012}
-                    delay={leadDelay + 0.4}
-                    trigger="mount"
-                  />
-                  <RevealText
-                    text={heroData.subtitleSecondary}
-                    className="about-page__text about-page__text--ink"
-                    variant="blur"
-                    step={0.012}
-                    delay={leadDelay + 0.6}
-                    trigger="mount"
-                  />
+                  {heroData.subtitle && (
+                    <RevealText
+                      text={heroData.subtitle}
+                      className="about-page__text"
+                      variant="blur"
+                      step={0.012}
+                      delay={leadDelay + 0.4}
+                      trigger="mount"
+                    />
+                  )}
+                  {heroData.subtitleSecondary && (
+                    <RevealText
+                      text={heroData.subtitleSecondary}
+                      className="about-page__text about-page__text--ink"
+                      variant="blur"
+                      step={0.012}
+                      delay={leadDelay + 0.6}
+                      trigger="mount"
+                    />
+                  )}
                 </div>
 
                 <motion.div

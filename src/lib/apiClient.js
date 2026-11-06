@@ -83,6 +83,7 @@ export async function apiRequest(path, options = {}) {
     throw new ApiError(payload?.message || `Request failed (${response.status})`, response.status);
   }
 
-  // Эндпоинты отвечают { success, data }; наружу отдаём саму data.
-  return payload?.data ?? payload;
+  // Эндпоинты отвечают { success, data }; наружу отдаём саму data — в том
+  // числе null, если сервер так и ответил.
+  return payload && 'data' in payload ? payload.data : payload;
 }

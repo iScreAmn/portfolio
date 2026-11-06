@@ -40,16 +40,23 @@ const draw = (img, size, crop) => {
   return canvas;
 };
 
-export async function resizeImage(file, { crop = false } = {}) {
+/**
+ * По умолчанию — под аватарки и логотипы отзывов. Крупным картинкам
+ * (например, фото в контенте сайта) передают свои sizes и maxLength.
+ */
+export async function resizeImage(
+  file,
+  { crop = false, sizes = SIZES, maxLength = MAX_LENGTH } = {},
+) {
   const img = await loadImage(file);
 
-  for (const size of SIZES) {
+  for (const size of sizes) {
     const canvas = draw(img, size, crop);
     let dataUrl = canvas.toDataURL('image/webp', 0.85);
     if (!dataUrl.startsWith('data:image/webp')) {
       dataUrl = crop ? canvas.toDataURL('image/jpeg', 0.85) : canvas.toDataURL('image/png');
     }
-    if (dataUrl.length <= MAX_LENGTH) return dataUrl;
+    if (dataUrl.length <= maxLength) return dataUrl;
   }
 
   throw new ImageTooLargeError('Image is too large');
