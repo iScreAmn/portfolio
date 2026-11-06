@@ -1,4 +1,4 @@
-import { service1, service2, service3, abonent } from "../../assets/images";
+import { service1, service2, service3, abonent } from "../../../assets/images";
 
 export const heroData = {
   eyebrow: "Services",

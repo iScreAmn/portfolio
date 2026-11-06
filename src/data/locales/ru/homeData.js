@@ -12,7 +12,7 @@ import {
   brand9,
   flameJumper,
   imgboxCover,
-} from "../../assets/images";
+} from "../../../assets/images";
 
 export const navItems = [
   { id: "home", label: "главная", type: "section", hint: "Коротко обо всём" },

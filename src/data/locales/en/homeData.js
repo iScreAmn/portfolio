@@ -11,7 +11,7 @@ import {
   brand8,
   flameJumper,
   imgboxCover,
-} from "../../assets/images";
+} from "../../../assets/images";
 
 export const navItems = [
   { id: "home", label: "home", type: "section", hint: "Intro and quick pitch" },

@@ -34,9 +34,8 @@ export const projectPageData = {
   },
 };
 
-// Тексты проектов по слагу; остальные поля — в src/data/portfolioData.js.
 export const projectTexts = {
-  "Georgian Polygraph Services": {
+  "georgian-polygraph-services": {
     category: "Полиграфические услуги",
     description:
       "Многостраничный сайт для компании по продаже полиграфических устройств",
@@ -46,7 +45,7 @@ export const projectTexts = {
     description:
       "Многостраничный сайт для частной клиники с функционалом онлайн записи",
   },
-  "Impera Design": {
+  "impera-design": {
     category: "Дизайн-агентство",
     description:
       "Многостраничный сайт для студии коммерческого дизайна",
