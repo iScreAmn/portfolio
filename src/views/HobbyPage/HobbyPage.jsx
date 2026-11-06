@@ -6,16 +6,14 @@ import Image from "next/image";
 import { hobby1, hobby2, hobby3 } from "../../assets/images";
 import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
-import { useLocaleHobbyData } from "../../hooks/useLocaleHobbyData";
+import { useDictionary } from "../../i18n/useDictionary";
 import "./HobbyPage.css";
 
-// Анимированная обёртка над next/image: motion.img не умеет работать со
-// статическим импортом, а motion.create сохраняет ту же разметку, что и <Image>.
 const MotionImage = motion.create(Image);
 
 const HobbyPage = () => {
   const { track } = useAnalytics();
-  const { heroData, videosSection, videos, flyData } = useLocaleHobbyData();
+  const { heroData, videosSection, videos, flyData } = useDictionary("hobby");
   const [activeVideo, setActiveVideo] = useState(null);
 
   const openVideo = (video) => {

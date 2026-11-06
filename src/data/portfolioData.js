@@ -50,7 +50,8 @@ import {
 const portfolioData = [
   {
     id: 1,
-    slug: "Georgian Polygraph Services",
+    slug: "georgian-polygraph-services",
+    oldSlugs: ["Georgian Polygraph Services"],
     title: "Georgian Polygraph Services",
     imgSrc: portfolio20,
     href: "https://www.geopolser.ge",
@@ -70,7 +71,8 @@ const portfolioData = [
   },
   {
     id: 2,
-    slug: "Impera Design",
+    slug: "impera-design",
+    oldSlugs: ["Impera Design"],
     title: "Impera Design",
     imgSrc: portfolio15,
     href: "https://www.impera-design.ru/",

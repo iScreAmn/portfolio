@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "../../../i18n/navigation";
 import { motion, useReducedMotion, useSpring } from "motion/react";
 import { useRef } from "react";
 import "./MagneticButton.css";
@@ -8,8 +8,6 @@ import "./MagneticButton.css";
 const MotionLink = motion.create(Link);
 const MAGNET_SPRING = { stiffness: 200, damping: 14, mass: 0.3 };
 
-// Кнопка-«магнит»: тянется за курсором, при наведении заливается
-// противоположным цветом, надпись прокручивается, иконка поворачивается.
 const MagneticButton = ({
   href,
   text,
@@ -35,7 +33,6 @@ const MagneticButton = ({
     my.set(0);
   };
 
-  // Файлы для скачивания отдаём обычной ссылкой: Link их не скачивает.
   const Component = external || download ? motion.a : MotionLink;
   const externalProps = external ? { target: "_blank", rel: "noreferrer" } : {};
   const downloadProps = download ? { download: true } : {};

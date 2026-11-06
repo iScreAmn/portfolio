@@ -42,10 +42,8 @@
 .education,
 .skills-info>div {
   min-width: 390px;
-  /* width: 32%; */
 }
 
-/* Специальный стиль для awards - увеличиваем ширину */
 .education.awards-section {
   min-width: 930px;
   width: 100%;
@@ -142,24 +140,6 @@
 .info span {
   font-weight: 500;
 }
-
-/* .bar .line {
-  position: relative;
-  width: 100%;
-  height: 7px;
-  border-radius: 2px;
-  background: #c5cadf;
-} */
-
-/* .bar .line::before {
-  content: "";
-  position: absolute;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: var(--second-color);
-  border-radius: 2px;
-} */
 
 .bar .html::before {
   width: 95%;

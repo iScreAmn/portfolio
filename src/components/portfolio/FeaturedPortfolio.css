@@ -121,8 +121,6 @@
   text-transform: uppercase;
 }
 
-/* Карточки в ряду одной высоты: текст прижат к верху, чтобы строки
-   не растягивались и заголовки не съезжали. */
 .featured-portfolio__body {
   padding: 20px;
   display: grid;
@@ -132,8 +130,6 @@
   z-index: 1;
 }
 
-/* Размер зависит от ширины карточки, чтобы длинные названия
-   («Georgian Polygraph Services») помещались в одну строку. */
 .featured-portfolio__name {
   margin: 0;
   font-size: clamp(1.05rem, 6cqi, 1.3rem);

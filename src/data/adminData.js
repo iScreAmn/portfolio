@@ -1,3 +1,4 @@
+import { LOCALES, LOCALE_META } from '../i18n/config';
 import {
   MdOutlineAnalytics,
   MdOutlineEditNote,
@@ -299,8 +300,6 @@ const adminData = {
     payloadLabel: 'Детали заявки',
     payloadYes: 'Да',
     payloadNo: 'Нет',
-    // У заявок на пакет со страницы /services свои поля вместо шагов
-    // калькулятора — подписываем их по-человечески.
     payloadKeys: {
       package: 'Пакет',
       price: 'Цена',
@@ -383,10 +382,7 @@ const adminData = {
       imageTooLarge: 'Картинка слишком большая даже после сжатия',
       textsTitle: 'Тексты',
       localeLabel: 'Язык',
-      locales: [
-        { key: 'en', label: 'English' },
-        { key: 'ru', label: 'Русский' },
-      ],
+      locales: LOCALES.map((key) => ({ key, label: LOCALE_META[key]?.label ?? key })),
       fields: [
         { key: 'eyebrow', label: 'Надпись над заголовком', max: 60 },
         {

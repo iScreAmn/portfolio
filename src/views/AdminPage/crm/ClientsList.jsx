@@ -103,9 +103,6 @@ const ClientsList = ({
                   title={expanded ? crm.detailsClose : crm.detailsOpen}
                 >
                   <MdExpandMore className="crm-table__chevron" aria-hidden />
-                  {/* Компания второй строкой под именем, а не отдельной
-                      колонкой: заполнена она только у ручных клиентов, и седьмая
-                      колонка ради них сжала бы таблицу для всех остальных. */}
                   <span className="crm-table__name-text">
                     <span className="crm-table__name-label">{client.name}</span>
                     {client.company && (

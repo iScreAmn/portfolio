@@ -11,7 +11,6 @@ const AnimatedNumber = ({ value, duration = 2, delay = 0 }) => {
   const suffix = value.includes("+") ? "+" : value.includes("%") ? "%" : "";
   const digitsCount = value.replace(/[^0-9]/g, "").length;
 
-  // Слушаем изменения MotionValue
   useMotionValueEvent(count, "change", (latest) => {
     setDisplayValue(Math.round(latest));
   });
@@ -20,13 +19,12 @@ const AnimatedNumber = ({ value, duration = 2, delay = 0 }) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Извлекаем числовое значение из строки (убираем символы +, %, и т.д.)
           const numericValue = parseInt(value.replace(/[^0-9]/g, ''));
           
           setTimeout(() => {
             const controls = animate(count, numericValue, { 
               duration: duration,
-              easing: [0.25, 0.46, 0.45, 0.94] // easeOutQuart
+              easing: [0.25, 0.46, 0.45, 0.94]
             });
             return () => controls.stop();
           }, delay * 1000);

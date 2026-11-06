@@ -67,7 +67,6 @@
   will-change: transform;
   width: fit-content;
   animation: scrollBrands 40s linear infinite;
-  /* animation: none */
 }
 
 .brands__item {

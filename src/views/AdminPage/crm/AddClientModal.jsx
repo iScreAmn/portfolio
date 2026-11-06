@@ -7,7 +7,6 @@ import adminData from '../../../data/adminData';
 const { crm } = adminData;
 const text = crm.addModal;
 
-/** Клиент, заведённый руками: бэкенд запишет его с source = 'manual'. */
 const AddClientModal = ({ onClose, onCreate }) => {
   const [form, setForm] = useState({
     name: '',

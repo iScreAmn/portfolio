@@ -25,13 +25,6 @@ const formatDate = (value) =>
     minute: '2-digit',
   });
 
-/**
- * Главная страница админки: сводка за неделю и свежие заявки.
- *
- * Своей логики здесь нет — это те же /api/analytics/summary и /api/leads, что
- * и в разделах, только урезанные до чисел. Графиков и фильтров нет намеренно:
- * за ними человек идёт в «Аналитику».
- */
 const DashboardPage = () => {
   const [summary, setSummary] = useState(null);
   const [summaryError, setSummaryError] = useState(null);
@@ -50,8 +43,6 @@ const DashboardPage = () => {
     setSummaryError(null);
     setLeadsError(null);
 
-    // allSettled, а не all: упавшая аналитика не должна прятать заявки и
-    // наоборот — каждая карточка показывает свою ошибку отдельно.
     const [summaryResult, leadsResult] = await Promise.allSettled([
       getSummary(period.from, period.to),
       getClients({ status: 'new', limit: RECENT_LIMIT }),
@@ -82,9 +73,6 @@ const DashboardPage = () => {
   const newCount = leads?.counts?.new ?? 0;
   const recent = leads?.items || [];
 
-  // Опорное значение для полос: наибольший показатель воронки, то есть
-  // просмотры. Считаем максимумом, а не totals.pageviews, чтобы полосы не
-  // уехали за 100%, если сервер когда-нибудь отдаст иной порядок.
   const metricMax = Math.max(
     ...overview.analytics.metrics.map(({ key }) => Number(totals[key]) || 0),
   );
@@ -97,7 +85,6 @@ const DashboardPage = () => {
       </div>
 
       <div className="dash__grid">
-        {/* Левая колонка: сводка и под ней отзывы, справа — заявки. */}
         <div className="dash__col">
           <section className="dash-card">
             <div className="dash-card__head">

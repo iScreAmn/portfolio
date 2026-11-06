@@ -3,14 +3,11 @@ name: Deploy Web
 on:
   push:
     branches: [main]
-  # Ручной перезапуск без коммита.
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  # Вшивается в клиентский бандл при сборке образа, поэтому задаётся здесь,
-  # а не в .env на сервере.
   API_URL: https://api.djcode.ge
 
 jobs:
@@ -32,8 +29,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Имя пакета в GHCR должно быть в нижнем регистре, а owner в GitHub
-      # может быть с заглавными (iScreAmn) — приводим явно.
       - name: Resolve image name
         id: meta
         run: echo "tags=${REGISTRY}/${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
@@ -67,7 +62,6 @@ jobs:
           script: |
             cd /opt/portfolio
 
-            # Сервер ничего не собирает — только тянет готовый образ.
             docker compose pull web
             docker compose up -d web
 

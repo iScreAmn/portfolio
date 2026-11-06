@@ -11,25 +11,20 @@ import adminData from '../../../data/adminData';
 const text = adminData.content;
 const hero = text.aboutHero;
 
-// Как и на сервере: тело запроса не должно упереться в лимит nginx (1 МБ).
 const IMAGE_SIZES = [1400, 1200, 1000, 800];
 const IMAGE_MAX_LENGTH = 850_000;
 const LINK_PATTERN = /^(https?:\/\/\S+|mailto:\S+|tel:\S+|\/\S*)$/;
 
 const toForm = (content) => {
   const defaults = aboutHeroDefaults();
-  if (!content) return { links: defaults.links, en: defaults.en, ru: defaults.ru };
   return {
-    links: { ...defaults.links, ...content.links },
-    en: { ...defaults.en, ...content.en },
-    ru: { ...defaults.ru, ...content.ru },
+    links: { ...defaults.links, ...content?.links },
+    ...Object.fromEntries(
+      hero.locales.map(({ key }) => [key, { ...defaults[key], ...content?.[key] }]),
+    ),
   };
 };
 
-/**
- * saved — картинка из API, new — только что выбранная (data URL),
- * default — та, что лежит в assets сайта.
- */
 const toImage = (content) =>
   content?.image
     ? { kind: 'saved', src: contentImageUrl(content.image) }
@@ -38,7 +33,6 @@ const toImage = (content) =>
 const trimAll = (group) =>
   Object.fromEntries(Object.entries(group).map(([key, value]) => [key, value.trim()]));
 
-/** @returns {{ message: string, locale?: string } | null} */
 const validate = (form) => {
   for (const { key: locale, label: localeLabel } of hero.locales) {
     const missing = hero.fields.find((field) => field.required && !form[locale][field.key].trim());
@@ -103,7 +97,6 @@ const AboutHeroEditor = () => {
     image.kind === 'new' ||
     (image.kind === 'default' && Boolean(content?.image));
 
-  // Закрыть вкладку с несохранёнными правками — обидно; переспрашиваем.
   useEffect(() => {
     if (!dirty) return undefined;
     const onBeforeUnload = (event) => {
@@ -151,10 +144,8 @@ const AboutHeroEditor = () => {
 
     const payload = {
       links: trimAll(form.links),
-      en: trimAll(form.en),
-      ru: trimAll(form.ru),
+      ...Object.fromEntries(hero.locales.map(({ key }) => [key, trimAll(form[key])])),
     };
-    // Нетронутую картинку не шлём: сервер оставит ту, что уже лежит в базе.
     if (image.kind === 'new') payload.image = image.src;
     if (image.kind === 'default') payload.image = null;
 

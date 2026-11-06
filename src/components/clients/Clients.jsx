@@ -1,7 +1,6 @@
 "use client";
 
 import "./Clients.css";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -17,14 +16,12 @@ import { VscCodeReview } from "react-icons/vsc";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getPublishedReviews } from "../../lib/reviews";
 import { initials } from "../../utils/initials";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
-// На телефонах в карточке тесно, там форма открывается в модалке.
 const MOBILE_QUERY = "(max-width: 768px)";
 
-// Шторка благодарности раскрывается из места, откуда отправили отзыв:
-// кнопка «Отправить» внизу формы в карточке или «Оставить отзыв» после модалки.
 const SUCCESS_ORIGIN = { inline: "80% 92%", modal: "20% 70%" };
 
 const fromApi = (review) => ({
@@ -36,11 +33,8 @@ const fromApi = (review) => ({
   companyLogo: review.logo,
 });
 
-// hideTitle/className — чтобы тот же блок жил и на главной, и на /review,
-// где вместо заголовка секции стоит PageHero.
 const Clients = ({ hideTitle = false, className = "" }) => {
-  const { clientsData, clientsSectionData } = useLocaleHomeData();
-  // Карточка рядом со слайдером: призыв → форма отзыва → благодарность.
+  const { clientsData, clientsSectionData } = useDictionary("home");
   const [view, setView] = useState("cta");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [successOrigin, setSuccessOrigin] = useState(SUCCESS_ORIGIN.inline);
@@ -64,8 +58,6 @@ const Clients = ({ hideTitle = false, className = "" }) => {
 
   useEffect(() => () => clearTimeout(successTimer.current), []);
 
-  // После «Отмены» возвращаем фокус на кнопку, иначе он теряется вместе с формой.
-  // Callback-ref, а не эффект: из-за mode="wait" кнопка монтируется позже смены view.
   const ctaButtonRef = (button) => {
     ctaButton.current = button;
     if (button && returnFocus.current) {
@@ -95,7 +87,6 @@ const Clients = ({ hideTitle = false, className = "" }) => {
     setView("success");
   };
 
-  // Ждём, пока модалка растворится, иначе шторка раскроется под оверлеем.
   const handleModalSubmitted = (review) => {
     setIsModalOpen(false);
     clearTimeout(successTimer.current);

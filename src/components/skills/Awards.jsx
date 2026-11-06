@@ -2,14 +2,13 @@
 
 import { motion } from "motion/react";
 import { slideInVariants } from "../../utils/animation";
-import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const Awards = () => {
-  const { awards } = useLocaleAboutData();
+  const { awards } = useDictionary("about");
 
   return (
     <div className="education awards-section">
-      {/* <h4 className="label">Awards</h4> */}
       <motion.h3
         className="work-exp-title"
         initial="hidden"

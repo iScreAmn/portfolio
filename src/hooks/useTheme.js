@@ -18,20 +18,11 @@ const applyTheme = (theme) => {
   document.body.classList.toggle("dark-theme", theme === "dark");
 };
 
-// Сохранённая тема применяется при загрузке модуля, а не при монтировании
-// компонента: переключатель живёт только в меню, но тема нужна всей странице.
 if (typeof document !== "undefined") {
   applyTheme(currentTheme);
 }
 
-/**
- * The theme lives in this module rather than in a component, so any switch can
- * read and write it without a provider.
- */
 export function useTheme() {
-  // Сервер о localStorage не знает и всегда рендерит светлую тему, поэтому
-  // стартовое состояние здесь тоже "light" — сохранённое значение приезжает
-  // эффектом ниже, уже после гидрации.
   const [theme, setThemeState] = useState("light");
 
   useEffect(() => {

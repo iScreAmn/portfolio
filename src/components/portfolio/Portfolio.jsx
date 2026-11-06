@@ -1,15 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "../../i18n/navigation";
 import { setPendingScroll } from "../../utils/pendingScroll";
 import "./Portfolio.css";
 import PortfolioItem from "./PortfolioItem";
-import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const Portfolio = () => {
-  const router = useRouter();
-  const { projects, portfolioHeroData, projectCardLabels } = useLocalePortfolioData();
+  const router = useLocaleRouter();
+  const { projects, portfolioHeroData, projectCardLabels } = useDictionary("portfolio");
 
   const chips = useMemo(() => {
     const unique = new Set();

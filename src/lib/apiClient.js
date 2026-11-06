@@ -1,13 +1,5 @@
 import { getApiBase } from '../utils/apiBase';
 
-/**
- * Тонкая обёртка над fetch для запросов к Express.
- *
- * Токенов в localStorage нет: сессию держат httpOnly-куки, поэтому каждому
- * запросу нужен credentials: 'include'. Когда access-кука протухает, запрос
- * получает 401 — тогда молча обновляем сессию и повторяем запрос один раз.
- */
-
 export class ApiError extends Error {
   constructor(message, status) {
     super(message);
@@ -38,11 +30,6 @@ const parseBody = async (response) => {
   }
 };
 
-/**
- * Одно обновление сессии на всех: если 401 прилетел сразу в нескольких
- * параллельных запросах, refresh должен уйти один раз, иначе токен
- * ротируется несколько раз подряд и часть запросов останется ни с чем.
- */
 let refreshPromise = null;
 
 const refreshSession = () => {
@@ -83,7 +70,5 @@ export async function apiRequest(path, options = {}) {
     throw new ApiError(payload?.message || `Request failed (${response.status})`, response.status);
   }
 
-  // Эндпоинты отвечают { success, data }; наружу отдаём саму data — в том
-  // числе null, если сервер так и ответил.
   return payload && 'data' in payload ? payload.data : payload;
 }

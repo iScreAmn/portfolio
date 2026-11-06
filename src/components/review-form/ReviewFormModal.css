@@ -26,7 +26,6 @@
   background: var(--modal-bg-color);
 }
 
-/* Заголовок по центру и с отступами под крестик. */
 .review-form-modal .review-form-title {
   margin: 0 40px 8px;
   text-align: center;

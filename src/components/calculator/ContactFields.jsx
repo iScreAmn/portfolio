@@ -6,7 +6,6 @@ import { PHONE_METHOD, isContactValid } from "../../utils/contactValidation";
 
 const PRIVACY_LINK = "/privacy";
 
-/** Состояние формы контактов: значения, «тронутые» поля и валидность. */
 export const useContactForm = (initialForm) => {
   const [form, setForm] = useState(initialForm);
   const [touched, setTouched] = useState({});
@@ -32,7 +31,6 @@ export const useContactForm = (initialForm) => {
   return { form, setForm, touched, update, touch, selectMethod, reset, nameValid, contactValid, isValid };
 };
 
-/** Поля имени, способа связи, контакта и согласия — общие для шага калькулятора и модалки. */
 const ContactFields = ({ t, contactMethods, contactForm, idPrefix, onEdit }) => {
   const { form, touched, update, touch, selectMethod, nameValid, contactValid } = contactForm;
   const isPhone = form.contactMethod === PHONE_METHOD;

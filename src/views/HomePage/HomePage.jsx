@@ -8,7 +8,6 @@ import {
   About,
   Brands,
   Services,
-  // HobbyTeaser,
   FeaturedPortfolio,
   GetInTouch,
   Clients,
@@ -34,7 +33,6 @@ const HomePage = () => {
     const target = stateTarget || hashTarget;
 
     if (target) {
-      // Даем маршруту отрисоваться перед прокруткой
       requestAnimationFrame(() => scrollToSection(target));
 
       if (stateTarget) {
@@ -51,7 +49,6 @@ const HomePage = () => {
       <FeaturedPortfolio />
       <Calculator />
       <Services />
-      {/* <HobbyTeaser /> */}
       <Clients />
       <GetInTouch />
     </div>

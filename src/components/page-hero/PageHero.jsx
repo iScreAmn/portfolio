@@ -1,9 +1,6 @@
 import "./PageHero.css";
 
-// Шапка внутренних страниц (/contacts, /review): eyebrow, крупный заголовок
-// с подчёркнутым последним словом.
 const PageHero = ({ eyebrow, title }) => {
-  // Последнее слово заголовка подсвечиваем — текст при этом не меняется.
   const titleSplit = title.lastIndexOf(" ");
   const titleHead = title.slice(0, titleSplit + 1);
   const titleAccent = title.slice(titleSplit + 1);

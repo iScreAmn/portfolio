@@ -6,7 +6,6 @@ import "./PromoCta.css";
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
 const Tape = ({ words, icon, className, reverse, delay }) => {
-  // Слова повторяем с запасом: трек сдвигается на −50% и бесшовно зацикливается.
   const track = [...words, ...words, ...words, ...words];
   return (
     <motion.div
@@ -29,10 +28,6 @@ const Tape = ({ words, icon, className, reverse, delay }) => {
   );
 };
 
-/**
- * Призыв в карточке рядом с калькулятором и отзывами: ленты с текстами блока,
- * заголовок по буквам и кнопка, открывающая форму.
- */
 const PromoCta = ({ title, text, buttonLabel, onOpen, buttonRef, tapeIcon = "✦" }) => {
   const reduceMotion = useReducedMotion();
   const tapeWords = [buttonLabel, title];

@@ -8,7 +8,6 @@ import adminData from '../../../data/adminData';
 const { common, sessionsView: text } = adminData;
 const BackIcon = text.backIcon;
 
-/** Длительность считаем из границ визита: сервер отдаёт их как ISO-строки. */
 const formatDuration = (startedAt, endedAt) => {
   const start = new Date(startedAt).getTime();
   const end = new Date(endedAt).getTime();
@@ -46,11 +45,6 @@ const getDeviceIcon = (deviceType) => {
 
 const SOURCE_URL_MAX_LENGTH = 34;
 
-/**
- * В карточке источник целиком не помещается и вылезает за границы — там
- * показываем укороченную версию (путь без домена, обрезанный многоточием),
- * полный URL виден в детальной панели по клику на карточку.
- */
 const shortenUrl = (url, maxLength = SOURCE_URL_MAX_LENGTH) => {
   if (!url) return '';
   let display = url;
@@ -100,8 +94,6 @@ const SessionsView = ({ period, filters }) => {
     fetchSessions();
   }, [fetchSessions]);
 
-  // Сегментация делается на клиенте: список сессий отдаёт максимум 100 строк
-  // за период, фильтровать их в браузере дешевле, чем гонять запрос на каждый ввод.
   const visibleSessions = useMemo(() => {
     const country = filters.country.trim().toLowerCase();
     const browser = filters.browser.trim().toLowerCase();

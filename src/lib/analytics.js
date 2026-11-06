@@ -1,25 +1,11 @@
-/**
- * Клиентский трекер аналитики.
- *
- * Шлёт события на собственный Express по NEXT_PUBLIC_API_URL. События копятся
- * в очереди и уходят батчами, чтобы не долбить сеть на каждый клик.
- *
- * Публичный API:
- *   initAnalytics()                                  — один раз при старте приложения
- *   trackPageview(path, title)                       — просмотр страницы
- *   trackEvent(category, action, label, params)      — произвольное событие
- *   flushAnalytics()                                 — принудительно отправить очередь
- *   setAnalyticsEnabled(bool)                        — переключатель для баннера согласия
- */
-
 import { getApiBase } from '../utils/apiBase'
 
 const ENDPOINT = `${getApiBase()}/api/analytics`
 
-const MAX_BATCH = 50 // столько же событий за раз принимает сервер
-const FLUSH_SIZE = 10 // отправляем, как только накопилось столько
-const FLUSH_MS = 8000 // ...или прошло столько времени
-const SESSION_TTL_MS = 30 * 60 * 1000 // 30 минут без активности = новая сессия
+const MAX_BATCH = 50
+const FLUSH_SIZE = 10
+const FLUSH_MS = 8000
+const SESSION_TTL_MS = 30 * 60 * 1000
 
 const SESSION_KEY = 'pa:session'
 const VISITOR_KEY = 'pa:visitor'
@@ -29,8 +15,6 @@ let queue = []
 let timer = null
 let started = false
 let pageEnteredAt = 0
-
-/* ------------------------------------------------------------------ utils */
 
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
@@ -46,16 +30,14 @@ const safeStorage = (store) => {
     s.removeItem(probe)
     return s
   } catch {
-    return null // Safari private mode и подобное
+    return null
   }
 }
 
-/** Аналитика выключена: opt-out, Do Not Track, админка или локальная разработка. */
 function isDisabled() {
   if (!isBrowser()) return true
   if (safeStorage('localStorage')?.getItem(OPTOUT_KEY) === '1') return true
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return true
-  // собственные визиты в админку не должны попадать в статистику сайта
   if (window.location.pathname.startsWith('/admin')) return true
   if (
     process.env.NODE_ENV !== 'production' &&
@@ -75,8 +57,6 @@ export function setAnalyticsEnabled(enabled) {
   }
 }
 
-/* --------------------------------------------------------------- identity */
-
 function getSessionId() {
   const ss = safeStorage('sessionStorage')
   const now = Date.now()
@@ -90,7 +70,6 @@ function getSessionId() {
       return saved.id
     }
   } catch {
-    /* пересоздадим ниже */
   }
 
   const id = uuid()
@@ -98,7 +77,6 @@ function getSessionId() {
   return id
 }
 
-/** Анонимный, но стабильный между визитами идентификатор — чтобы считать возвраты. */
 function getVisitorId() {
   const ls = safeStorage('localStorage')
   if (!ls) return null
@@ -109,8 +87,6 @@ function getVisitorId() {
   }
   return id
 }
-
-/* ----------------------------------------------------------------- device */
 
 function detectDevice() {
   const ua = navigator.userAgent || ''
@@ -149,8 +125,6 @@ function detectDevice() {
   }
 }
 
-/* ----------------------------------------------------------------- source */
-
 const SEARCH_RE = /(google|yandex|bing|duckduckgo|yahoo|baidu|ecosia|brave|search)\./i
 const SOCIAL_RE =
   /(t\.me|telegram|vk\.com|facebook|instagram|linkedin|twitter|x\.com|reddit|youtube|tiktok|threads|dev\.to|habr)/i
@@ -185,8 +159,6 @@ function detectSource() {
   return { ...utm, sourceType, referrer: ref || undefined }
 }
 
-/* ------------------------------------------------------------ core sender */
-
 function baseEvent() {
   const { pathname, search, hash, href, hostname, origin } = window.location
   return {
@@ -220,11 +192,6 @@ function enqueue(event) {
   }
 }
 
-/**
- * Отправка очереди.
- * keepalive: true — запрос переживает закрытие вкладки, поэтому последние
- * события визита не теряются.
- */
 export function flushAnalytics() {
   if (!queue.length) return Promise.resolve()
 
@@ -242,11 +209,8 @@ export function flushAnalytics() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ events: batch }),
   }).catch(() => {
-    // Сеть отвалилась — аналитика не должна ломать сайт. Молча забываем батч.
   })
 }
-
-/* -------------------------------------------------------------- public API */
 
 export function trackEvent(category, action, label, params) {
   enqueue({
@@ -258,7 +222,6 @@ export function trackEvent(category, action, label, params) {
 }
 
 export function trackPageview(path, title) {
-  // время на предыдущей странице — считаем перед сменой маршрута
   if (pageEnteredAt) {
     const seconds = Math.round((Date.now() - pageEnteredAt) / 1000)
     if (seconds > 0 && seconds < 3600) {
@@ -286,7 +249,6 @@ export function initAnalytics() {
   document.addEventListener('visibilitychange', onHide)
   window.addEventListener('pagehide', flushAnalytics)
 
-  // Глобальный перехват кликов по внешним ссылкам — без правок в компонентах
   document.addEventListener(
     'click',
     (e) => {
@@ -300,7 +262,6 @@ export function initAnalytics() {
           trackEvent('file', 'download', target.pathname)
         }
       } catch {
-        /* ссылка вида mailto:/tel: — пропускаем */
       }
     },
     { capture: true }

@@ -5,7 +5,6 @@ import { VscCodeReview } from "react-icons/vsc";
 import PromoSuccess, { T0 } from "../promo-cta/PromoSuccess";
 import "./ReviewSuccess.css";
 
-// Ленты намеренно многоязычные: это «спасибо» от сайта, а не перевод интерфейса.
 const TAPE_WORDS = ["Thank you", "Спасибо", "Merci", "Gracias", "Danke", "Grazie", "Obrigado"];
 const STARS = 5;
 const EXCERPT_LENGTH = 120;
@@ -31,7 +30,6 @@ const Star = ({ index }) => (
   </motion.svg>
 );
 
-/** Благодарность за отзыв: в карточке — сам отзыв со звёздами и автором. */
 const ReviewSuccess = ({ title, message, review, origin }) => {
   const initialLetter = review.name.trim().charAt(0).toUpperCase() || "✦";
 

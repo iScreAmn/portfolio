@@ -7,7 +7,6 @@ import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useLocale } from "../../context/LocaleContext";
 import { phoneCountryCodes } from "../../data/phoneCountryCodes";
-import { useLocaleCalculatorData } from "../../hooks/useLocaleCalculatorData";
 import { formatContact } from "../../utils/contactValidation";
 import SectionTitle from "../section-title/SectionTitle";
 import ModalCloseButton from "../modal-close-button/ModalCloseButton";
@@ -18,10 +17,10 @@ import CallbackForm from "./CallbackForm";
 import PromoCta from "../promo-cta/PromoCta";
 import { BsCalculatorFill } from "react-icons/bs";
 import "./Calculator.css";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
-// На телефонах в карточке тесно, там форма звонка открывается в модалке.
 const MOBILE_QUERY = "(max-width: 768px)";
 
 const emptyCtaForm = {
@@ -53,20 +52,16 @@ const emptyFormData = {
 
 const Calculator = () => {
   const { locale } = useLocale();
-  const { calculatorData: t } = useLocaleCalculatorData();
-  // Шаги с вопросами + финальная форма контактов.
+  const { calculatorData: t } = useDictionary("calculator");
   const totalSteps = t.steps.length + 1;
   const [currentStep, setCurrentStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // Карточка рядом с калькулятором: призыв → форма звонка → благодарность.
   const [ctaView, setCtaView] = useState("cta");
   const [isCtaModalOpen, setIsCtaModalOpen] = useState(false);
   const [isCtaSubmitting, setIsCtaSubmitting] = useState(false);
-  // Точка, из которой раскрывается шторка в карточке, — центр кнопки, которой отправили заявку.
   const [ctaCurtainOrigin, setCtaCurtainOrigin] = useState(undefined);
-  // Что попадёт в карточку благодарности: форма к этому моменту уже сброшена.
   const [callbackRequest, setCallbackRequest] = useState(null);
   const ctaCardRef = useRef(null);
   const ctaButton = useRef(null);
@@ -93,8 +88,6 @@ const Calculator = () => {
 
   useEffect(() => () => clearTimeout(ctaSuccessTimer.current), []);
 
-  // После «Отмены» возвращаем фокус на кнопку, иначе он теряется вместе с формой.
-  // Callback-ref, а не эффект: из-за mode="wait" кнопка монтируется позже смены ctaView.
   const ctaButtonRef = (button) => {
     ctaButton.current = button;
     if (button && returnCtaFocus.current) {
@@ -244,7 +237,6 @@ const Calculator = () => {
       const data = await response.json();
       if (!data.success) throw new Error(data.message);
 
-      // Из модалки шторка раскрывается от «Заказать звонок», из карточки — от «Отправить».
       const fromModal = isCtaModalOpen;
       const card = ctaCardRef.current?.getBoundingClientRect();
       const button = (fromModal ? ctaButton.current : ctaSubmitRef.current)?.getBoundingClientRect();
@@ -262,7 +254,6 @@ const Calculator = () => {
       });
       ctaForm.reset();
       if (fromModal) {
-        // Ждём, пока модалка растворится, иначе шторка раскроется под оверлеем.
         setIsCtaModalOpen(false);
         clearTimeout(ctaSuccessTimer.current);
         ctaSuccessTimer.current = setTimeout(() => setCtaView("completed"), 350);
@@ -500,8 +491,6 @@ const Calculator = () => {
                 disabled={isCtaSubmitting}
                 label={t.ctaCloseLabel}
               />
-              {/* Без автофокуса и «Отмены»: клавиатура телефона сразу перекрыла бы
-                  модалку, а закрывают её крестиком или тапом по фону. */}
               <CallbackForm
                 t={t}
                 contactMethods={contactMethods}

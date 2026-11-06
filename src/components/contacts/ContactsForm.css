@@ -1,5 +1,3 @@
-/* Визуально повторяет форму заявки на пакет со страницы /services. */
-
 .contact-form {
   position: relative;
   z-index: 1;
@@ -240,7 +238,6 @@
   }
 }
 
-/* iOS Safari зумит страницу при фокусе на поле со шрифтом меньше 16px. */
 @media (max-width: 768px) {
   .contact-form__label input,
   .contact-form__label textarea,

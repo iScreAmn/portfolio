@@ -7,15 +7,12 @@ import "./PromoSuccess.css";
 export const EASE_OUT = [0.22, 1, 0.36, 1];
 const EASE_IN_OUT = [0.76, 0, 0.24, 1];
 
-/** Момент, от которого считают задержки и сцена, и содержимое карточки. */
 export const T0 = 0.45;
 
-// По умолчанию шторка раскрывается из нижнего левого угла, где кнопка призыва.
 const DEFAULT_ORIGIN = "20% 70%";
 const SPARKS = 10;
 
 const Tape = ({ words, icon, className, reverse, delay }) => {
-  // Слова повторяем с запасом: трек сдвигается на −50% и бесшовно зацикливается.
   const track = words.length < 4 ? [...words, ...words, ...words, ...words] : [...words, ...words];
   return (
     <motion.div
@@ -59,16 +56,10 @@ const Spark = ({ index }) => {
   );
 };
 
-/**
- * Сцена благодарности в карточке: шторка из точки отправки, бегущие ленты,
- * 3D-карточка с печатью (содержимое — children), искры, заголовок по буквам.
- * Варианты hidden/visible наследуются, поэтому детям хватает своих variants.
- */
 const PromoSuccess = ({ title, message, tapeWords, tapeIcon = "✦", origin = DEFAULT_ORIGIN, className = "", children }) => {
   const reduceMotion = useReducedMotion();
   const initial = reduceMotion ? false : "hidden";
 
-  // Карточка слегка наклоняется за курсором — как лежащая на столе открытка.
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const rotateY = useSpring(useTransform(pointerX, [-0.5, 0.5], [-10, 10]), { stiffness: 150, damping: 18 });

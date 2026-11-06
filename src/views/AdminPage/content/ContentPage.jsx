@@ -7,11 +7,6 @@ import './Content.css';
 
 const text = adminData.content;
 
-/**
- * Редактор контента сайта. Каждый блок — своя карточка со своей формой и
- * своим сохранением: блоки независимы и лежат в API под разными ключами.
- * Новые блоки добавляются сюда же отдельными редакторами.
- */
 const ContentPage = () => (
   <div className="content-page">
     <header className="content-page__header">

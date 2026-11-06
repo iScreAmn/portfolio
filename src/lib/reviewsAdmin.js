@@ -1,9 +1,5 @@
 import { apiRequest } from './apiClient';
 
-/**
- * @returns {{ items: Array, counts: { pending: number, approved: number } }}
- * `counts` считается по всей таблице, на нём держатся счётчики вкладок
- */
 export const getReviews = ({ status } = {}) =>
   apiRequest('/api/reviews/admin', { query: { status } });
 

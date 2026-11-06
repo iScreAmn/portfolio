@@ -8,7 +8,6 @@ import './AnalyticsContainer.css';
 
 const { tabs: TABS, ranges: RANGES, filters: filterText } = adminData;
 
-// Списки соответствуют тому, что проставляет трекер в lib/analytics.js.
 const DEVICE_OPTIONS = ['desktop', 'mobile', 'tablet', 'tv', 'bot', 'unknown'];
 const SOURCE_OPTIONS = [
   'direct',
@@ -32,8 +31,6 @@ const AnalyticsContainer = () => {
     source: '',
   });
 
-  // Пересчитываем границы периода только при смене диапазона, иначе каждый
-  // рендер создавал бы новый Date и дёргал перезапрос в дочерних вкладках.
   const period = useMemo(() => {
     const to = new Date();
     const from = new Date(Date.now() - (RANGE_DAYS[range] ?? 7) * 24 * 3600 * 1000);
@@ -48,8 +45,6 @@ const AnalyticsContainer = () => {
 
   return (
     <div className="analytics-container-wrapper">
-      {/* Вкладок всего две, поэтому они помещаются в строку и на телефоне —
-          бургер с выпадающим списком здесь больше не нужен. */}
       <div className="analytics-tabs-wrapper">
         <div className="analytics-tabs">
           {TABS.map(({ key, label, icon: Icon }) => (
@@ -64,7 +59,6 @@ const AnalyticsContainer = () => {
         </div>
       </div>
 
-      {/* Период нужен обеим вкладкам, поэтому панель фильтров видна всегда. */}
       <div className="analytics-filter-bar">
         <div className="analytics-filter-bar__range">
           {RANGES.map(({ value, label }) => (
@@ -78,8 +72,6 @@ const AnalyticsContainer = () => {
           ))}
         </div>
 
-        {/* Сегменты применимы только к списку сессий: сводка считается
-            на сервере за период целиком и по сегментам не разбивается. */}
         {activeTab === 'sessions' && (
           <div className="analytics-filter-bar__segments">
             <input

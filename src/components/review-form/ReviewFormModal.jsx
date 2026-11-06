@@ -3,12 +3,11 @@
 import { AnimatePresence, motion } from "motion/react";
 import ModalCloseButton from "../modal-close-button/ModalCloseButton";
 import ReviewForm from "./ReviewForm";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import "./ReviewFormModal.css";
+import { useDictionary } from "../../i18n/useDictionary";
 
-/** На телефонах в карточке мало места, поэтому та же форма открывается в модалке. */
 const ReviewFormModal = ({ isOpen, onClose, onSubmitted }) => {
-  const { reviewFormData } = useLocaleHomeData();
+  const { reviewFormData } = useDictionary("home");
 
   return (
     <AnimatePresence>
@@ -30,8 +29,6 @@ const ReviewFormModal = ({ isOpen, onClose, onSubmitted }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <ModalCloseButton onClick={onClose} label={reviewFormData.close} />
-            {/* Без автофокуса: иначе клавиатура телефона сразу перекроет модалку.
-                «Отмена» не нужна — закрывают крестиком или тапом по фону. */}
             <ReviewForm
               autoFocus={false}
               showCancel={false}

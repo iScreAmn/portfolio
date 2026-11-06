@@ -2,11 +2,6 @@ import { apiRequest } from './apiClient';
 
 export const CLIENT_STATUSES = ['new', 'in_progress', 'promotion', 'done'];
 
-/**
- * @returns {{ items: Array, total: number, counts: Record<string, number> }}
- * `counts` считается по всей таблице, а не по выборке — на нём держатся
- * счётчики рядом с фильтром статусов.
- */
 export const getClients = ({ status, source, limit } = {}) =>
   apiRequest('/api/leads', { query: { status, source, limit } });
 

@@ -10,7 +10,6 @@ const EXCERPT_LENGTH = 140;
 const excerpt = (text) =>
   text.length > EXCERPT_LENGTH ? `${text.slice(0, EXCERPT_LENGTH).trimEnd()}…` : text;
 
-// Две галочки, как в мессенджере: первая — «отправлено», вторая — «доставлено».
 const Tick = ({ delay, d }) => (
   <motion.path
     d={d}
@@ -21,10 +20,6 @@ const Tick = ({ delay, d }) => (
   />
 );
 
-/**
- * Благодарность за заявку со страницы контактов. В карточке — «сообщение в мессенджере»:
- * отправитель, пузырь с текстом заявки и статус «доставлено» с двумя галочками.
- */
 const ContactSuccess = ({ t, request, icon: Icon, origin }) => {
   const initialLetter = request.name.trim().charAt(0).toUpperCase() || "✦";
 
