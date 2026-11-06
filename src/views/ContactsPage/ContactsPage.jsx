@@ -1,49 +1,20 @@
 "use client";
 
-import { FiArrowDown, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowUpRight } from "react-icons/fi";
 import ContactsForm from "../../components/contacts/ContactsForm";
+import PageHero from "../../components/page-hero/PageHero";
 import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
 import "./ContactsPage.css";
 
 const ContactsPage = () => {
   const { contactsHeroData: hero, contactsItems, contactsSocials } = useLocaleContactsData();
-  // Последнее слово заголовка подсвечиваем — текст при этом не меняется.
-  const titleSplit = hero.title.lastIndexOf(" ");
-  const titleHead = hero.title.slice(0, titleSplit + 1);
-  const titleAccent = hero.title.slice(titleSplit + 1);
 
   return (
     <div className="contacts-page">
-      <section className="contacts-hero">
-        <div className="contacts-hero__container">
-          <div className="contacts-hero__content">
-            <div className="contacts-hero__eyebrow">
-              <span className="contacts-hero__eyebrow-dot" aria-hidden="true" />
-              {hero.eyebrow}
-            </div>
-            <h1 className="contacts-hero__title">
-              {titleHead}
-              <span className="contacts-hero__title-accent">
-                {titleAccent}
-                <svg
-                  className="contacts-hero__title-scribble"
-                  viewBox="0 0 300 24"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
-                  <path d="M3 17 C 60 5, 120 5, 170 12 S 260 20, 297 7" />
-                </svg>
-              </span>
-            </h1>
-            <div className="contacts-hero__bottom">
-              <p className="contacts-hero__subtitle">{hero.subtitle}</p>
-              <a className="contacts-hero__scroll" href="#contacts-panel" aria-label={hero.panelTitle}>
-                <FiArrowDown />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+      />
 
       <section className="contacts-panel" id="contacts-panel">
         <div className="contacts-panel__container">

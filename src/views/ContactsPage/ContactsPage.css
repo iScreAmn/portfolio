@@ -11,191 +11,6 @@
     var(--body-bg-color);
 }
 
-.contacts-hero {
-  padding: 120px 0 10px;
-}
-
-.contacts-hero__container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: grid;
-  gap: 18px;
-}
-
-.contacts-hero__content {
-  --ch-ink: #0e1b31;
-  --ch-muted: #6b7185;
-  --ch-line: rgba(14, 27, 49, 0.12);
-  --ch-accent: linear-gradient(135deg, var(--second-color), var(--hover-color));
-
-  display: grid;
-  gap: 22px;
-  color: var(--ch-ink);
-}
-
-.dark-theme .contacts-hero__content {
-  --ch-ink: #f4f6fb;
-  --ch-muted: #a9afc3;
-  --ch-line: rgba(255, 255, 255, 0.14);
-}
-
-/* Появление по очереди: eyebrow → заголовок → подзаголовок. */
-.contacts-hero__content > * {
-  animation: contacts-hero-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.contacts-hero__title {
-  animation-delay: 0.08s;
-}
-
-.contacts-hero__bottom {
-  animation-delay: 0.18s;
-}
-
-@keyframes contacts-hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-}
-
-/* Eyebrow: точка акцентного цвета и линия, уходящая вправо. */
-.contacts-hero__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ch-muted);
-}
-
-.contacts-hero__eyebrow::after {
-  content: "";
-  flex: 1;
-  max-width: 220px;
-  height: 1px;
-  background: var(--ch-line);
-  transform-origin: left;
-  animation: contacts-hero-line 1.2s 0.3s cubic-bezier(0.65, 0, 0.35, 1) both;
-}
-
-@keyframes contacts-hero-line {
-  from {
-    transform: scaleX(0);
-  }
-}
-
-.contacts-hero__eyebrow-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--ch-accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--second-color) 22%, transparent);
-}
-
-.contacts-hero__title {
-  margin: 0;
-  max-width: 14ch;
-  font-size: clamp(2.6rem, 7vw, 5.6rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.contacts-hero__title-accent {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
-  background: var(--ch-accent);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.contacts-hero__title-scribble {
-  position: absolute;
-  left: 0;
-  bottom: -8px;
-  width: 100%;
-  height: 10px;
-  overflow: visible;
-  fill: none;
-  stroke: var(--second-color);
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-dasharray: 320;
-  stroke-dashoffset: 320;
-  animation: contacts-hero-draw 1s 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-}
-
-@keyframes contacts-hero-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.contacts-hero__bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  padding-top: 22px;
-}
-
-.contacts-hero__subtitle {
-  margin: 0;
-  max-width: 54ch;
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--ch-muted);
-}
-
-.contacts-hero__scroll {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 1px solid var(--ch-line);
-  color: var(--ch-ink);
-  font-size: 1.4rem;
-  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-}
-
-.contacts-hero__scroll svg {
-  animation: contacts-hero-bob 2s ease-in-out infinite;
-}
-
-@keyframes contacts-hero-bob {
-  50% {
-    transform: translateY(5px);
-  }
-}
-
-.contacts-hero__scroll:hover,
-.contacts-hero__scroll:focus-visible {
-  color: #fff;
-  border-color: transparent;
-  background: var(--ch-accent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .contacts-hero__content > *,
-  .contacts-hero__eyebrow::after,
-  .contacts-hero__scroll svg {
-    animation: none;
-  }
-
-  .contacts-hero__title-scribble {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-}
-
 .contacts-panel {
   padding: 40px 0 110px;
   scroll-margin-top: 40px;
@@ -680,10 +495,6 @@
 }
 
 @media (max-width: 768px) {
-  .contacts-hero {
-    padding: 90px 0 0;
-  }
-
   .contacts-panel {
     padding: 28px 0 80px;
   }
@@ -709,13 +520,8 @@
 }
 
 @media (max-width: 480px) {
-  .contacts-hero__container,
   .contacts-panel__container {
     padding: 0 16px;
-  }
-
-  .contacts-hero__scroll {
-    display: none;
   }
 
   .contacts-panel__badge {
