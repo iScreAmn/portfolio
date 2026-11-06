@@ -7,10 +7,6 @@ import ContactFields from "./ContactFields";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
-/**
- * Форма «Заказать звонок». На десктопе раскрывается в карточке рядом с калькулятором
- * (с «Отменой» и автофокусом), на телефоне — в модалке без них.
- */
 const CallbackForm = ({
   t,
   contactMethods,

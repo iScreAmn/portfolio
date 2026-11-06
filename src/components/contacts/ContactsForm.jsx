@@ -6,14 +6,13 @@ import { MdOutlineEmail } from "react-icons/md";
 import { getApiBase } from "../../utils/apiBase";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 import { useLocale } from "../../context/LocaleContext";
-import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
 import { phoneCountryCodes } from "../../data/phoneCountryCodes";
 import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contactValidation";
 import ContactSuccess from "./ContactSuccess";
 import "./ContactsForm.css";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const PRIVACY_LINK = "/privacy";
-// Ответ простой капчи; должен совпадать с CONTACT_CAPTCHA_ANSWER на сервере.
 const CAPTCHA_ANSWER = "portfolio2024";
 const MESSAGE_MIN = 10;
 const MESSAGE_MAX = 1000;
@@ -36,12 +35,11 @@ const emptyForm = {
 const ContactsForm = () => {
   const { track } = useAnalytics();
   const { locale } = useLocale();
-  const { contactsFormData: t } = useLocaleContactsData();
+  const { contactsFormData: t } = useDictionary("contacts");
   const [form, setForm] = useState(emptyForm);
   const [touched, setTouched] = useState({});
   const [status, setStatus] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // Что попадёт в карточку благодарности: форма к этому моменту уже сброшена.
   const [request, setRequest] = useState(null);
   const [curtainOrigin, setCurtainOrigin] = useState(undefined);
   const formRef = useRef(null);
@@ -98,7 +96,6 @@ const ContactsForm = () => {
       });
       if (!ok) throw new Error(data?.message);
 
-      // Шторка раскрывается из центра кнопки отправки — в координатах карточки вокруг формы.
       const card = formRef.current?.parentElement?.getBoundingClientRect();
       const button = submitRef.current?.getBoundingClientRect();
       if (card && button) {

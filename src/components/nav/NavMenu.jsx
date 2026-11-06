@@ -14,10 +14,11 @@ import {
   HiOutlineTranslate,
   HiOutlineUser,
 } from "react-icons/hi";
-import { useLocale } from "../../context/LocaleContext";
+import Link from "next/link";
+import { useLocale, usePathWithoutLocale } from "../../context/LocaleContext";
+import { LOCALE_META, localizePath } from "../../i18n/config";
 import { useSiteNavigation } from "../../hooks/useSiteNavigation";
 import { useTheme } from "../../hooks/useTheme";
-// Механика бургера и панели — общая с админским меню.
 import "./NavPanel.css";
 import "./NavMenu.css";
 
@@ -32,7 +33,6 @@ const ICONS = {
   contact: HiOutlineMail,
 };
 
-/** Entrance stagger for the n-th row of the panel, in ms. */
 const revealDelay = (index) => `${40 + index * 45}ms`;
 
 const ThemeToggle = ({ labels }) => {
@@ -75,51 +75,51 @@ const ThemeToggle = ({ labels }) => {
 };
 
 const LanguageToggle = ({ labels }) => {
-  const { locale, setLocale, supportedLocales } = useLocale();
+  const { locale, supportedLocales } = useLocale();
+  const path = usePathWithoutLocale();
+  const activeIndex = Math.max(supportedLocales.indexOf(locale), 0);
 
   return (
-    <div className="nav-segmented" role="group" aria-label={labels.label}>
+    <div
+      className="nav-segmented"
+      role="group"
+      aria-label={labels.label}
+      style={{ "--segments": supportedLocales.length }}
+    >
       <span
-        className={`nav-segmented__thumb ${
-          locale === supportedLocales[1] ? "nav-segmented__thumb--right" : ""
-        }`}
+        className="nav-segmented__thumb"
+        style={{ "--segment-index": activeIndex }}
         aria-hidden
       />
-      {supportedLocales.map((code) => (
-        <button
-          key={code}
-          type="button"
-          className={`nav-segmented__option ${
-            locale === code ? "is-active" : ""
-          }`}
-          onClick={() => setLocale(code)}
-          aria-pressed={locale === code}
-          aria-label={labels.switchTo[code]}
-          title={labels.switchTo[code]}
-        >
-          {labels.options[code]}
-        </button>
-      ))}
+      {supportedLocales.map((code) => {
+        const title = labels.switchTo?.[code] ?? LOCALE_META[code]?.label;
+
+        return (
+          <Link
+            key={code}
+            href={localizePath(path, code)}
+            hrefLang={code}
+            scroll={false}
+            className={`nav-segmented__option ${
+              locale === code ? "is-active" : ""
+            }`}
+            aria-current={locale === code ? "true" : undefined}
+            aria-label={title}
+            title={title}
+          >
+            {labels.options?.[code] ?? LOCALE_META[code]?.short ?? code.toUpperCase()}
+          </Link>
+        );
+      })}
     </div>
   );
 };
 
-/**
- * The whole header navigation, on every screen size: a burger trigger and the
- * dropdown it opens. The panel holds every page as a borderless row plus, split
- * off below a rule, the theme and language switches.
- *
- * The panel stays mounted and hides with `visibility` (see `.nav-panel` in
- * NavMenu.css) so it can animate out and still stay out of the tab order.
- */
 const NavMenu = ({ isMenuOpen, toggleMenu, handleMenuClick }) => {
   const { navItems, navMenu, activeSection, goToNavItem } = useSiteNavigation();
   const rootRef = useRef(null);
   const triggerRef = useRef(null);
 
-  // Closing while focus is inside the panel would strand it on a hidden
-  // element, so every keyboard/selection path hands focus back to the trigger.
-  // An outside click doesn't: the user is already pointing somewhere else.
   const closeAndRefocus = useCallback(() => {
     handleMenuClick();
     triggerRef.current?.focus();
@@ -189,8 +189,6 @@ const NavMenu = ({ isMenuOpen, toggleMenu, handleMenuClick }) => {
                     transitionDelay: isMenuOpen ? revealDelay(index) : "0ms",
                   }}
                 >
-                  {/* No border in any state: the current page is marked by the
-                      accent tick, tint and text colour instead. */}
                   <button
                     type="button"
                     className={`nav-item ${active ? "is-active" : ""}`}
@@ -210,7 +208,6 @@ const NavMenu = ({ isMenuOpen, toggleMenu, handleMenuClick }) => {
           </ul>
         </nav>
 
-        {/* The switches are settings, not destinations — hence the rule. */}
         <div
           className={`nav-reveal nav-rule ${isMenuOpen ? "is-shown" : ""}`}
           style={{

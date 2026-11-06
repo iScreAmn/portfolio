@@ -2,16 +2,18 @@
 
 import "./Footer.css";
 import { followLinks } from "../../data/footerData";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
-import { footerData as footerDataEn } from "../../data/english/homeData";
+import { useDictionary } from "../../i18n/useDictionary";
+import { getDictionary } from "../../i18n/dictionaries";
 import FooterLinkGroup from "./FooterLinkGroup";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useState } from "react";
 import CircularText from "../widgets/circularText/CircularText";
 import SplashCursor from '../widgets/splashCursor/SplashCursor'
 
+const footerDataEn = getDictionary("en").home.footerData;
+
 const Footer = () => {
-  const { footerData: t } = useLocaleHomeData();
+  const { footerData: t } = useDictionary("home");
   const currentYear = new Date().getFullYear();
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [isSplashCursorActive, setIsSplashCursorActive] = useState(false);
@@ -36,7 +38,6 @@ const Footer = () => {
         />
         <FooterLinkGroup title={t.followTitle} links={followLinks} isSocial={true} />
       </div>
-      {/* Копирайт всегда на английском, независимо от локали. */}
       <p className="footer-copyright" lang="en">
         © <span className="year">{currentYear}</span> {footerDataEn.madeWith}{" "}
         <span className="heart-icon" onClick={() => {

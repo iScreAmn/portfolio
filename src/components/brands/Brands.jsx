@@ -12,12 +12,12 @@ import {
   brand8, 
   brand9 
 } from '../../assets/images';
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import '../section-title/SectionTitle.css';
 import './Brands.css';
+import { useDictionary } from "../../i18n/useDictionary";
 
 const Brands = () => {
-  const { brandsSectionData } = useLocaleHomeData();
+  const { brandsSectionData } = useDictionary("home");
   const brands = [
     { logo: brand1, name: 'AskChef', url: '#' },
     { logo: brand2, name: 'Balu', url: '#', darkOnLightHover: true },

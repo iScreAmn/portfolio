@@ -2,17 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
-import { useLocaleHomeData } from "../../../hooks/useLocaleHomeData";
 import "./SidePanel.css";
+import { useDictionary } from "../../../i18n/useDictionary";
 
 const SidePanel = () => {
-  const { sidePanelData } = useLocaleHomeData();
+  const { sidePanelData } = useDictionary("home");
   const [isVisible, setIsVisible] = useState(false);
   const [footerLift, setFooterLift] = useState(0);
 
-  // Кнопка прижата к низу экрана, поэтому на футере она бы легла прямо поверх
-  // его содержимого — вместо того чтобы прятать её, приподнимаем ровно на ту
-  // высоту, на которую футер зашёл в кадр, и кнопка «останавливается» у него.
   useEffect(() => {
     let frame = null;
 
@@ -44,7 +41,6 @@ const SidePanel = () => {
     };
   }, []);
 
-  // Прокрутка к началу страницы
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

@@ -11,9 +11,8 @@ import {
   useTransform,
 } from "motion/react";
 import { Fragment, useMemo, useRef } from "react";
-import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import MagneticButton from "../widgets/magneticButton/MagneticButton";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const SPRING = { stiffness: 120, damping: 20, mass: 0.5 };
@@ -65,8 +64,8 @@ const Description = ({ text, delay }) => (
 );
 
 const Home = () => {
-  const { homeData } = useLocaleHomeData();
-  const { socialLinks } = useLocaleAboutData();
+  const { homeData } = useDictionary("home");
+  const { socialLinks } = useDictionary("about");
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef(null);
 

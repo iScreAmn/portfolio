@@ -26,7 +26,6 @@
   opacity: 0.8;
 }
 
-/* Адаптив для мобильных устройств */
 @media (max-width: 768px) {
   .services-app {
     flex-direction: column;
@@ -227,9 +226,7 @@
 }
 
 .service-card:hover {
-  /* transform: scale(1.03); */
   transform: scale(1.03);
-  /* cursor: pointer; */
 }
 
 .service-card:hover .fa-right-long {
@@ -239,7 +236,6 @@
 
 
 
-/* ZAMENIT */
 .expirience-card:hover,
 .education-list .item:hover,
 .bar:hover {
@@ -343,7 +339,6 @@
   right: 0;
   margin: 20px;
   cursor: pointer;
-  /* z-index: 2; */
 }
 
 .service-modal-body h3 {
@@ -364,7 +359,6 @@
   gap: 5px;
 }
 
-/* Слайдер проектов "в работе" */
 .services__wrapper,
 .services-slider {
   width: 100%;
@@ -417,7 +411,6 @@
   border-radius: 4px;
 }
 
-/* Появление контента активного слайда */
 .services-swiper .swiper-slide-active .services-app-content > * {
   animation: servicesContentIn 0.6s ease-out backwards;
 }

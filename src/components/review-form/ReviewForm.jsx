@@ -8,7 +8,7 @@ import { HiOutlineCamera, HiOutlinePhotograph } from "react-icons/hi";
 import { submitReview } from "../../lib/reviews";
 import { resizeImage, ImageTooLargeError } from "../../utils/resizeImage";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const EMPTY_FORM = {
   name: "",
@@ -60,7 +60,6 @@ const ImageField = ({ id, label, icon: Icon, value, round, onPick, onRemove, t, 
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 
-// Поля выезжают лесенкой из-под маски — форма «собирается» на месте призыва.
 const formVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
@@ -78,9 +77,8 @@ const ReviewForm = ({ onCancel, onSubmitted, autoFocus = true, showCancel = true
   const nameRef = useRef(null);
   const { track } = useAnalytics();
 
-  const { reviewFormData: t } = useLocaleHomeData();
+  const { reviewFormData: t } = useDictionary("home");
 
-  // Форма появляется по клику, поэтому сразу переводим фокус в первое поле.
   useEffect(() => {
     if (autoFocus) nameRef.current?.focus({ preventScroll: true });
   }, [autoFocus]);

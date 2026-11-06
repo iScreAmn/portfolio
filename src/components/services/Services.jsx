@@ -3,17 +3,17 @@
 import "./Services.css";
 import { motion } from "motion/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "../../i18n/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import SectionTitle from "../section-title/SectionTitle";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const Services = () => {
-  const { servicesSectionData } = useLocaleHomeData();
-  const router = useRouter();
+  const { servicesSectionData } = useDictionary("home");
+  const router = useLocaleRouter();
   const { slides } = servicesSectionData;
 
   return (

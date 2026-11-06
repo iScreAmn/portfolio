@@ -12,12 +12,10 @@
   background: linear-gradient(135deg, #0a6fdc 0%, #0858b8 100%);
 }
 
-/* Ограничение области действия SplashCursor только в футере */
 .footer {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
-/* Скрываем SplashCursor вне футера */
 .footer ~ div[style*="position: fixed"] {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }

@@ -5,13 +5,8 @@ import { BsCalculatorFill } from "react-icons/bs";
 import PromoSuccess, { EASE_OUT, T0 } from "../promo-cta/PromoSuccess";
 import "./CallbackSuccess.css";
 
-// Высоты столбиков звуковой волны: «голос» с подъёмом к середине.
 const WAVE = [0.35, 0.6, 0.45, 0.8, 0.55, 1, 0.7, 0.9, 0.5, 0.75, 0.4, 0.65, 0.3, 0.55, 0.35, 0.5, 0.25, 0.4];
 
-/**
- * Благодарность за заявку на звонок. В карточке — «входящий вызов»: аватар с волнами,
- * имя и контакт из заявки, звуковая дорожка и время, когда её приняли.
- */
 const CallbackSuccess = ({ eyebrow, title, message, request, icon: Icon, origin }) => {
   const initialLetter = request.name.trim().charAt(0).toUpperCase() || "✦";
 

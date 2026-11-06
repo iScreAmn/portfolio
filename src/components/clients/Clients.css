@@ -38,7 +38,6 @@
   background: linear-gradient(135deg, #203c7c 0%, rgb(255 255 255 / 0%) 100%);
 }
 
-/* Крупная кавычка-водяной знак в углу карточки. */
 .reviews-quote {
   position: absolute;
   top: -40px;
@@ -177,7 +176,6 @@
   color: var(--review-fg);
 }
 
-/* Точки переключения — как в блоке services. */
 .reviews-swiper .swiper-pagination-bullet {
   background-color: var(--review-fg);
   opacity: 0.4;
@@ -191,14 +189,11 @@
   border-radius: 4px;
 }
 
-/* ── CTA-карточка ────────────────────────────────────────────────────── */
-
 .reviews-cta-card {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Отступы задают сами состояния: призыв и шторка идут до краёв, форма — с полями. */
   padding: 0;
   border-radius: 20px;
   background: linear-gradient(
@@ -215,7 +210,6 @@
   background: linear-gradient(220deg, #203c7c 0%, rgb(255 255 255 / 0%) 100%);
 }
 
-/* Каждое состояние карточки (призыв, форма) занимает её целиком. */
 .reviews-cta-view {
   position: relative;
   z-index: 2;
@@ -230,8 +224,6 @@
   padding: 40px;
 }
 
-/* ── Адаптив ─────────────────────────────────────────────────────────── */
-
 @media (max-width: 1024px) {
   .our-client-wrapper {
     grid-template-columns: 1fr;
@@ -241,7 +233,6 @@
     min-height: auto;
   }
 
-  /* В одну колонку карточка становится широкой — держим длину строки читаемой. */
   .review-slide {
     max-width: 760px;
     margin: 0 auto;

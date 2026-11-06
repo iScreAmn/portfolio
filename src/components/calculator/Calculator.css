@@ -212,7 +212,6 @@
 .calculator-actions {
   display: flex;
   gap: 15px;
-  /* Нижний отступ как у PromoCta, чтобы «Далее» и «Заказать звонок» стояли на одной линии. */
   padding: 1.5rem 2rem 40px;
   justify-content: flex-end;
   min-height: 86px;
@@ -266,8 +265,6 @@
   transform: none !important;
 }
 
-/* Экран завершения: тёмная шторка + типографика, выезжающая из-под маски */
-/* Светлая тема: тёплая шторка в фирменном оранжевом, акценты — синие, как прогресс-бар */
 .calculator-completion {
   --completion-bg: linear-gradient(150deg, #ffb21f 0%, #f59a00 45%, #d97e00 100%);
   --completion-glow: rgba(255, 236, 190, 0.3);
@@ -299,7 +296,6 @@
   --completion-ring-width: 1.5;
 }
 
-/* Шторка должна доходить до краёв карточки, в том числе на мобильных */
 .calculator-card.calculator-card--completed,
 .cta-card.cta-card--completed {
   padding: 0;
@@ -435,7 +431,6 @@
 
 .calculator-completion__char {
   display: inline-block;
-  /* Запас снизу, чтобы маска не срезала выносные элементы букв */
   padding-bottom: 0.08em;
   transform-origin: left bottom;
   will-change: transform;
@@ -458,7 +453,6 @@
   justify-content: center;
   background: linear-gradient(135deg, var(--card-bg-color) 0%, var(--bg-transparent-color) 100%);
   border-radius: 20px;
-  /* Отступы задают сами состояния: призыв и шторка идут до краёв, форма — с полями. */
   padding: 0;
   box-shadow: var(--box-shadow);
   transition: all 0.3s ease;
@@ -468,7 +462,6 @@
   background: linear-gradient(220deg, #203c7c 0%, rgb(255 255 255 / 0%) 100%);
 }
 
-/* Каждое состояние карточки (призыв, форма) занимает её целиком. */
 .cta-view {
   position: relative;
   z-index: 2;
@@ -483,7 +476,6 @@
   padding: 40px;
 }
 
-/* В карточке нет крестика, место под него у заголовка не нужно. */
 .cta-card .calculator-modal-title {
   padding-right: 0;
 }
@@ -521,7 +513,6 @@
   overflow-y: auto;
 }
 
-/* Телефон: селект кода страны + сам номер в одну строку */
 .calculator-phone-field {
   display: flex;
   gap: 8px;
@@ -539,7 +530,6 @@
   min-width: 0;
 }
 
-/* Согласие на обработку персональных данных */
 .calculator-privacy {
   display: flex;
   align-items: flex-start;
@@ -591,7 +581,6 @@
   text-decoration: underline;
 }
 
-/* На оранжевой карточке акцентный цвет сливается с фоном */
 .calculator-card .calculator-privacy__text {
   color: var(--first-color);
 }

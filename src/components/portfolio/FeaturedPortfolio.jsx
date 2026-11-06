@@ -2,15 +2,14 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
-import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
+import { useLocaleRouter } from "../../i18n/navigation";
 import "./FeaturedPortfolio.css";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const FeaturedPortfolio = () => {
-  const router = useRouter();
-  const { featuredPortfolioSectionData } = useLocaleHomeData();
-  const { projects, projectCardLabels } = useLocalePortfolioData();
+  const router = useLocaleRouter();
+  const { featuredPortfolioSectionData } = useDictionary("home");
+  const { projects, projectCardLabels } = useDictionary("portfolio");
   const featured = useMemo(
     () =>
       projects.slice(0, featuredPortfolioSectionData.featuredCount),

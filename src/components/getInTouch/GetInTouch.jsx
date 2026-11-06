@@ -9,17 +9,16 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import Link from "next/link";
+import { LocaleLink as Link } from "../../i18n/navigation";
 import Image from "next/image";
 import { GiForwardField } from "react-icons/gi";
 import "./GetInTouch.css";
 import { project } from "../../assets/images";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const SPRING = { stiffness: 150, damping: 18, mass: 0.4 };
 
-// Слова заголовка выезжают из-под маски по одному, сквозная нумерация даёт задержку.
 const Headline = ({ lines, accent }) => {
   let index = 0;
   return (
@@ -53,11 +52,10 @@ const Headline = ({ lines, accent }) => {
 };
 
 const GetInTouch = () => {
-  const { getInTouchData: copy } = useLocaleHomeData();
+  const { getInTouchData: copy } = useDictionary("home");
   const reduceMotion = useReducedMotion();
   const cardRef = useRef(null);
 
-  // Положение курсора в карточке: 0…1 по обеим осям, по умолчанию — центр.
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
   const sx = useSpring(px, SPRING);
@@ -67,7 +65,6 @@ const GetInTouch = () => {
   const spotY = useTransform(sy, (v) => `${v * 100}%`);
   const spotlight = useMotionTemplate`radial-gradient(520px circle at ${spotX} ${spotY}, var(--git-glow), transparent 65%)`;
 
-  // Бейдж «притягивается» к курсору, картинка уходит в противоход — даёт глубину.
   const badgeX = useTransform(sx, [0, 1], [-28, 28]);
   const badgeY = useTransform(sy, [0, 1], [-20, 20]);
   const imageX = useTransform(sx, [0, 1], [18, -18]);
@@ -133,7 +130,6 @@ const GetInTouch = () => {
             <div className="git__body">
               <Headline lines={copy.lines} accent={copy.accent} />
 
-              {/* Внешняя обёртка отвечает за появление, внутренняя — за параллакс. */}
               <motion.div
                 className="git__visual"
                 variants={{
@@ -158,7 +154,6 @@ const GetInTouch = () => {
             </div>
 
             <div className="git__bottom">
-              {/* На десктопе плашка поднимается в правый верхний угол, на телефоне стоит рядом с бейджем. */}
               <motion.span
                 className="git__status"
                 variants={{

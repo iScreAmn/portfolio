@@ -10,10 +10,8 @@ function FooterSplashCursor() {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    // Упрощенная версия SplashCursor для футера
     const ctx = canvas.getContext('2d');
     
-    // Устанавливаем размер canvas равным размеру контейнера
     const resizeCanvas = () => {
       const rect = container.getBoundingClientRect();
       canvas.width = rect.width;
@@ -23,10 +21,8 @@ function FooterSplashCursor() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Массив для хранения частиц
     const particles = [];
     
-    // Создание частицы при клике
     const createParticle = (x, y) => {
       const rect = container.getBoundingClientRect();
       const localX = x - rect.left;
@@ -45,7 +41,6 @@ function FooterSplashCursor() {
       }
     };
 
-    // Анимация частиц
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
@@ -73,7 +68,6 @@ function FooterSplashCursor() {
       requestAnimationFrame(animate);
     };
 
-    // Обработчики событий
     const handleMouseDown = (e) => {
       const rect = container.getBoundingClientRect();
       if (e.clientX >= rect.left && e.clientX <= rect.right &&
@@ -86,17 +80,15 @@ function FooterSplashCursor() {
       const rect = container.getBoundingClientRect();
       if (e.clientX >= rect.left && e.clientX <= rect.right &&
           e.clientY >= rect.top && e.clientY <= rect.bottom) {
-        if (Math.random() < 0.1) { // Создаем частицы с небольшой вероятностью
+        if (Math.random() < 0.1) {
           createParticle(e.clientX, e.clientY);
         }
       }
     };
 
-    // Добавляем обработчики только к контейнеру
     container.addEventListener('mousedown', handleMouseDown);
     container.addEventListener('mousemove', handleMouseMove);
 
-    // Запускаем анимацию
     animate();
 
     return () => {

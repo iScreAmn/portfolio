@@ -3,7 +3,6 @@
 import { motion } from "motion/react";
 import "./ModalCloseButton.css";
 
-/** Общий крестик для модалок сайта: появляется с поворотом, на hover доворачивается. */
 const ModalCloseButton = ({ onClick, label, disabled = false, className = "" }) => (
   <motion.button
     type="button"

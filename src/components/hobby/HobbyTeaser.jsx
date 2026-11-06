@@ -1,14 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "../../i18n/navigation";
 import Image from "next/image";
 import { hobby1 } from "../../assets/images";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import "./HobbyTeaser.css";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const HobbyTeaser = () => {
-  const router = useRouter();
-  const { hobbyTeaserData: t } = useLocaleHomeData();
+  const router = useLocaleRouter();
+  const { hobbyTeaserData: t } = useDictionary("home");
 
   return (
     <section className="hobby-teaser section" id="hobby">

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "../../i18n/navigation";
 import Image from "next/image";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
 

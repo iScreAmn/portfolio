@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
 import { slideInVariants } from "../../utils/animation";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const ContactsLeft = () => {
-  const { contactsItems } = useLocaleContactsData();
+  const { contactsItems } = useDictionary("contacts");
 
   return (
     <div className="contact-left">

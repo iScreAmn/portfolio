@@ -8,10 +8,10 @@ import SectionTitle from "../section-title/SectionTitle";
 import AnimatedNumber from "../widgets/animatedNumber/AnimatedNumber";
 import ProfileCard from "../widgets/profileCard/ProfileCard";
 import MagneticButton from "../widgets/magneticButton/MagneticButton";
-import { useLocaleHomeData } from "../../hooks/useLocaleHomeData";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useScrollFill } from "../../hooks/useScrollFill";
 import "./About.css";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const IN_VIEW = { once: true, amount: 0.4 };
@@ -80,7 +80,7 @@ const Description = ({ text }) => (
 );
 
 const About = () => {
-  const { profList, aboutSectionData } = useLocaleHomeData();
+  const { profList, aboutSectionData } = useDictionary("home");
   const isMobileViewport = useMediaQuery("(max-width: 768px)");
   const reduceMotion = useReducedMotion();
   const wrapperRef = useRef(null);

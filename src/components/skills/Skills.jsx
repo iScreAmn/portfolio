@@ -2,10 +2,10 @@
 
 import { motion } from "motion/react";
 import { skillsVariants, sectionVariants } from "../../utils/animation";
-import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
+import { useDictionary } from "../../i18n/useDictionary";
 
 const Skills = () => {
-  const { skills } = useLocaleAboutData();
+  const { skills } = useDictionary("about");
   return (
     <motion.div 
       className="education"

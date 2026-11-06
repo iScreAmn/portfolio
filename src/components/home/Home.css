@@ -15,8 +15,6 @@
   isolation: isolate;
 }
 
-/* ===== Раскладка ===== */
-
 .home__wrapper {
   position: relative;
   display: grid;
@@ -24,8 +22,6 @@
   align-items: center;
   gap: 56px;
 }
-
-/* ===== Соцсети ===== */
 
 .home__socials {
   display: flex;
@@ -70,8 +66,6 @@
   transform: rotate(-12deg) scale(1.08);
 }
 
-/* ===== Текст ===== */
-
 .home__info {
   display: flex;
   flex-direction: column;
@@ -89,7 +83,6 @@
   color: var(--home-ink);
 }
 
-/* Запас по краям, чтобы курсив и диакритика не обрезались маской. */
 .home__mask {
   display: inline-block;
   overflow: hidden;
@@ -153,13 +146,9 @@
   white-space: pre;
 }
 
-/* ===== Кнопка ===== */
-
 .home__cta-wrap {
   margin-top: 40px;
 }
-
-/* ===== Фото ===== */
 
 .home__visual {
   position: relative;
@@ -201,14 +190,12 @@
   stroke-linecap: round;
 }
 
-/* Тонкая сплошная линия, на которую ложится пунктир. */
 .home__ring-track {
   stroke: var(--home-muted);
   stroke-width: 0.25;
   opacity: 0.35;
 }
 
-/* Ритмичный пунктир: длинный штрих, точка, короткий штрих, точка. */
 .home__ring-dash {
   stroke: var(--home-muted);
   stroke-width: 0.8;
@@ -216,7 +203,6 @@
   opacity: 0.7;
 }
 
-/* Внутренняя точечная орбита крутится навстречу внешней. */
 .home__ring-inner {
   stroke: var(--home-accent);
   stroke-width: 0.9;
@@ -234,7 +220,6 @@
   animation: home-twinkle 3.2s ease-in-out infinite;
 }
 
-/* Хвост кометы: светящаяся дуга, которая тянется за планетой. */
 .home__orbit-trail {
   position: absolute;
   inset: -1px;
@@ -250,8 +235,6 @@
   animation: home-spin 9s linear infinite;
 }
 
-/* Планета с кольцами. Обратное вращение гасит вращение орбиты,
-   поэтому наклон колец не меняется по ходу движения. */
 .home__planet {
   position: absolute;
   top: 0;
@@ -283,7 +266,6 @@
   box-shadow: 0 0 24px var(--home-accent);
 }
 
-/* Две полосы с щелью между ними, как деление Кассини. */
 .home__planet-ring {
   width: 48px;
   height: 14px;
@@ -298,7 +280,6 @@
   );
 }
 
-/* Верхняя половина кольца уходит за планету, нижняя проходит перед ней. */
 .home__planet-ring--back {
   clip-path: inset(0 0 50% 0);
 }
@@ -314,7 +295,6 @@
   will-change: transform;
 }
 
-/* Органичная форма, которая медленно перетекает. */
 .home__photo-shape {
   position: relative;
   width: 100%;
@@ -344,8 +324,6 @@
   object-fit: cover;
   object-position: center 20%;
 }
-
-/* ===== Скролл ===== */
 
 .home__scroll {
   display: flex;
@@ -382,8 +360,6 @@
 .home__scroll:hover .home__scroll-track {
   border-color: var(--home-accent);
 }
-
-/* ===== Анимации ===== */
 
 @keyframes home-spin {
   to {
@@ -452,8 +428,6 @@
     animation: none;
   }
 }
-
-/* ===== Адаптив ===== */
 
 @media (max-width: 980px) {
   .home {

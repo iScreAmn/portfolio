@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "../../i18n/navigation";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import "./Header.css";
@@ -14,8 +14,6 @@ const Header = ({ isMenuOpen, toggleMenu, handleMenuClick }) => {
   const [isOnDark, setIsOnDark] = useState(false)
 
   useEffect(() => {
-    // Секции с тёмным фоном (например, hero с фото) помечаются
-    // data-header-contrast="dark": пока хедер над ними, логотип светлый.
     const handleScroll = () => {
       setIsSticky(window.scrollY > 0)
       const header = document.querySelector(".header")

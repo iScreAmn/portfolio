@@ -1,15 +1,3 @@
-/**
- * Механика бургер-меню: сам бургер, выезжающая панель и её строки.
- *
- * Файл общий для сайтового NavMenu и админского AdminHeader — раскладка и
- * тайминги у них совпадают один в один, различается только содержимое панели
- * (у сайта это секции + переключатели, у админки — роуты + выход). Всё, что
- * специфично для одного из них, лежит в его собственном css.
- *
- * Корневой элемент обоих меню несёт класс `.nav-menu-root`: на нём объявлены
- * переменные, от которых зависят остальные правила.
- */
-
 .nav-menu-root {
   --nav-accent: var(--second-color);
   --nav-surface: var(--card-bg-color);
@@ -210,8 +198,6 @@ body.dark-theme .nav-menu-root {
   color: var(--nav-accent);
 }
 
-/* Accent tick against the item's left edge: it grows on hover and sits taller
-   on the current page — the whole marker, since the items carry no border. */
 .nav-item::before {
   content: "";
   position: absolute;
@@ -262,8 +248,6 @@ body.dark-theme .nav-menu-root {
   white-space: nowrap;
 }
 
-/* Пункты хранятся в нижнем регистре — поднимаем только первую букву, иначе
-   русские «обо мне» превращаются в «Обо Мне». */
 .nav-item__label::first-letter {
   text-transform: uppercase;
 }

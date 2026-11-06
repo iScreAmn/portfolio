@@ -1,11 +1,3 @@
-/**
- * Только то, что есть у сайтового меню и нет у админского: блок настроек с
- * переключателями темы и языка. Бургер, панель и её строки — в NavPanel.css,
- * который NavMenu.jsx импортирует рядом с этим файлом.
- */
-
-/* ------------------------------ Settings --------------------------------- */
-
 .nav-settings {
   display: flex;
   align-items: center;
@@ -29,34 +21,31 @@
   color: var(--third-color);
 }
 
-/* Segmented control: the track draws the active pill, the buttons only carry
-   the glyph. */
 .nav-segmented {
   position: relative;
   display: flex;
   align-items: center;
-  width: 72px;
+  width: calc(36px * var(--segments, 2));
   padding: 2px;
   border-radius: 10px;
   background: var(--nav-surface-2);
 }
 
-/* The pill is half the track wide, so a full-width shift lands it exactly on
-   the second option. */
 .nav-segmented__thumb {
   position: absolute;
   top: 2px;
   bottom: 2px;
   left: 2px;
-  width: calc(50% - 2px);
+  width: calc((100% - 4px) / var(--segments, 2));
   border-radius: 8px;
   background: color-mix(in srgb, var(--nav-accent) 18%, transparent);
   pointer-events: none;
+  transform: translateX(calc(100% * var(--segment-index, 0)));
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .nav-segmented__thumb--right {
-  transform: translateX(100%);
+  --segment-index: 1;
 }
 
 .nav-segmented__option {
@@ -72,6 +61,7 @@
   background: transparent;
   font-family: inherit;
   font-size: 0.7rem;
+  text-decoration: none;
   font-weight: 500;
   color: var(--third-color);
   cursor: pointer;

@@ -2,11 +2,9 @@
 
 import { motion, useReducedMotion } from "motion/react";
 
-// «Экспо»-кривые, которыми обычно двигают крупную типографику и шторки.
 const EASE_OUT = [0.22, 1, 0.36, 1];
 const EASE_IN_OUT = [0.76, 0, 0.24, 1];
 
-// По умолчанию шторка раскрывается из угла, где была кнопка «Отправить».
 const DEFAULT_ORIGIN = "88% 90%";
 const CURTAIN_DURATION = 1.1;
 
@@ -14,7 +12,6 @@ const t0 = CURTAIN_DURATION * 0.55;
 
 const CalculatorCompletion = ({ eyebrow, title, message, origin = DEFAULT_ORIGIN }) => {
   const reduceMotion = useReducedMotion();
-  // При reduced motion всё сразу стоит на местах.
   const initial = reduceMotion ? false : "hidden";
 
   const words = title.split(" ");
@@ -91,7 +88,6 @@ const CalculatorCompletion = ({ eyebrow, title, message, origin = DEFAULT_ORIGIN
               cx="50"
               cy="50"
               r="46"
-              // Начинаем рисовать с «12 часов».
               transform="rotate(-90 50 50)"
               variants={{
                 hidden: { pathLength: 0 },

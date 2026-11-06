@@ -1,12 +1,9 @@
-/* Содержимое карточки в сцене благодарности за заявку на звонок (сама сцена — PromoSuccess). */
-
 .callback-ticket__top {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-/* Аватар «звонит»: от него расходятся волны, как на экране входящего вызова. */
 .callback-ticket__avatar {
   position: relative;
   flex-shrink: 0;
@@ -85,7 +82,6 @@
   white-space: nowrap;
 }
 
-/* Звуковая дорожка: столбики вырастают по очереди, потом «говорят» бесконечно. */
 .callback-ticket__wave {
   display: flex;
   align-items: center;
@@ -123,7 +119,6 @@
   }
 }
 
-/* Нижняя часть отделена «перфорацией», как отрывной талон. */
 .callback-ticket__foot {
   display: flex;
   align-items: center;

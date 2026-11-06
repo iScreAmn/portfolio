@@ -27,7 +27,6 @@
   --ph-line: rgba(255, 255, 255, 0.14);
 }
 
-/* Появление по очереди: eyebrow → заголовок. */
 .page-hero__content > * {
   animation: page-hero-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
@@ -43,7 +42,6 @@
   }
 }
 
-/* Eyebrow: точка акцентного цвета и линия, уходящая вправо. */
 .page-hero__eyebrow {
   display: flex;
   align-items: center;

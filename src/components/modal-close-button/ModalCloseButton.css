@@ -1,4 +1,3 @@
-/* transform ведёт motion, поэтому здесь его не задаём. */
 .modal-close {
   position: absolute;
   top: 14px;
