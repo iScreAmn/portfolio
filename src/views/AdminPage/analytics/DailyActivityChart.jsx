@@ -5,10 +5,6 @@ import adminData from '../../../data/adminData';
 
 const { dashboard } = adminData;
 
-/**
- * Столбчатый график активности по дням.
- * Переиспользует стили .hourly-chart__* — раскладка та же, меняются только данные.
- */
 export default function DailyActivityChart({ daily = [] }) {
   const [hovered, setHovered] = useState(null);
 
@@ -31,7 +27,6 @@ export default function DailyActivityChart({ daily = [] }) {
     };
   }, [daily]);
 
-  // На 30 и 90 днях подписи по каждому дню превращаются в кашу — прореживаем.
   const labelStep = Math.max(1, Math.ceil(data.points.length / 12));
 
   const formatDay = (day) => {

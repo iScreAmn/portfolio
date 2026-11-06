@@ -1,4 +1,3 @@
-/* Фон как на /contacts, чтобы страницы выглядели одной серией. */
 .review-page {
   background: radial-gradient(circle at 20% 20%, rgba(255, 122, 78, 0.15), transparent 30%),
     radial-gradient(circle at 80% 10%, rgba(22, 83, 225, 0.15), transparent 25%),
@@ -22,10 +21,8 @@
   }
 }
 
-/* ── Десктоп и ноутбуки: шапка и обе карточки помещаются в один экран ── */
 @media (min-width: 1025px) {
   .review-page {
-    /* Высота шапки сайта + отступы над и под блоком отзывов. */
     --review-chrome: 290px;
   }
 
@@ -37,7 +34,6 @@
     gap: clamp(12px, 2.2vh, 22px);
   }
 
-  /* Заголовок в одну строку, размер зависит и от ширины, и от высоты окна. */
   .review-page .page-hero__title {
     max-width: none;
     font-size: clamp(2.4rem, min(5vw, 8.5vh), 5.6rem);
@@ -47,8 +43,6 @@
     padding: clamp(24px, 4vh, 40px) 0 clamp(24px, 4vh, 40px);
   }
 
-  /* Карточки забирают оставшуюся высоту экрана, но не меньше, чем нужно контенту.
-     Форма отзыва растягивает карточку сама, ей min-height не мешает. */
   .review-page .reviews-card,
   .review-page .promo-cta {
     min-height: clamp(380px, calc(100svh - var(--review-chrome)), 520px);

@@ -1,5 +1,5 @@
-import * as englishAboutData from '../data/english/aboutData';
-import * as russianAboutData from '../data/russian/aboutData';
+import { getDictionary } from '../i18n/dictionaries';
+import { DEFAULT_LOCALE, LOCALES } from '../i18n/config';
 import { contentImageUrl } from '../lib/siteContent';
 
 export const ABOUT_HERO_KEY = 'about-hero';
@@ -16,30 +16,25 @@ const pickTexts = (data) => ({
   cvText: data.cvData.downloadText,
 });
 
-/**
- * Блок в том виде, в каком его хранит API, собранный из статичных файлов.
- * Им админка заполняет форму, пока блок ни разу не сохраняли.
- */
-export const aboutHeroDefaults = () => ({
-  image: null,
-  links: {
-    cv: englishAboutData.cvData.filePath,
+export const aboutHeroDefaults = () => {
+  const base = getDictionary(DEFAULT_LOCALE).about;
+  return {
+    image: null,
+    links: {
+      cv: base.cvData.filePath,
+      ...Object.fromEntries(
+        SOCIAL_KEYS.map((key) => [
+          key,
+          base.socialLinks.find((link) => link.key === key)?.href || '',
+        ]),
+      ),
+    },
     ...Object.fromEntries(
-      SOCIAL_KEYS.map((key) => [
-        key,
-        englishAboutData.socialLinks.find((link) => link.key === key)?.href || '',
-      ]),
+      LOCALES.map((locale) => [locale, pickTexts(getDictionary(locale).about)]),
     ),
-  },
-  en: pickTexts(englishAboutData),
-  ru: pickTexts(russianAboutData),
-});
+  };
+};
 
-/**
- * Накладывает сохранённый в админке блок на статичные данные локали.
- * Без блока (API не ответил или его ещё не сохраняли) данные остаются как
- * есть, а posterSrc — null: страница возьмёт картинку из assets.
- */
 export const applyAboutHero = (data, content, locale) => {
   if (!content) return { ...data, posterSrc: null };
 

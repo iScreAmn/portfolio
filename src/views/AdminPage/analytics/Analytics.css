@@ -105,8 +105,6 @@
   grid-column: 1 / -1;
 }
 
-/* Средний ряд: слева пара метрик + источники, справа страницы + устройства.
-   Колонки одной высоты, источники дотягиваются до низа правой колонки. */
 .analytics-split {
   grid-column: 1 / -1;
   display: grid;
@@ -216,7 +214,6 @@
   margin: 0;
 }
 
-/* ─── Events filters ──────────────────────────────────────────────────────── */
 .analytics-events-filters {
   display: flex;
   align-items: center;
@@ -257,7 +254,6 @@
   color: #dc2626;
 }
 
-/* ─── Event item badges ───────────────────────────────────────────────────── */
 .analytics-event-badge {
   display: inline-block;
   padding: 2px 7px;
@@ -283,7 +279,6 @@
   margin-left: 4px;
 }
 
-/* ─── Hourly chart ─────────────────────────────────────────────────────────── */
 .hourly-chart {
   width: 100%;
 }

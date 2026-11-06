@@ -326,8 +326,6 @@
   transform: rotate(-12deg) scale(1.08);
 }
 
-/* ===== Заголовки секций ===== */
-
 .about-page__head {
   display: flex;
   align-items: flex-start;
@@ -346,8 +344,6 @@
   letter-spacing: -0.04em;
   text-transform: uppercase;
 }
-
-/* ===== Стек ===== */
 
 .about-page__stack {
   padding: clamp(30px, 8vw, 120px) 0 clamp(20px, 3vw, 40px);
@@ -416,7 +412,6 @@
   -webkit-text-stroke-color: var(--ap-accent);
 }
 
-/* Логотип окрашивается маской, поэтому берёт акцентный цвет в обеих темах. */
 .about-page__marquee-logo {
   flex-shrink: 0;
   width: 0.8em;
@@ -424,8 +419,6 @@
   background: var(--ap-accent);
   mask: var(--logo) center / contain no-repeat;
 }
-
-/* ===== Опыт ===== */
 
 .about-page__section {
   padding: clamp(30px, 8vw, 120px) 0;
@@ -459,7 +452,6 @@
   transform-origin: left center;
 }
 
-/* Подложка поднимается снизу при наведении. */
 .about-page__job::before {
   content: "";
   position: absolute;
@@ -540,8 +532,6 @@
   color: var(--ap-accent-text);
 }
 
-/* ===== Образование ===== */
-
 .about-page__edu {
   position: relative;
 }
@@ -619,8 +609,6 @@
   line-height: 1.5;
 }
 
-/* ===== Анимации ===== */
-
 @keyframes about-page-marquee {
   to {
     transform: translateX(-50%);
@@ -657,7 +645,6 @@
     animation: none;
   }
 
-  /* Без бегущей строки навыки просто переносятся. */
   .about-page__marquees {
     transform: none;
     margin: 0;
@@ -683,8 +670,6 @@
     white-space: normal;
   }
 }
-
-/* ===== Адаптив ===== */
 
 @media (max-width: 1100px) {
   .about-page__texts {

@@ -48,7 +48,6 @@
   min-height: calc(100vh - 250px);
 }
 
-/* ─── Shared filter bar ───────────────────────────────────────────────────── */
 .analytics-filter-bar {
   display: flex;
   align-items: center;
@@ -120,8 +119,6 @@
 }
 
 @media (max-width: 768px) {
-  /* Обе вкладки стоят в строку прямо в шапке раздела: делим ширину поровну и
-     ужимаем подпись, чтобы «Пользователи и сессии» влезало без обрезки. */
   .analytics-tabs {
     gap: 0;
     padding: 0 8px;

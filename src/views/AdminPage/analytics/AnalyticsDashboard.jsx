@@ -20,10 +20,6 @@ const formatSeconds = (total) => {
   return rm ? `${h}h ${rm}m` : `${h}h`;
 };
 
-/**
- * Сервер отдаёт только те дни, в которые были события. Пропуски заполняем
- * нулями, иначе график по времени сжимает паузы и врёт о динамике.
- */
 const fillDailyGaps = (daily, from, to) => {
   const byDay = new Map((daily || []).map((d) => [d.day, d]));
   const out = [];

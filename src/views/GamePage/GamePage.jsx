@@ -4,12 +4,12 @@ import { FaGithub } from "react-icons/fa";
 import Image from "next/image";
 import { flameJumper2 } from "../../assets/images";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
-import { useLocaleGameData } from "../../hooks/useLocaleGameData";
+import { useDictionary } from "../../i18n/useDictionary";
 import "./GamePage.css";
 
 const GamePage = () => {
   const { track } = useAnalytics();
-  const { heroData, infoCards } = useLocaleGameData();
+  const { heroData, infoCards } = useDictionary("game");
 
   return (
     <div className="game-page">
@@ -54,7 +54,6 @@ const GamePage = () => {
           </div>
 
           <div className="game-hero__poster">
-            {/* Анимированный GIF: оптимизатор свёл бы его к одному кадру. */}
             <Image src={flameJumper2} alt={heroData.posterAlt} unoptimized />
           </div>
         </div>

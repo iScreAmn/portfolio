@@ -786,7 +786,6 @@
   }
 }
 
-/* После отправки модалка целиком отдаётся сцене благодарности. */
 .services-modal__content.is-success {
   display: flex;
   width: min(92vw, 640px);

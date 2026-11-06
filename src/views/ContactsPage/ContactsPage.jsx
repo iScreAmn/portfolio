@@ -3,11 +3,11 @@
 import { FiArrowUpRight } from "react-icons/fi";
 import ContactsForm from "../../components/contacts/ContactsForm";
 import PageHero from "../../components/page-hero/PageHero";
-import { useLocaleContactsData } from "../../hooks/useLocaleContactsData";
+import { useDictionary } from "../../i18n/useDictionary";
 import "./ContactsPage.css";
 
 const ContactsPage = () => {
-  const { contactsHeroData: hero, contactsItems, contactsSocials } = useLocaleContactsData();
+  const { contactsHeroData: hero, contactsItems, contactsSocials } = useDictionary("contacts");
 
   return (
     <div className="contacts-page">
@@ -38,7 +38,6 @@ const ContactsPage = () => {
                       d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"
                     />
                   </defs>
-                  {/* textLength растягивает фразу ровно на длину окружности (2π·38). */}
                   <text textLength="238" lengthAdjust="spacingAndGlyphs">
                     <textPath href="#contacts-badge-circle" textLength="238">
                       {hero.panelBadge}

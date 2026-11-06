@@ -2,21 +2,20 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "../../i18n/navigation";
 import { motion } from "motion/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import ModalCloseButton from "../../components/modal-close-button/ModalCloseButton";
 import { useAnalytics } from "../../analytics/AnalyticsProvider";
-import { useLocalePortfolioData } from "../../hooks/useLocalePortfolioData";
+import { useDictionary } from "../../i18n/useDictionary";
 import { setPendingScroll } from "../../utils/pendingScroll";
 import "./ProjectPage.css";
 
-// Та же пружина, что у крестика в ModalCloseButton.
 const NAV_SPRING = { type: "spring", stiffness: 300, damping: 18 };
 
 const ProjectPage = ({ slug }) => {
-  const router = useRouter();
-  const { projects, projectCardLabels, projectPageData: t } = useLocalePortfolioData();
+  const router = useLocaleRouter();
+  const { projects, projectCardLabels, projectPageData: t } = useDictionary("portfolio");
   const { track } = useAnalytics();
 
   const project = projects.find((item) => item.slug === slug);

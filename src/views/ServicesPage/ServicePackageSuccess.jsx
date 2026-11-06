@@ -6,7 +6,6 @@ import { BsCreditCard2Front } from "react-icons/bs";
 import PromoSuccess, { EASE_OUT, T0 } from "../../components/promo-cta/PromoSuccess";
 import "./ServicePackageSuccess.css";
 
-// Пункты пакета отмечаются по очереди, когда карточка уже легла на место.
 const ITEMS_DELAY = T0 + 0.85;
 const ITEM_STEP = 0.14;
 
@@ -38,10 +37,6 @@ const ReceiptLine = ({ index, className = "", children }) => {
   );
 };
 
-/**
- * Благодарность за заказ пакета. В карточке — «чек заказа»: пакет с ценой,
- * пункты, которые отмечаются галочками, поддержка (если выбрана) и контакт.
- */
 const ServicePackageSuccess = ({ pkg, order, texts, icon: Icon, origin }) => (
   <PromoSuccess
     title={texts.successTitle}

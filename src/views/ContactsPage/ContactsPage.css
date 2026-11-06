@@ -25,12 +25,10 @@
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
 }
 
-/* Без min-width: 0 длинный email раздувает колонку грида шире экрана. */
 .contacts-panel__container > * {
   min-width: 0;
 }
 
-/* Инфо-карточка: свои токены, чтобы обе темы переключались в одном месте. */
 .contacts-panel__info {
   --cp-ink: #0e1b31;
   --cp-muted: #6b7185;
@@ -150,7 +148,6 @@
   font-size: clamp(2.3rem, 4.6vw, 3.6rem);
   line-height: 0.95;
   letter-spacing: -0.03em;
-  /* background-clip: text красит только внутри бокса — даём место хвостам g/y/p. */
   padding-bottom: 0.15em;
   margin-bottom: -0.15em;
   background: linear-gradient(100deg, var(--cp-ink) 40%, var(--cp-orange) 75%, var(--cp-blue));
@@ -228,7 +225,6 @@
   transition: color 0.35s ease, padding 0.35s ease;
 }
 
-/* Заливка выезжает слева корпоративным цветом текущей темы. */
 .contacts-panel__row::before {
   content: "";
   position: absolute;
@@ -354,7 +350,6 @@
   --brand: linear-gradient(135deg, #0a66c2, #1653e1);
 }
 
-/* Заливка поднимается снизу кругом — фирменный цвет соцсети. */
 .contacts-panel__social::before {
   content: "";
   position: absolute;
@@ -423,7 +418,6 @@
   transform: rotate(45deg);
 }
 
-/* В узкой карточке плитки превращаются в строки: иконка, имя, хэндл, стрелка. */
 @container contacts-info (max-width: 440px) {
   .contacts-panel__socials-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -456,7 +450,6 @@
   }
 }
 
-/* Карточка формы — в стиле модалки заявки со страницы /services. */
 .contacts-panel__form {
   background: linear-gradient(160deg, rgba(255, 122, 78, 0.1), rgba(22, 83, 225, 0.12)),
     var(--card-bg-color);
@@ -474,8 +467,6 @@
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
 }
 
-/* Лишнюю высоту карточки забирает поле сообщения — так кнопка отправки
-   стоит на одной линии с плитками соцсетей в соседней карточке. */
 .contacts-panel__form > .contact-form {
   flex: 1;
   display: flex;
@@ -487,7 +478,6 @@
   grid-template-rows: auto 1fr;
 }
 
-/* После отправки карточка целиком отдаётся сцене благодарности. */
 .contacts-panel__form:has(> .promo-success) {
   display: flex;
   padding: 0;

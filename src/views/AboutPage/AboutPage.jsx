@@ -6,7 +6,7 @@ import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa";
 import { aboutImg, logo } from "../../assets/images";
 import { useLocale } from "../../context/LocaleContext";
-import { useLocaleAboutData } from "../../hooks/useLocaleAboutData";
+import { useDictionary } from "../../i18n/useDictionary";
 import { useScrollFill } from "../../hooks/useScrollFill";
 import { applyAboutHero } from "../../utils/aboutHeroContent";
 import MagneticButton from "../../components/widgets/magneticButton/MagneticButton";
@@ -167,13 +167,9 @@ const Marquee = ({ items, x, reverse = false, outline = false }) => (
   </motion.div>
 );
 
-/**
- * heroContent — блок первого экрана из админки (/admin/content), его
- * загружает серверная page.jsx. null — показываем тексты из src/data.
- */
 const AboutPage = ({ heroContent = null }) => {
   const { locale } = useLocale();
-  const localeData = useLocaleAboutData();
+  const localeData = useDictionary("about");
   const {
     heroData,
     cvData,
@@ -263,8 +259,6 @@ const AboutPage = ({ heroContent = null }) => {
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.35, duration: 1.8, ease: EASE }}
                   >
-                    {/* Загруженная из админки картинка отдаётся API уже
-                        ужатой, оптимизатор Next ей не нужен. */}
                     {posterSrc ? (
                       <Image src={posterSrc} alt={posterAlt} fill unoptimized priority />
                     ) : (

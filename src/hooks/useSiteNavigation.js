@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useLocaleHomeData } from "./useLocaleHomeData";
+import { useLocaleRouter } from "../i18n/navigation";
+import { usePathWithoutLocale } from "../context/LocaleContext";
+import { useDictionary } from "../i18n/useDictionary";
 import { setPendingScroll } from "../utils/pendingScroll";
 
 const ROUTE_SECTIONS = [
@@ -13,14 +14,10 @@ const ROUTE_SECTIONS = [
   { prefix: "/about", id: "about" },
 ];
 
-/**
- * Shared navigation state for the desktop nav bar and the mobile dropdown, so
- * both mark the same item as current and follow the same routing rules.
- */
 export function useSiteNavigation() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { navItems, navMenu } = useLocaleHomeData();
+  const router = useLocaleRouter();
+  const pathname = usePathWithoutLocale();
+  const { navItems, navMenu } = useDictionary("home");
   const [activeSection, setActiveSection] = useState("home");
 
   const goToNavItem = useCallback(
@@ -32,7 +29,6 @@ export function useSiteNavigation() {
         return;
       }
 
-      // A section lives on the home page: route there first when we are away.
       if (pathname !== "/") {
         setPendingScroll(item.id);
         router.push("/");

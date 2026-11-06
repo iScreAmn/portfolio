@@ -10,7 +10,6 @@ export function getApiBase() {
         return '';
       }
     } catch {
-      /* ignore */
     }
   }
   return trimmed.replace(/\/$/, '');

@@ -8,19 +8,12 @@ import "./ServicesPage.css";
 import ServicePackageForm, { contactMethodIcons } from "./ServicePackageForm";
 import ServicePackageSuccess from "./ServicePackageSuccess";
 import { useLocale } from "../../context/LocaleContext";
-import * as englishServicesData from "../../data/english/services";
-import * as russianServicesData from "../../data/russian/services";
-
-const servicesDataByLocale = {
-  en: englishServicesData,
-  ru: russianServicesData,
-};
+import { useDictionary } from "../../i18n/useDictionary";
 
 const ServicesPage = () => {
   const { locale } = useLocale();
   const [selectedService, setSelectedService] = useState(null);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
-  // Заказ, принятый сервером: пока он есть, вместо формы в модалке сцена благодарности.
   const [order, setOrder] = useState(null);
   const [curtainOrigin, setCurtainOrigin] = useState(undefined);
   const contentRef = useRef(null);
@@ -29,7 +22,7 @@ const ServicesPage = () => {
     heroData,
     uiTexts,
     supportCtaData,
-  } = servicesDataByLocale[locale] ?? englishServicesData;
+  } = useDictionary("services");
 
   const openModal = (pkg) => {
     setOrder(null);
@@ -44,7 +37,6 @@ const ServicesPage = () => {
   };
 
   const handleSuccess = (submittedOrder, submitRect) => {
-    // Шторка благодарности раскрывается из центра кнопки, которой отправили заявку.
     const content = contentRef.current;
     const box = content?.getBoundingClientRect();
     if (box && submitRect) {
@@ -55,7 +47,6 @@ const ServicesPage = () => {
       setCurtainOrigin(undefined);
     }
     setOrder(submittedOrder);
-    // Кнопка отправки исчезает вместе с формой — фокус остаётся внутри диалога.
     content?.scrollTo({ top: 0 });
     content?.focus({ preventScroll: true });
   };

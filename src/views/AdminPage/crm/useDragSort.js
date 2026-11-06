@@ -29,12 +29,6 @@ const edgeSpeed = (clientY) => {
   return 0;
 };
 
-/**
- * @param {{ ids: string[], onReorder: (ids: string[]) => void }} params
- *   `ids` — порядок строк в том виде, в каком они отрисованы.
- * @returns ручка для элемента строки (`registerRow`), пропсы для кнопки-грипа
- *   (`getHandleProps`) и id строки, которую тянут прямо сейчас.
- */
 const useDragSort = ({ ids, onReorder }) => {
   const [draggingId, setDraggingId] = useState(null);
 

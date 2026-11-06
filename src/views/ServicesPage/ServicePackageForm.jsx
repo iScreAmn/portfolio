@@ -11,7 +11,6 @@ import { PHONE_METHOD, isContactValid, formatContact } from "../../utils/contact
 
 const PRIVACY_LINK = "/privacy";
 
-// Иконки нужны и форме, и карточке благодарности.
 export const contactMethodIcons = {
   telegram: FaTelegramPlane,
   whatsapp: FaWhatsapp,

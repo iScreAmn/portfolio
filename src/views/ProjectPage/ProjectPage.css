@@ -270,7 +270,6 @@
   z-index: 2;
 }
 
-/* Блок ровно по размеру картинки: кнопки ставятся от её краёв. */
 .gallery-modal__slide {
   position: relative;
   justify-self: center;
@@ -293,8 +292,6 @@
   right: calc(-1 * var(--gallery-btn-offset));
 }
 
-/* Стрелки повторяют крестик из ModalCloseButton; transform ведёт motion,
-   поэтому вертикальное центрирование сделано через margin. */
 .gallery-modal__nav {
   position: absolute;
   top: 50%;
@@ -446,7 +443,6 @@
     max-height: calc(100dvh - 190px);
   }
 
-  /* По бокам места нет: крестик уходит над картинкой, стрелки — на неё. */
   .gallery-modal__slide .modal-close {
     top: -42px;
     right: 0;

@@ -40,10 +40,6 @@ const draw = (img, size, crop) => {
   return canvas;
 };
 
-/**
- * По умолчанию — под аватарки и логотипы отзывов. Крупным картинкам
- * (например, фото в контенте сайта) передают свои sizes и maxLength.
- */
 export async function resizeImage(
   file,
   { crop = false, sizes = SIZES, maxLength = MAX_LENGTH } = {},

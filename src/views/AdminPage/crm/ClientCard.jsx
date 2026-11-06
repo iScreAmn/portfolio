@@ -5,33 +5,22 @@ import adminData from '../../../data/adminData';
 
 const { crm } = adminData;
 
-/**
- * Быстрый ответ — обычная ссылка, переписки внутри админки нет.
- * Email уходит в mailto, телефон — в tel; телеграм-ник (@name) ссылкой не
- * становится: набирать его некуда.
- */
 export const contactHref = (method, value) => {
   const raw = (value || '').trim();
   if (!raw) return null;
-  // Проверяем и форму адреса: телеграм-ник тоже начинается с @, но mailto из
-  // него делать нельзя.
   const looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
   if (method === 'Email' || looksLikeEmail) return `mailto:${raw}`;
 
-  // Телефон опознаём по количеству цифр, а не по способу связи: в поле
-  // телеграма одинаково часто лежит и номер, и @ник.
   const digits = raw.replace(/\D/g, '');
   return digits.length >= 10 ? `tel:${raw.replace(/[^\d+]/g, '')}` : null;
 };
 
-/** Ответы калькулятора и детали пакета приходят произвольным объектом — печатаем как есть. */
 const renderPayloadValue = (value) => {
   if (typeof value === 'boolean') return value ? crm.payloadYes : crm.payloadNo;
   if (Array.isArray(value)) return value.join(', ');
   return String(value ?? '—');
 };
 
-/** Поля, которые карточка умеет править, — в том же виде, в каком их ждёт PATCH. */
 const toForm = (client) => ({
   name: client.name || '',
   company: client.company || '',
@@ -40,27 +29,14 @@ const toForm = (client) => ({
   note: client.note || '',
 });
 
-/**
- * Раскрытая строка списка: правит контакт, компанию, задачу и заметку одной
- * формой. Статус сюда намеренно не вынесен — он меняется бейджем прямо в
- * строке, не раскрывая карточку.
- */
 const ClientCard = ({ client, onSave }) => {
   const [form, setForm] = useState(() => toForm(client));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
-  /**
-   * Сбрасываем форму только при переключении на другого клиента.
-   *
-   * Следить за самими полями нельзя: сохранение обновляет запись в родителе,
-   * эффект отработал бы сразу после успешного save и стёр «Изменения
-   * сохранены» раньше, чем их успевали прочитать.
-   */
   useEffect(() => {
     setForm(toForm(client));
     setMessage(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client.id]);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
@@ -138,8 +114,6 @@ const ClientCard = ({ client, onSave }) => {
           />
         </label>
 
-        {/* Ответы калькулятора и детали пакета пришли с сайта и не правятся:
-            это снимок того, что человек выбрал в форме. */}
         {payloadEntries.length > 0 && (
           <>
             <h4 className="crm-card__label">{crm.payloadLabel}</h4>

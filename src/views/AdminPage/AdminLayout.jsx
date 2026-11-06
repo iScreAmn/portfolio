@@ -8,15 +8,8 @@ import { AdminSessionProvider } from './components/AdminSessionContext';
 import adminData from '../../data/adminData';
 import './Admin.css';
 
-/**
- * Каркас закрытой части админки: одна проверка сессии на все страницы группы
- * и общий хедер. /admin/login сюда не попадает — он лежит вне route-группы
- * (protected), иначе форма входа сама бы редиректила на себя.
- */
 export default function AdminLayout({ children }) {
   const router = useRouter();
-  // Сессию держит httpOnly-кука: JS её не видит, поэтому единственный способ
-  // узнать, вошли мы или нет — спросить у API.
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
 
@@ -48,7 +41,6 @@ export default function AdminLayout({ children }) {
     try {
       await signOut();
     } catch {
-      /* кука всё равно протухнет — уводим на логин в любом случае */
     }
     setUser(null);
     router.replace('/admin/login');

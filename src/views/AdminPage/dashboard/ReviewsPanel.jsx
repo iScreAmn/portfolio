@@ -186,7 +186,6 @@ const ReviewsPanel = () => {
         <p className="dash-card__empty">{text.empty[status]}</p>
       ) : (
         <>
-          {/* key по вкладке: при переключении слайдер начинает с первого отзыва. */}
           <Swiper
             key={status}
             modules={[Pagination]}

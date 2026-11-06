@@ -84,7 +84,6 @@ export const subtitleVariants = {
   },
 };
 
-// Анимации для последовательного появления секций
 export const educationVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {

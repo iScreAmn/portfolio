@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [checking, setChecking] = useState(true);
 
-  // Уже вошедшего не держим на форме логина.
   useEffect(() => {
     let active = true;
 
@@ -25,7 +24,6 @@ export default function LoginPage() {
         if (active && user) router.replace('/admin');
       })
       .catch(() => {
-        /* сеть недоступна — просто показываем форму */
       })
       .finally(() => {
         if (active) setChecking(false);

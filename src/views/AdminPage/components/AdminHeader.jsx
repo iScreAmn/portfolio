@@ -7,45 +7,25 @@ import { usePathname } from 'next/navigation';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import { logo } from '../../../assets/images';
 import adminData from '../../../data/adminData';
-// Бургер, панель и строки — те же, что у сайтового меню.
 import '../../../components/nav/NavPanel.css';
 import './AdminHeader.css';
 
 const { nav } = adminData;
 const PANEL_ID = 'admin-nav-panel';
 
-/** Entrance stagger for the n-th row of the panel, in ms. */
 const revealDelay = (index) => `${40 + index * 45}ms`;
 
-/**
- * Пункты админки — настоящие роуты, а не секции одной страницы, поэтому
- * активный определяется по pathname, а не по локальному состоянию.
- *
- * `/admin` сравнивается точно: иначе дашборд подсвечивался бы на всех
- * вложенных. Ссылка на сайт активной не бывает вовсе — она уводит из админки,
- * а по startsWith её '/' совпал бы с любым путём.
- */
 const isActiveHref = (pathname, href) => {
   if (!href.startsWith('/admin')) return false;
   return href === '/admin' ? pathname === href : pathname.startsWith(href);
 };
 
-/**
- * Хедер админки: логотип сайта слева, бургер справа. Переключателей темы и
- * языка здесь нет — админка одноязычная и следует теме сайта.
- *
- * Панель остаётся в DOM и прячется через `visibility` (см. `.nav-panel`),
- * чтобы уметь анимироваться на выход и при этом выпадать из таб-порядка.
- */
 const AdminHeader = ({ onLogout }) => {
   const pathname = usePathname() || '';
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef(null);
   const triggerRef = useRef(null);
 
-  // Закрытие с фокусом внутри панели оставило бы его на скрытом элементе,
-  // поэтому клавиатурные пути возвращают фокус на бургер. Клик мимо — нет:
-  // пользователь уже показал, куда смотрит.
   const closeAndRefocus = useCallback(() => {
     setIsOpen(false);
     triggerRef.current?.focus();
@@ -69,7 +49,6 @@ const AdminHeader = ({ onLogout }) => {
     };
   }, [isOpen, closeAndRefocus]);
 
-  // Переход состоялся — панель больше не нужна.
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
@@ -136,7 +115,6 @@ const AdminHeader = ({ onLogout }) => {
             </ul>
           </nav>
 
-          {/* Выход — не раздел, поэтому отделён чертой. */}
           <div
             className={`nav-reveal nav-rule ${isOpen ? 'is-shown' : ''}`}
             style={{ transitionDelay: isOpen ? revealDelay(nav.items.length) : '0ms' }}
