@@ -43,6 +43,9 @@ const Services = () => {
                 pauseOnMouseEnter: true,
               }}
               pagination={{ clickable: true }}
+              onAutoplayTimeLeft={(swiper, _time, progress) =>
+                swiper.el.style.setProperty("--autoplay-progress", 1 - progress)
+              }
               className="services-swiper"
             >
               {slides.map((slide) => {

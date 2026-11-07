@@ -132,6 +132,9 @@ const Clients = ({ hideTitle = false, className = "" }) => {
                 pauseOnMouseEnter: true,
               }}
               pagination={{ clickable: true }}
+              onAutoplayTimeLeft={(swiper, _time, progress) =>
+                swiper.el.style.setProperty("--autoplay-progress", 1 - progress)
+              }
               className="reviews-swiper"
             >
               {reviews.map((client) => (

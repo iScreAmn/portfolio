@@ -405,10 +405,21 @@
 }
 
 .services-swiper .swiper-pagination-bullet-active {
-  background-color: var(--second-color);
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--swiper-bullet-color) 60%, transparent);
   opacity: 1;
   width: 24px;
   border-radius: 4px;
+}
+
+.services-swiper .swiper-pagination-bullet-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--second-color);
+  transform: scaleX(var(--autoplay-progress, 0));
+  transform-origin: left;
 }
 
 .services-swiper .swiper-slide-active .services-app-content > * {
